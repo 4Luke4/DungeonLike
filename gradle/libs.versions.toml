@@ -1,0 +1,40 @@
+## Gradle version catalog -- single source of truth for declared library and
+## plugin versions.
+##
+## Scope split (see AGENTS.md):
+##   * This file          -> Gradle library + plugin versions for the build.
+##   * config/android/toolchain.properties -> SDK / NDK / CMake / ABI / Java.
+##   * config/build-tool-security.versions -> forced pins that exist only to
+##                                            remediate a build-tooling CVE.
+##
+## `scripts/validate_toolchain.py` asserts that the `agp` and `kotlin` entries
+## below agree with `agp.version` / `kotlin.version` in toolchain.properties, so
+## the two files can never silently drift apart.
+##
+## The catalogue is intentionally minimal: the repository does not yet contain a
+## Gradle project. Only versions that are already justified by a verified,
+## documented constraint are declared. Libraries are added alongside the module
+## that actually consumes them, so an unused entry never accumulates here.
+
+[versions]
+# Android Gradle plugin. Supports a maximum compileSdk of API 37, which is the
+# level this project compiles against.
+agp = "9.4.0"
+
+# Kotlin. Used for the thin Android host layer (see ADR 0002); gameplay logic
+# lives in C# inside the Godot project.
+kotlin = "2.4.20"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+[libraries]
+# Deliberately empty.
+#
+# Runtime dependencies are introduced together with the source set that uses
+# them. Declaring them ahead of a consumer would create unreviewable, untested
+# surface area and would defeat Dependabot's ability to prove an update is safe.
+
+[bundles]
+# Deliberately empty; see [libraries].

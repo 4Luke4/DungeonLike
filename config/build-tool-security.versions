@@ -1,0 +1,26 @@
+# Security overrides for vulnerable *build-time* tooling.
+#
+# Scope: transitive dependencies of the build itself (Gradle plugins, annotation
+# processors, code generators). Runtime/shipped dependencies belong in
+# `gradle/libs.versions.toml`, not here.
+#
+# Why this file exists separately: a forced version constraint applied to fix a
+# CVE is a security decision with a different review bar and a different lifetime
+# than an ordinary dependency bump. Keeping the two apart means a reviewer can
+# see at a glance what is pinned *for security* and why, and stale pins can be
+# retired once the upstream fix lands naturally.
+#
+# Format: one `group:artifact=version` per line, '#' comments.
+# Every entry MUST carry an advisory reference and the reason it is still needed.
+#
+# Example (illustrative only -- not an active override):
+#   # GHSA-xxxx-xxxx-xxxx -- arbitrary file write during archive extraction.
+#   # Remove once the plugin that pulls this in ships a fixed release.
+#   org.apache.commons:commons-compress=1.28.0
+
+# No build-tool security overrides are active.
+#
+# This is expected: the repository does not yet contain a Gradle build, so there
+# is no build-tool dependency graph to constrain. Entries will be added here if
+# and only if a CVE affecting build tooling cannot be resolved by an ordinary
+# version bump in `gradle/libs.versions.toml`.
