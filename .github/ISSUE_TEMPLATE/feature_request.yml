@@ -1,0 +1,84 @@
+name: ✨ Feature request
+description: Suggest a capability or improvement for DungeonLike.
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the **problem** you want solved before proposing a
+        solution — it usually leads to a better outcome.
+
+        For open-ended ideas, consider
+        [Discussions](https://github.com/4Luke4/DungeonLike/discussions) first.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I have read the roadmap in the README.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is difficult, missing, or frustrating today? Avoid jumping to a solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed, and why you discarded them.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the project does this affect?
+      options:
+        - Gameplay and rules
+        - UI / UX
+        - Accessibility
+        - Localization
+        - Input (mouse / keyboard / touch)
+        - Performance
+        - Build, CI, or tooling
+        - Documentation
+        - Other / not sure
+    validations:
+      required: true
+
+  # Scope is collected up front because DungeonLike has hard product invariants:
+  # 64-bit ARM only, API 34 minimum, five locales, and adaptive phone/tablet
+  # layouts. A request that conflicts with these needs a different conversation.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      description: Tick every statement that applies to your request.
+      options:
+        - label: It affects user-visible strings and would need all five locales.
+        - label: It changes UI layout and would need both phone and tablet treatments.
+        - label: It has accessibility implications.
+        - label: It would introduce a new third-party dependency.
+        - label: It would be a breaking change for existing save data.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, references, or prior art. Do not include third-party copyrighted material.
