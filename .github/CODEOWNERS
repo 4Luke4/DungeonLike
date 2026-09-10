@@ -1,0 +1,36 @@
+# Code owners for DungeonLike.
+#
+# Every pull request touching a matched path automatically requests review from
+# the listed owner. Ownership is enforced only if "Require review from Code
+# Owners" is enabled in the repository's branch protection settings.
+#
+# Rules are evaluated in order; the LAST matching rule wins. The catch-all is
+# therefore declared first, and progressively more specific paths follow.
+
+# Default owner for everything in the repository.
+*                                   @4Luke4
+
+# --- Sources of truth --------------------------------------------------------
+# Changing a source of truth silently re-points every consumer of that value, so
+# these paths are called out separately to make such changes conspicuous in review.
+/VERSION                            @4Luke4
+/config/                            @4Luke4
+/gradle/libs.versions.toml          @4Luke4
+
+# --- Automation and supply chain --------------------------------------------
+# Workflow changes can alter privileges, secret exposure, and release integrity.
+/.github/                           @4Luke4
+/.github/workflows/                 @4Luke4
+/.github/dependabot.yml             @4Luke4
+/scripts/                           @4Luke4
+
+# --- Legal -------------------------------------------------------------------
+# Licence and attribution changes carry legal consequence and must never be
+# merged without the copyright holder's explicit review.
+/LICENSE.md                         @4Luke4
+/THIRD_PARTY_NOTICES.md             @4Luke4
+/SECURITY.md                        @4Luke4
+
+# --- Architecture and release gates -----------------------------------------
+/docs/architecture/                 @4Luke4
+/docs/release/                      @4Luke4
