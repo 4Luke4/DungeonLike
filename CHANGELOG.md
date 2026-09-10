@@ -64,6 +64,12 @@ builds on.
 - Documented the trust boundaries, signing-material handling, and supply-chain
   risks of the planned architecture in `docs/architecture/THREAT_MODEL.md`.
 - Applied least-privilege `permissions` to every workflow.
+- Pinned every third-party GitHub Action to a full commit SHA, so a retagged or
+  compromised upstream release cannot alter what CI executes. Version comments
+  are retained so Dependabot can still propose updates.
+- Selected the standard Godot build over the .NET variant, which removes an
+  unverifiable vendored binary from the planned dependency graph in favour of a
+  signed MavenCentral artifact.
 
 [Unreleased]: https://github.com/4Luke4/DungeonLike/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/4Luke4/DungeonLike/releases/tag/v0.1.0

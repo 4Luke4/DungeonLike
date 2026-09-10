@@ -41,9 +41,8 @@
 "area: engine":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/*.cs"
-          - "**/*.csproj"
-          - "**/*.sln"
+          - "**/*.gd"
+          - "**/*.gdshader"
           - "**/project.godot"
           - "**/*.tscn"
           - "**/*.tres"

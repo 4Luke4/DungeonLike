@@ -20,6 +20,7 @@ from the **System Reference Document 5.2.1** (CC-BY-4.0).
 | Compile / target | API 37.2 (SDK extension 24) |
 | ABI | `arm64-v8a` only |
 | Languages | English (default), Italian, Spanish, French, German |
+| Code | Kotlin (Android host), GDScript (game core) |
 | Input | Touch, plus full mouse and keyboard support when detected |
 
 ## Architecture
@@ -29,8 +30,8 @@ The application is a **thin Kotlin host around an embedded Godot engine**.
 ```mermaid
 flowchart TD
     A["Android host — Kotlin<br/>activity lifecycle, billing, platform I/O"]
-    B["Godot Engine 4.7.2 (.NET)<br/>embedded as an Android library"]
-    C["Game core — C#<br/>rules, simulation, content"]
+    B["Godot Engine 4.7.2<br/>embedded as an Android library"]
+    C["Game core — GDScript<br/>rules, simulation, content"]
     D["Game data<br/>derived from SRD 5.2.1, CC-BY-4.0"]
 
     A -->|hosts + drives lifecycle| B
@@ -41,7 +42,7 @@ flowchart TD
 - **Godot owns all rendering**, including menus and adaptive phone/tablet layout,
   which is expressed with Godot's own anchor and container system.
 - **Kotlin stays thin**: activity lifecycle, in-app purchase, and platform I/O.
-- **C# holds gameplay logic**: rules, simulation, and content.
+- **GDScript holds gameplay logic**: rules, simulation, and content.
 
 This split is not stylistic. Godot's Android library documentation states that
 only one engine instance is supported per process, and that resize/orientation
@@ -95,7 +96,7 @@ Every version below was verified against a primary source rather than assumed.
 | Gradle | 9.7.1 | current release |
 | Kotlin | 2.4.20 | current release |
 | JDK | 17 | AGP 9.4.0 ships Java 17 bytecode; Godot declares Java 17 |
-| Godot | 4.7.2-stable (.NET) | current stable release |
+| Godot | 4.7.2-stable (standard build) | published to MavenCentral as `org.godotengine:godot`, signed |
 
 ## Verification
 
@@ -124,7 +125,7 @@ Report security issues privately — see [`SECURITY.md`](SECURITY.md).
 
 1. ✅ Repository foundation — governance, legal, CI/CD, sources of truth
 2. ⬜ Gradle project and Kotlin host skeleton
-3. ⬜ Godot 4.7.2 (.NET) engine integration
+3. ⬜ Godot 4.7.2 engine integration (standard build, GDScript)
 4. ⬜ SRD content pipeline producing structured, localized game data
 5. ⬜ Gameplay systems, UI/UX, mouse and keyboard support
 6. ⬜ Play Store release, signing, and store metadata

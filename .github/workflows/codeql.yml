@@ -8,9 +8,13 @@ name: CodeQL
 # which is worse than having no scan. The matrix below is explicit.
 #
 # Only `actions` is analysed today because workflow definitions are the sole
-# analysable code in the repository. `java-kotlin` and `csharp` entries are added
-# by the pull requests that introduce those sources, together with the build
-# steps CodeQL needs to compile them.
+# analysable code in the repository. A `java-kotlin` entry is added by the pull
+# request that introduces the Android host module.
+#
+# The GDScript game core will NOT be covered: CodeQL does not support GDScript.
+# That gap is a known, deliberate consequence of the engine decision and is
+# recorded in docs/architecture/adr/0002-engine-and-ui-architecture.md and in the
+# threat model, along with its mitigations.
 
 on:
   push:

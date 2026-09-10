@@ -82,7 +82,7 @@
 
 - name: "area: engine"
   color: 478cbf
-  description: Godot engine integration and the C# game core
+  description: Godot engine integration and the GDScript game core
 
 - name: "area: gameplay"
   color: 5319e7

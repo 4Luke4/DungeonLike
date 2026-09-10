@@ -51,9 +51,11 @@ reason** — never silently skipped.
       protected environment.
 - [ ] `docs/architecture/THREAT_MODEL.md` reviewed; every open item is either
       closed or explicitly accepted for this release.
-- [ ] **Boundary 3 resolved:** the Godot .NET library's checksum is verified
-      against the published release, and the expected value is recorded in the
-      repository.
+- [ ] **Boundary 3 resolved:** the Godot Android library is resolved from
+      MavenCentral with Gradle dependency verification enabled, so its checksum
+      and PGP signature are checked on every build.
+- [ ] GDScript game core reviewed with extra care, since CodeQL does not cover it
+      (ADR 0002); `gdtoolkit` linting passed.
 - [ ] Dependency updates reviewed; no known-vulnerable shipped dependency.
 - [ ] App requests only the permissions it genuinely needs, each justified.
 - [ ] No debug logging of sensitive data; debuggable flag unset in release.

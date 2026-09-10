@@ -4,10 +4,13 @@ version: 2
 #
 # ECOSYSTEM SCOPE
 # ---------------
-# Only `github-actions` is enabled. `gradle` and `nuget` are deliberately absent:
-# Dependabot raises a persistent job error when an ecosystem is configured but no
-# manifest exists, and this repository has no Gradle or .NET project yet. They are
-# added in the pull request that introduces those manifests.
+# Only `github-actions` is enabled. `gradle` is deliberately absent: Dependabot
+# raises a persistent job error when an ecosystem is configured but no manifest
+# exists, and this repository has no Gradle project yet. It is added in the pull
+# request that introduces those manifests.
+#
+# No `nuget` ecosystem is planned. The game core is GDScript on the standard
+# Godot build, so the project has no .NET dependency graph (ADR 0002).
 #
 # Every label referenced below is defined in `.github/labels.yml`.
 

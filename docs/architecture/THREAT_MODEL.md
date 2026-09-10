@@ -54,11 +54,17 @@ secrets; a poisoned dependency; committed credentials.
 - Validation script dependencies are hash-pinned, so a compromised release cannot
   alter what CI enforces.
 
-**Accepted risk.** Actions are pinned to major version tags rather than commit
-SHAs. Tags are mutable, so a compromised upstream action could serve altered code.
-Accepted for now in exchange for automatic security patches from Dependabot; the
-blast radius is limited by least-privilege tokens. Revisit before the first
-signed release, when a compromised action would gain access to signing material.
+**Accepted risk.** GitHub-published actions (`actions/*`, `github/*`) are
+referenced by major version tag. These are immutable releases from a first-party
+publisher, and CodeQL's unpinned-action rule does not flag them.
+
+**Resolved.** Third-party actions were previously referenced by mutable tag, on
+the reasoning that tag references were the price of automatic Dependabot updates.
+That reasoning was wrong: Dependabot updates SHA-pinned actions too, using the
+trailing `# vX` version comment. CodeQL flagged all four occurrences, and every
+third-party action is now pinned to a full commit SHA, so a retagged or
+compromised upstream release cannot alter what CI executes. New third-party
+actions must be added the same way.
 
 ### Boundary 2 — `pull_request_target` and elevated tokens *(live)*
 
@@ -85,28 +91,34 @@ than bypassing verification.
 
 ### Boundary 3 — Engine binary acquisition *(planned)*
 
-Godot's .NET Android library is **not published to MavenCentral** and must be
-obtained as a GitHub release asset or built from source (ADR 0002).
+The standard Godot Android library is published to MavenCentral as
+`org.godotengine:godot`, alongside a GPG signature (`.asc`) and SHA-256/SHA-512
+checksums (ADR 0002).
 
-**Threat.** This is the single largest supply-chain risk in the planned
-architecture. A dependency without package-manager provenance is one that
-Dependabot cannot track, that no resolver verifies, and whose substitution would
-place attacker-controlled native code directly inside the shipped application.
+**Threat.** The engine is native code running inside the shipped application, so
+substituting it would place attacker-controlled code directly in front of users.
+
+**Why this is now a much smaller risk.** An earlier revision of this architecture
+selected the .NET/C# engine build, which is **not** published to any package
+manager and exists only as a GitHub release asset. That would have been the single
+largest supply-chain risk in the project: a binary with no resolver verification
+that Dependabot could not track. Choosing the standard engine replaces it with an
+ordinary, signed, resolver-managed Gradle dependency.
 
 **Planned controls.**
 
 - Pin the exact engine version in `config/android/toolchain.properties`.
-- Verify the artifact's checksum against the published release before use, and
-  fail the build on mismatch.
-- Record the expected checksum in the repository so a change to it is reviewable.
-- Document the update procedure, including re-verification.
-- Prefer a reproducible from-source build if verification proves insufficient.
+- Resolve the engine only from MavenCentral; do not vendor the AAR.
+- Enable Gradle dependency verification so the artifact's checksum and PGP
+  signature are checked on every build, and the build fails on mismatch.
+- Keep the verification metadata in the repository so a change to it is reviewable.
 
-**Status.** Open. Must be resolved in the engine integration pull request.
+**Status.** Open, but materially reduced. Must be closed in the engine integration
+pull request.
 
 ### Boundary 4 — Kotlin host to embedded engine *(planned)*
 
-The Kotlin host and the C# game core exchange data across the Godot bridge.
+The Kotlin host and the GDScript game core exchange data across the Godot bridge.
 
 **Threats.** Malformed data crossing the boundary; an over-broad bridge surface
 that exposes host capabilities to engine-side code; leaking entitlement state.
@@ -114,6 +126,13 @@ that exposes host capabilities to engine-side code; leaking entitlement state.
 **Planned controls.** Keep the bridge minimal and explicitly enumerated. Validate
 at the boundary rather than trusting the caller. Never expose file-system or
 credential APIs directly to engine code.
+
+**Additional exposure from the language choice.** GDScript is analysed by neither
+CodeQL nor super-linter, so the game core has no automated security coverage from
+the existing tooling (ADR 0002). Because the engine side cannot be scanned, the
+host must treat everything crossing this boundary as untrusted, and review of
+engine-side code carries more weight than it otherwise would. Adopting `gdtoolkit`
+for linting is a planned partial mitigation.
 
 ### Boundary 5 — Device and player data *(planned)*
 
@@ -182,7 +201,6 @@ Re-review this document when:
 
 | # | Item | Boundary | Owner |
 | - | ---- | -------- | ----- |
-| 1 | Define and implement checksum verification for the Godot .NET AAR | 3 | Engine integration PR |
-| 2 | Decide whether to pin actions to commit SHAs before first signed release | 1 | Release readiness |
-| 3 | Define the Kotlin ↔ engine bridge surface and its validation | 4 | Engine integration PR |
-| 4 | Configure Android backup rules for save data | 5 | Save system PR |
+| 1 | Define and implement checksum verification for the Godot Android library | 3 | Engine integration PR |
+| 2 | Define the Kotlin ↔ engine bridge surface and its validation | 4 | Engine integration PR |
+| 3 | Configure Android backup rules for save data | 5 | Save system PR |

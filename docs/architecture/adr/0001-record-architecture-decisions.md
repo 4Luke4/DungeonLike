@@ -6,8 +6,8 @@
 ## Context
 
 DungeonLike is making a number of decisions that are expensive to reverse: the
-game engine, the split between the Kotlin host and the C# game core, the Android
-API baseline, and how licensed reference material is turned into game data.
+game engine, the split between the Kotlin host and the GDScript game core, the
+Android API baseline, and how licensed reference material is turned into game data.
 
 These decisions are being taken while the repository is still empty, which means
 the reasoning behind them exists only in the head of whoever made them. Six months
