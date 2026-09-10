@@ -1,0 +1,18 @@
+# Pinned dependencies for the repository validation scripts in this directory.
+#
+# Only `validate_labels.py` needs a third-party package; the other scripts use
+# the standard library only.
+#
+# Hash-pinned deliberately. These scripts decide whether a change is allowed to
+# merge, so a compromised or yanked release must not be able to silently alter
+# what CI enforces. `--require-hashes` makes pip refuse anything that does not
+# match one of the digests below.
+#
+# Both the CPython 3.13 manylinux x86_64 wheel and the source distribution are
+# listed, so the install succeeds whether or not the runner can use the wheel.
+#
+# To update: bump the version, then take the new digests from
+# https://pypi.org/pypi/PyYAML/json
+PyYAML==6.0.3 \
+    --hash=sha256:0f29edc409a6392443abf94b9cf89ce99889a1dd5376d94316ae5145dfedd5d6 \
+    --hash=sha256:d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f

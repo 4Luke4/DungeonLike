@@ -1,0 +1,47 @@
+# Ruff configuration for the repository validation scripts.
+#
+# These scripts gate merges, so they are held to a stricter standard than
+# throwaway tooling: they must be readable, typed at the boundaries, and free of
+# the mistakes that silently weaken a check (unused results, bare excepts,
+# mutable default arguments).
+
+target-version = "py313"
+line-length = 100
+
+# Only the validation scripts are Python today. Listed explicitly so that adding
+# Python elsewhere is a deliberate decision rather than an accident.
+include = ["scripts/*.py"]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # import sorting
+    "B",    # flake8-bugbear: likely bugs, e.g. mutable default arguments
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade: keep syntax current with target-version
+    "SIM",  # flake8-simplify
+    "PTH",  # prefer pathlib over os.path
+    "RET",  # return-statement consistency
+    "ARG",  # unused arguments
+    "TRY",  # exception-handling anti-patterns
+]
+
+ignore = [
+    # The scripts print diagnostics as their primary output; that is the point.
+    "T201",
+    # Long, explanatory error messages passed directly to a raise are clearer
+    # inline than hoisted into a variable.
+    "TRY003",
+    # Guarding against a documented error path with a plain raise is intentional
+    # and does not need a custom exception hierarchy for a five-file toolset.
+    "TRY400",
+]
+
+[lint.pydocstyle]
+convention = "google"
+
+[format]
+quote-style = "double"
+indent-style = "space"
