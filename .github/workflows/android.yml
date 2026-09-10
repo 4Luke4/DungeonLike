@@ -111,7 +111,7 @@ jobs:
           # wastes the runner's cache quota.
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
         with:
           packages: >-
             ${{ needs.toolchain.outputs.compile-sdk-package }}
@@ -120,7 +120,7 @@ jobs:
             cmake;${{ needs.toolchain.outputs.cmake }}
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
         with:
           # Only the default branch writes cache entries. Pull request runs read
           # them, which stops an untrusted branch from poisoning the cache other

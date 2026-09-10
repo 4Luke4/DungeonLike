@@ -41,7 +41,7 @@ jobs:
           persist-credentials: false
 
       - name: Run super-linter
-        uses: super-linter/super-linter/slim@v8.7.0
+        uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Lint the whole repository. It is small, and scoping to changed files
@@ -51,9 +51,13 @@ jobs:
           # the GitHub context, and setting it is documented as unnecessary here.
           #
           # Setting any VALIDATE_* variable to true switches super-linter to
-          # opt-in mode, so only the linters listed below run. Languages with no
-          # sources yet (Kotlin, C#) are intentionally absent and are enabled by
-          # the pull request that introduces them.
+          # opt-in mode, so only the linters listed below run. Kotlin is absent
+          # because no Kotlin source exists yet; it is enabled by the pull request
+          # that introduces the host module.
+          #
+          # GDScript is NOT listed because super-linter does not support it. The
+          # game core will therefore need a separate `gdtoolkit` step; see
+          # docs/architecture/adr/0002-engine-and-ui-architecture.md.
           VALIDATE_GITHUB_ACTIONS: true
           VALIDATE_YAML: true
           VALIDATE_MARKDOWN: true
