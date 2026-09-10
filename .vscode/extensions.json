@@ -1,0 +1,44 @@
+{
+  "//": [
+    "Recommended extensions for DungeonLike.",
+    "Every identifier below was confirmed to exist in the Visual Studio Marketplace.",
+    "Publisher verification status is noted per entry: 'domain-verified' means the",
+    "Marketplace has verified the publisher owns its stated domain. Extensions",
+    "without that badge are included only where they are the de facto standard for",
+    "their ecosystem and no first-party alternative exists."
+  ],
+
+  "recommendations": [
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
+    "fwcd.kotlin",
+    "vscjava.vscode-gradle",
+    "geequlim.godot-tools",
+    "redhat.vscode-yaml",
+    "redhat.vscode-xml",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "davidanson.vscode-markdownlint",
+    "timonwong.shellcheck",
+    "ms-python.python",
+    "editorconfig.editorconfig"
+  ],
+
+  "//publishers": {
+    "ms-dotnettools.csharp": "Microsoft, domain-verified. C# language support for the game core.",
+    "ms-dotnettools.csdevkit": "Microsoft, domain-verified. Solution and project tooling for C#.",
+    "fwcd.kotlin": "fwcd, not domain-verified. Community standard for Kotlin outside IntelliJ.",
+    "vscjava.vscode-gradle": "Microsoft, domain-verified. Gradle task and dependency tooling.",
+    "geequlim.godot-tools": "geequlim, not domain-verified. The reference Godot extension, linked from Godot's own docs.",
+    "redhat.vscode-yaml": "Red Hat, domain-verified. Schema-aware YAML for workflows and issue forms.",
+    "redhat.vscode-xml": "Red Hat, domain-verified. Android manifests and resource XML.",
+    "github.vscode-github-actions": "GitHub, domain-verified. Workflow authoring and run inspection.",
+    "github.vscode-pull-request-github": "GitHub, domain-verified. Pull request and issue review in-editor.",
+    "davidanson.vscode-markdownlint": "DavidAnson, domain-verified. Matches the markdownlint rules CI enforces.",
+    "timonwong.shellcheck": "timonwong, not domain-verified. Wraps upstream ShellCheck, which CI also runs.",
+    "ms-python.python": "Microsoft, domain-verified. For the repository validation scripts.",
+    "editorconfig.editorconfig": "EditorConfig, not domain-verified. Maintained by the EditorConfig project itself."
+  },
+
+  "unwantedRecommendations": []
+}
