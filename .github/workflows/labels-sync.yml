@@ -1,0 +1,101 @@
+name: Sync labels
+
+# Reconciles the repository's labels with `.github/labels.yml`, the declarative
+# catalogue that is the single source of truth for label names, colours, and
+# descriptions.
+#
+# WHY: automation breaks when a label is missing. `actions/labeler` fails its job
+# if asked to apply a label the repository does not have, and `actions/stale`
+# cannot mark anything without its marker label. Both conditions existed here
+# before this catalogue was introduced. Reconciling from a file makes label
+# existence reviewable in a pull request instead of a manual click in settings.
+#
+# SEMANTICS: additive and update-only. Labels are created when missing and
+# corrected when their colour or description drifts. Nothing is ever deleted, so
+# a label added by hand during triage survives a sync.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/labels.yml
+      - .github/workflows/labels-sync.yml
+  # Manual trigger, for reconciling after labels are edited in the web UI.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Never run two reconciliations at once: concurrent create calls for the same
+  # label race and one of them fails.
+  group: labels-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Reconcile labels
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Label management is part of the issues API surface.
+      issues: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install --require-hashes --no-deps -r scripts/requirements.txt
+
+      - name: Verify catalogue integrity
+        # Fail before mutating anything if the catalogue is malformed or a
+        # consumer references an undefined label.
+        run: python scripts/validate_labels.py
+
+      - name: Reconcile labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # Read the catalogue as tab-separated records. Using Python for the
+          # parse keeps this correct for quoted names and names containing
+          # spaces or colons, which a shell/grep approach mishandles.
+          python - <<'PY' > labels.tsv
+          import yaml
+          with open(".github/labels.yml", encoding="utf-8") as handle:
+              for entry in yaml.safe_load(handle):
+                  print("\t".join([entry["name"], str(entry["color"]), entry["description"]]))
+          PY
+
+          # Snapshot the existing labels once. Querying inside the loop would
+          # issue a request per label for no benefit.
+          gh label list --limit 500 --json name --jq '.[].name' > existing.txt
+
+          created=0
+          updated=0
+
+          # File descriptor 3 carries the catalogue instead of stdin: `gh` would
+          # otherwise inherit stdin and consume the remaining records, silently
+          # processing only the first label.
+          while IFS=$'\t' read -r name color description <&3; do
+            [ -n "$name" ] || continue
+
+            if grep -Fxq "$name" existing.txt; then
+              gh label edit "$name" --color "$color" --description "$description"
+              updated=$((updated + 1))
+            else
+              gh label create "$name" --color "$color" --description "$description"
+              created=$((created + 1))
+            fi
+          done 3< labels.tsv
+
+          echo "::notice::Label sync complete: ${created} created, ${updated} updated, 0 deleted."

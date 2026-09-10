@@ -1,27 +1,89 @@
-# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
+name: Stale
+
+# Triages issues and pull requests that have gone quiet.
 #
-# You can adjust the behavior by modifying this file.
-# For more information, see:
-# https://github.com/actions/stale
-name: Mark stale issues and pull requests
+# The previous version of this workflow was unusable: it posted the literal
+# placeholder text "Stale issue message", and its marker labels
+# (`no-issue-activity`, `no-pr-activity`) did not exist in the repository, so it
+# could not label anything. Both labels are now defined in `.github/labels.yml`
+# and verified by `scripts/validate_labels.py`.
 
 on:
   schedule:
-  - cron: '16 13 * * *'
+    - cron: "16 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stale
+  cancel-in-progress: false
 
 jobs:
   stale:
-
+    name: Mark and close stale items
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
-
     steps:
-    - uses: actions/stale@v5
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+      - name: Mark stale issues and pull requests
+        uses: actions/stale@v11
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Issues are given longer than pull requests. An unanswered issue is
+          # often still a valid report, whereas an abandoned pull request goes
+          # out of date against `main` and becomes cheaper to redo than to revive.
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+
+          stale-issue-label: no-issue-activity
+          stale-pr-label: no-pr-activity
+
+          stale-issue-message: >
+            This issue has had no activity for 60 days and has been marked stale.
+            If it is still relevant, please add a comment with any new detail —
+            a reproduction, an affected version, or confirmation that it still
+            occurs. It will be closed in 14 days otherwise. A closed issue can
+            always be reopened.
+
+          close-issue-message: >
+            Closing this issue after 14 days without further activity. This is
+            housekeeping, not a judgement on the report: please comment if the
+            problem persists and it will be reopened.
+
+          stale-pr-message: >
+            This pull request has had no activity for 30 days and has been marked
+            stale. Please rebase on `main`, address any outstanding review
+            comments, or comment to say it is still in progress. It will be
+            closed in 14 days otherwise.
+
+          close-pr-message: >
+            Closing this pull request after 14 days without further activity.
+            The branch is untouched, so it can be reopened at any time.
+
+          # Items that are deliberately long-lived. `pinned` is the manual
+          # override; security and legal work can legitimately stay open while
+          # coordination or advice is pending.
+          #
+          # Quoted because a plain YAML scalar may not contain ": " — the
+          # "area: security" label name would otherwise be misparsed.
+          exempt-issue-labels: "pinned,area: security,legal"
+          exempt-pr-labels: "pinned,area: security,legal"
+
+          # Milestoned or assigned work is already tracked by a human.
+          exempt-all-milestones: true
+          exempt-all-assignees: true
+
+          # Do not resurrect a stale item on an unrelated push; only a comment or
+          # an explicit update should reset the clock.
+          remove-stale-when-updated: true
+
+          # Oldest first, so the longest-neglected items are handled before the
+          # API budget for a run is exhausted.
+          ascending: true
+          operations-per-run: 100

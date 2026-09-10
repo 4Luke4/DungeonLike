@@ -1,0 +1,81 @@
+name: Dependabot auto-merge
+
+# Reviews and enables auto-merge for low-risk Dependabot updates.
+#
+# POLICY
+# ------
+# Automatic merging is limited to `patch` and `minor` version updates, plus
+# security patches. A `major` update is never merged automatically: by SemVer it
+# carries a breaking change, and a breaking change to build or release tooling
+# needs a human to decide whether it is safe.
+#
+# Auto-merge is *enabled*, not forced. GitHub still holds the pull request until
+# every required status check passes, so this workflow shortens the wait for a
+# green update rather than bypassing verification.
+#
+# PREREQUISITE: "Allow auto-merge" must be enabled in the repository settings.
+# Without it, `gh pr merge --auto` fails and this workflow reports an error
+# instead of silently doing nothing.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    name: Enable auto-merge
+    # SECURITY BOUNDARY
+    # -----------------
+    # `pull_request_target` grants a writable token. `github.actor` is compared
+    # against the Dependabot app so the job cannot be triggered by an arbitrary
+    # contributor opening a pull request. Nothing here checks out or executes
+    # pull request code, which is what makes the elevated token safe: the job
+    # only reads metadata and calls the merge API.
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve the pull request
+        # An approval is required before auto-merge can complete when the branch
+        # protection rules demand a review. Dependabot cannot approve its own
+        # pull request, so the workflow does it.
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr review --approve "$PR_URL"
+
+      - name: Enable auto-merge
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
+
+      - name: Flag major updates for review
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          DEPENDENCY: ${{ steps.metadata.outputs.dependency-names }}
+        run: |
+          echo "::notice::Major update to ${DEPENDENCY} requires manual review."
+          gh pr comment "$PR_URL" --body \
+            "This is a **major** version update, so it will not be merged automatically. Please review the upstream changelog for breaking changes before merging."
