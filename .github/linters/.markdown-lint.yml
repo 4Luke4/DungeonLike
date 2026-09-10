@@ -1,0 +1,38 @@
+# markdownlint configuration for super-linter.
+#
+# The intent is to catch genuine structural defects (broken lists, skipped
+# heading levels, malformed links) while not fighting the way this repository's
+# documentation is written.
+
+default: true
+
+# MD013 line-length: disabled. Documentation here is hard-wrapped for review, but
+# tables, URLs and required legal attribution text cannot always be wrapped, and
+# reflowing them purely to satisfy a column count hurts readability.
+MD013: false
+
+# MD024 duplicate headings: allowed when nested under different parents. The
+# changelog repeats "Added"/"Changed"/"Removed" under each release by design,
+# which is exactly what Keep a Changelog prescribes.
+MD024:
+  siblings_only: true
+
+# MD033 inline HTML: permitted. The pull request template relies on HTML comments
+# for reviewer guidance that must not render.
+MD033: false
+
+# MD041 first line must be a top-level heading: disabled, because the pull
+# request template opens with an HTML comment.
+MD041: false
+
+# MD046 code block style: fenced everywhere, so language hints are always
+# available for syntax highlighting.
+MD046:
+  style: fenced
+
+# MD060 table-column-style: disabled. Padding every cell so the pipes line up in
+# the source has no effect on how GitHub renders a table, breaks again on the
+# next edit, and is ambiguous for emoji and non-ASCII text whose display width
+# does not match its character count. Table *correctness* is still enforced by
+# the other MD05x rules.
+MD060: false

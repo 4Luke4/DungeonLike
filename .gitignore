@@ -1,3 +1,20 @@
+# Local planning notes
+plan.md
+
+# System Reference Document
+srd/
+
+##########################################################
+
+# Python (repository validation scripts in scripts/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ruff_cache/
+
+##########################################################
+
 # Gradle files
 .gradle/
 build/

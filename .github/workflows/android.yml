@@ -1,26 +1,144 @@
-name: Android CI
+name: Android
+
+# Gradle build and unit tests for the Android application.
+#
+# GUARD: the repository does not contain a Gradle project yet. Every job below is
+# conditional on a Gradle wrapper being present, so this workflow reports success
+# without doing work until the application module lands. The previous version of
+# this file ran `./gradlew build` unconditionally and therefore failed on every
+# single run, which trains reviewers to ignore a red check. A configured but
+# inert workflow is preferable to a permanently failing one, and preferable to
+# deleting and later re-adding it.
+#
+# All toolchain values come from `config/android/toolchain.properties`, the
+# single source of truth. `scripts/validate_toolchain.py` fails CI if this file
+# hardcodes any value that belongs there.
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  build:
-
+  toolchain:
+    name: Resolve toolchain
     runs-on: ubuntu-latest
-
+    outputs:
+      gradle-project: ${{ steps.detect.outputs.gradle-project }}
+      java-version: ${{ steps.read.outputs.java-version }}
+      build-tools: ${{ steps.read.outputs.build-tools }}
+      compile-sdk-package: ${{ steps.read.outputs.compile-sdk-package }}
+      ndk: ${{ steps.read.outputs.ndk }}
+      cmake: ${{ steps.read.outputs.cmake }}
     steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 11
-      uses: actions/setup-java@v4
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Detect Gradle project
+        id: detect
+        run: |
+          if [ -f gradlew ] && [ -f settings.gradle.kts ] || [ -f settings.gradle ]; then
+            echo "gradle-project=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gradle-project=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No Gradle project found. Build and test jobs are skipped."
+          fi
+
+      - name: Read toolchain source of truth
+        id: read
+        run: |
+          set -euo pipefail
+          properties="config/android/toolchain.properties"
+
+          # Minimal java.util.Properties reader: strip comments and blank lines,
+          # then return the value for an exact key match.
+          read_property() {
+            grep -E "^$1=" "$properties" | head -n 1 | cut -d'=' -f2- | tr -d '[:space:]'
+          }
+
+          java_version="$(read_property 'java.version')"
+          build_tools="$(read_property 'build.tools')"
+          compile_sdk="$(read_property 'sdk.compile')"
+          compile_sdk_minor="$(read_property 'sdk.compile.minor')"
+          ndk="$(read_property 'ndk')"
+          cmake="$(read_property 'cmake')"
+
+          for name in java_version build_tools compile_sdk compile_sdk_minor ndk cmake; do
+            if [ -z "${!name}" ]; then
+              echo "::error::'${name}' is missing from ${properties}"
+              exit 1
+            fi
+          done
+
+          # Android platforms are addressed as major.minor from API 36.1 onward,
+          # so the SDK package id must carry both components.
+          {
+            echo "java-version=${java_version}"
+            echo "build-tools=${build_tools}"
+            echo "compile-sdk-package=platforms;android-${compile_sdk}.${compile_sdk_minor}"
+            echo "ndk=${ndk}"
+            echo "cmake=${cmake}"
+          } >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build and test
+    needs: toolchain
+    if: needs.toolchain.outputs.gradle-project == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ needs.toolchain.outputs.java-version }}
+          # Gradle caching is deliberately NOT enabled here. gradle/actions owns
+          # it below; configuring both caches the same directories twice and
+          # wastes the runner's cache quota.
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        with:
+          packages: >-
+            ${{ needs.toolchain.outputs.compile-sdk-package }}
+            build-tools;${{ needs.toolchain.outputs.build-tools }}
+            ndk;${{ needs.toolchain.outputs.ndk }}
+            cmake;${{ needs.toolchain.outputs.cmake }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+        with:
+          # Only the default branch writes cache entries. Pull request runs read
+          # them, which stops an untrusted branch from poisoning the cache other
+          # builds depend on.
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Assemble debug
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon --stacktrace
+
+      - name: Upload test reports
+        # Reports are most valuable precisely when the build failed.
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: "**/build/reports/tests/**"
+          retention-days: 14
+          if-no-files-found: ignore

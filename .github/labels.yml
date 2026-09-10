@@ -1,0 +1,141 @@
+# Declarative label catalogue -- the single source of truth for repository labels.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# Automation silently misbehaves when it references a label that does not exist:
+# `actions/labeler` fails the job, and `actions/stale` cannot apply its marker
+# label. This catalogue makes label existence an explicit, reviewable fact, and
+# `labels-sync.yml` reconciles GitHub to match it.
+#
+# `scripts/validate_labels.py` fails CI if `.github/labeler.yml` or
+# `.github/workflows/stale.yml` references a label that is not defined here, so
+# the two can never drift apart.
+#
+# SYNC SEMANTICS
+# --------------
+# Reconciliation is additive and update-only: labels are created or corrected,
+# but never deleted. A label applied by hand during triage therefore survives.
+#
+# Colours are 6-digit hex WITHOUT a leading '#'.
+
+# --- Default GitHub labels ---------------------------------------------------
+# Reproduced exactly as they already exist in the repository so that a sync run
+# is a no-op for them.
+- name: bug
+  color: d73a4a
+  description: Something isn't working
+
+- name: documentation
+  color: 0075ca
+  description: Improvements or additions to documentation
+
+- name: duplicate
+  color: cfd3d7
+  description: This issue or pull request already exists
+
+- name: enhancement
+  color: a2eeef
+  description: New feature or request
+
+- name: good first issue
+  color: 7057ff
+  description: Good for newcomers
+
+- name: help wanted
+  color: 008672
+  description: Extra attention is needed
+
+- name: invalid
+  color: e4e669
+  description: This doesn't seem right
+
+- name: question
+  color: d876e3
+  description: Further information is requested
+
+- name: wontfix
+  color: ffffff
+  description: This will not be worked on
+
+- name: accessibility
+  color: f143ab
+  description: Barrier affecting people with disabilities
+
+# --- Area labels -------------------------------------------------------------
+# Applied automatically by `.github/labeler.yml` based on the paths a pull
+# request touches. Every name here must match an entry in that file.
+- name: "area: build"
+  color: 1d76db
+  description: Gradle build, toolchain, or dependency configuration
+
+- name: "area: ci"
+  color: 1d76db
+  description: GitHub Actions workflows and repository automation
+
+- name: "area: content"
+  color: 5319e7
+  description: Game data derived from the System Reference Document
+
+- name: "area: docs"
+  color: 0075ca
+  description: Documentation, ADRs, and repository guidance
+
+- name: "area: engine"
+  color: 478cbf
+  description: Godot engine integration and the GDScript game core
+
+- name: "area: gameplay"
+  color: 5319e7
+  description: Rules, simulation, and gameplay systems
+
+- name: "area: localization"
+  color: 006b75
+  description: Translations and locale-specific behaviour
+
+- name: "area: security"
+  color: b60205
+  description: Security policy, threat model, and hardening
+
+- name: "area: ui"
+  color: c2e0c6
+  description: User interface, layout, and input handling
+
+# --- Workflow and triage labels ---------------------------------------------
+- name: dependencies
+  color: 0366d6
+  description: Dependency updates
+
+- name: github-actions
+  # Quoted deliberately: an all-digit colour such as 000000 is parsed as the
+  # integer 0 by a YAML loader, which then fails validation and would be sent to
+  # the API as "0". Any future all-digit colour must be quoted for the same reason.
+  color: "000000"
+  description: Updates to GitHub Actions dependencies
+
+- name: breaking-change
+  color: b60205
+  description: Introduces an incompatible behaviour change
+
+- name: needs-triage
+  color: ededed
+  description: Awaiting initial assessment
+
+- name: pinned
+  color: 0e8a16
+  description: Exempt from automatic stale closure
+
+- name: legal
+  color: fbca04
+  description: Licensing, attribution, and third-party notices
+
+# --- Stale automation labels -------------------------------------------------
+# Referenced by `.github/workflows/stale.yml`. These are the labels the original
+# workflow expected but which did not exist, so the workflow could not mark
+# anything.
+- name: no-issue-activity
+  color: eeeeee
+  description: Marked stale after a prolonged period without activity
+
+- name: no-pr-activity
+  color: eeeeee
+  description: Marked stale after a prolonged period without activity

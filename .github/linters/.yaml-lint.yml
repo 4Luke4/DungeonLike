@@ -1,0 +1,33 @@
+# yamllint configuration for super-linter.
+
+extends: default
+
+rules:
+  # Disabled: GitHub Actions workflows and issue forms legitimately carry long
+  # single-line values (expressions, messages, glob lists) that cannot be wrapped
+  # without changing their meaning.
+  line-length: disable
+
+  # Not required. A leading '---' adds nothing to single-document files, and
+  # GitHub's own workflow templates omit it.
+  document-start: disable
+
+  # YAML 1.1 treats `on`, `off`, `yes` and `no` as booleans. GitHub Actions
+  # requires a literal `on:` key for triggers, so key truthiness is not checked.
+  truthy:
+    allowed-values: ["true", "false"]
+    check-keys: false
+
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1
+
+  braces:
+    # `${{ ... }}` expressions are written with inner spaces, which is the
+    # conventional GitHub Actions style.
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  indentation:
+    spaces: 2
+    indent-sequences: true

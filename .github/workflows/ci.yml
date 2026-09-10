@@ -1,0 +1,132 @@
+name: CI
+
+# Consolidated repository checks. This workflow replaces the former
+# `super-linter.yml`; keeping linting, repository invariants and commit
+# conventions as jobs of one workflow means a single checkout strategy, one
+# status surface, and no overlapping runs competing for the same cache.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Read-only by default. Any job needing more must opt in explicitly, so a change
+# to one job cannot silently widen the privileges of the others.
+permissions:
+  contents: read
+
+# Supersede in-flight runs for the same ref. `main` is excluded from
+# cancellation so that the history of pushes to the default branch stays intact.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required for super-linter to publish its status check.
+      statuses: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          # super-linter needs full history to compute the changed-file set.
+          fetch-depth: 0
+          # The linter never pushes; leaving credentials in the checkout would
+          # expose a writable token to every tool it runs.
+          persist-credentials: false
+
+      - name: Run super-linter
+        uses: super-linter/super-linter/slim@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Lint the whole repository. It is small, and scoping to changed files
+          # lets a pre-existing violation survive indefinitely.
+          VALIDATE_ALL_CODEBASE: true
+          # DEFAULT_BRANCH is deliberately NOT set: super-linter derives it from
+          # the GitHub context, and setting it is documented as unnecessary here.
+          #
+          # Setting any VALIDATE_* variable to true switches super-linter to
+          # opt-in mode, so only the linters listed below run. Kotlin is absent
+          # because no Kotlin source exists yet; it is enabled by the pull request
+          # that introduces the host module.
+          #
+          # GDScript is NOT listed because super-linter does not support it. The
+          # game core will therefore need a separate `gdtoolkit` step; see
+          # docs/architecture/adr/0002-engine-and-ui-architecture.md.
+          VALIDATE_GITHUB_ACTIONS: true
+          VALIDATE_YAML: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_JSON: true
+          VALIDATE_BASH: true
+          VALIDATE_PYTHON_RUFF: true
+          VALIDATE_GIT_MERGE_CONFLICT_MARKERS: true
+          # Defence in depth against committing credentials, which SECURITY.md
+          # forbids outright.
+          VALIDATE_GITLEAKS: true
+          # No pull request comment is posted. Doing so needs `pull-requests:
+          # write`, and granting a linter permission to write to pull requests is
+          # a poor trade for a convenience: the annotations and the job summary
+          # already carry the findings.
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
+
+  validate:
+    name: Validate repository invariants
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install validation dependencies
+        # PyYAML is the only third-party requirement, used to parse the label
+        # catalogue. Pinned so a compromised or broken release cannot silently
+        # change what CI enforces.
+        run: python -m pip install --require-hashes --no-deps -r scripts/requirements.txt
+
+      - name: Validate version consistency
+        run: python scripts/validate_version.py
+
+      - name: Validate toolchain source of truth
+        run: python scripts/validate_toolchain.py
+
+      - name: Validate third-party attribution
+        run: python scripts/validate_attribution.py
+
+      - name: Validate label integrity
+        run: python scripts/validate_labels.py
+
+  commit-messages:
+    name: Commit messages
+    # Pull requests only: this validates the commits a pull request proposes to
+    # add. On a push to `main` the commits have already been merged, so failing
+    # there would report a problem nobody can fix.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          # The full range between the base and the head is needed to enumerate
+          # every commit the pull request introduces.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate commit messages
+        # Dependabot is exempt by policy. The guard is here as well as in the
+        # script so the job is skipped outright rather than doing needless work.
+        if: github.actor != 'dependabot[bot]'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python scripts/validate_commits.py "${BASE_SHA}..${HEAD_SHA}"

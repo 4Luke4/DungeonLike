@@ -1,0 +1,49 @@
+version: 2
+
+# Dependabot configuration.
+#
+# ECOSYSTEM SCOPE
+# ---------------
+# Only `github-actions` is enabled. `gradle` is deliberately absent: Dependabot
+# raises a persistent job error when an ecosystem is configured but no manifest
+# exists, and this repository has no Gradle project yet. It is added in the pull
+# request that introduces those manifests.
+#
+# No `nuget` ecosystem is planned. The game core is GDScript on the standard
+# Godot build, so the project has no .NET dependency graph (ADR 0002).
+#
+# Every label referenced below is defined in `.github/labels.yml`.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    # A low cap keeps the review queue honest: a backlog of open dependency pull
+    # requests tends to get rubber-stamped, which is exactly how a malicious
+    # action update slips in.
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+      - "area: ci"
+    commit-message:
+      # Matches the Conventional Commits convention enforced by `ci.yml`.
+      # Dependabot is exempt from that check, but keeping the history uniform
+      # means `git log` and changelog tooling stay usable.
+      prefix: "ci"
+      include: scope
+    # Security updates are never grouped or delayed; they arrive as soon as an
+    # advisory lands, regardless of the weekly schedule above.
+    groups:
+      # Group routine, low-risk updates into one pull request so CI runs once and
+      # review effort is spent on the diff that matters. Major bumps are excluded
+      # so they arrive individually and are reviewed on their own merits.
+      github-actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch

@@ -1,22 +1,45 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler
-
 name: Labeler
-on: [pull_request_target]
+
+# Applies area labels to a pull request based on the paths it touches.
+# Rules live in `.github/labeler.yml`; every label they use is defined in
+# `.github/labels.yml` and verified by `scripts/validate_labels.py`.
+
+# SECURITY BOUNDARY
+# -----------------
+# `pull_request_target` runs in the context of the base repository and therefore
+# has access to a writable token, which `pull_request` does not for fork pull
+# requests. That token is what makes labelling forks possible at all.
+#
+# The danger of `pull_request_target` is checking out and executing untrusted
+# head code with those privileges. This workflow does NOT check out any code:
+# `actions/labeler` reads the changed-file list from the API. Do not add an
+# `actions/checkout` step, and do not add any step that runs code from the pull
+# request branch.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: labeler-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   label:
-
+    name: Apply area labels
     runs-on: ubuntu-latest
     permissions:
+      # Needed to read the labeler configuration from the base repository.
       contents: read
       pull-requests: write
-
     steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Apply labels
+        uses: actions/labeler@v7
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          # Labels are added but never removed, so a label applied by hand during
+          # triage is not stripped when the contributor pushes another commit.
+          sync-labels: false

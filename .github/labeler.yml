@@ -1,0 +1,92 @@
+# Path-based pull request labelling, consumed by `actions/labeler`.
+#
+# CONSTRAINT: every label named here MUST exist in `.github/labels.yml`.
+# `scripts/validate_labels.py` enforces this in CI, because `actions/labeler`
+# fails the job when asked to apply a label the repository does not have.
+#
+# Syntax is labeler v5+: a list of match objects per label, where
+# `changed-files` / `any-glob-to-any-file` matches when ANY changed file matches
+# ANY listed glob.
+
+"area: ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/labeler.yml"
+          - ".github/labels.yml"
+          - ".github/dependabot.yml"
+          - "scripts/**"
+
+"area: build":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "config/**"
+          - "gradle/**"
+          - "gradlew"
+          - "gradlew.bat"
+          - "**/*.gradle"
+          - "**/*.gradle.kts"
+          - "gradle.properties"
+          - "settings.gradle*"
+          - "VERSION"
+
+"area: docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/PULL_REQUEST_TEMPLATE.md"
+
+"area: engine":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.gd"
+          - "**/*.gdshader"
+          - "**/project.godot"
+          - "**/*.tscn"
+          - "**/*.tres"
+          - "**/export_presets.cfg"
+
+"area: ui":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.kt"
+          - "**/res/layout/**"
+          - "**/res/drawable*/**"
+          - "**/res/values/themes*.xml"
+
+"area: localization":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/res/values-*/strings.xml"
+          - "**/res/values/strings.xml"
+          - "**/locale/**"
+          - "**/*.po"
+          - "**/*.csv"
+
+"area: content":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "content/**"
+          - "**/data/srd/**"
+
+"area: security":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "SECURITY.md"
+          - "docs/architecture/THREAT_MODEL.md"
+          - "config/build-tool-security.versions"
+          - ".github/workflows/codeql.yml"
+
+legal:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "LICENSE.md"
+          - "THIRD_PARTY_NOTICES.md"
+
+accessibility:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/res/values/strings.xml"
+          - "**/res/xml/accessibility*.xml"
