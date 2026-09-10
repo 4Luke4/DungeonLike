@@ -29,3 +29,10 @@ MD041: false
 # available for syntax highlighting.
 MD046:
   style: fenced
+
+# MD060 table-column-style: disabled. Padding every cell so the pipes line up in
+# the source has no effect on how GitHub renders a table, breaks again on the
+# next edit, and is ambiguous for emoji and non-ASCII text whose display width
+# does not match its character count. Table *correctness* is still enforced by
+# the other MD05x rules.
+MD060: false

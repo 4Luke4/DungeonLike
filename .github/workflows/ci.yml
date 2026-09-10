@@ -64,6 +64,11 @@ jobs:
           # Defence in depth against committing credentials, which SECURITY.md
           # forbids outright.
           VALIDATE_GITLEAKS: true
+          # No pull request comment is posted. Doing so needs `pull-requests:
+          # write`, and granting a linter permission to write to pull requests is
+          # a poor trade for a convenience: the annotations and the job summary
+          # already carry the findings.
+          ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
 
   validate:
     name: Validate repository invariants

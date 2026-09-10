@@ -32,6 +32,14 @@ wording published in the corresponding localized edition of the document.
 > locale, not only in this repository file. They must not be reworded, abridged, or
 > machine-translated.
 
+<!--
+  markdownlint-disable MD034
+  MD034 (no-bare-urls) is suppressed for the attribution statements below.
+  The licence requires these statements to appear as published, so the URLs
+  inside them must not be rewritten as Markdown links or wrapped in angle
+  brackets. Satisfying a style rule is not a reason to alter a legal notice.
+-->
+
 ### English (`en`, default)
 
 > This work includes material from the System Reference Document 5.2.1
@@ -71,6 +79,8 @@ wording published in the corresponding localized edition of the document.
 > https://www.dndbeyond.com/srd. Das SRD 5.2.1 ist lizenziert gemäß Creative
 > Commons Namensnennung 4.0 International Public License (verfügbar unter
 > https://creativecommons.org/licenses/by/4.0/legalcode.de).
+
+<!-- markdownlint-enable MD034 -->
 
 ### Compliance constraints
 

@@ -33,6 +33,8 @@ updates:
       # means `git log` and changelog tooling stay usable.
       prefix: "ci"
       include: scope
+    # Security updates are never grouped or delayed; they arrive as soon as an
+    # advisory lands, regardless of the weekly schedule above.
     groups:
       # Group routine, low-risk updates into one pull request so CI runs once and
       # review effort is spent on the diff that matters. Major bumps are excluded
@@ -42,5 +44,3 @@ updates:
         update-types:
           - minor
           - patch
-    # Security updates are never grouped or delayed; they arrive as soon as an
-    # advisory lands, regardless of the weekly schedule above.
