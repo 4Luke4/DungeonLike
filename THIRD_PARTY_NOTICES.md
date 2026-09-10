@@ -33,12 +33,17 @@ wording published in the corresponding localized edition of the document.
 > machine-translated.
 
 <!--
-  markdownlint-disable MD034
-  MD034 (no-bare-urls) is suppressed for the attribution statements below.
-  The licence requires these statements to appear as published, so the URLs
-  inside them must not be rewritten as Markdown links or wrapped in angle
-  brackets. Satisfying a style rule is not a reason to alter a legal notice.
+  The directive below suppresses MD034 (no-bare-urls) for the attribution
+  statements that follow. The licence requires those statements to appear as
+  published, so the URLs inside them must not be rewritten as Markdown links or
+  wrapped in angle brackets. Satisfying a style rule is not a reason to alter a
+  legal notice.
+
+  Note: markdownlint only honours a directive comment whose entire content is
+  the directive itself, so it must stand alone below rather than be embedded in
+  this explanatory comment.
 -->
+<!-- markdownlint-disable MD034 -->
 
 ### English (`en`, default)
 
