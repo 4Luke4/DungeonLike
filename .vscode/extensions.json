@@ -10,7 +10,7 @@
 
   "recommendations": [
     "geequlim.godot-tools",
-    "fwcd.kotlin",
+    "JetBrains.kotlin-server",
     "vscjava.vscode-gradle",
     "redhat.vscode-yaml",
     "redhat.vscode-xml",
@@ -24,7 +24,7 @@
 
   "//publishers": {
     "geequlim.godot-tools": "geequlim, not domain-verified. The reference Godot extension, linked from Godot's own docs. Provides GDScript language support, the debugger, and editor integration.",
-    "fwcd.kotlin": "fwcd, not domain-verified. Community standard for Kotlin outside IntelliJ.",
+    "JetBrains.kotlin-server": "JetBrains, domain-verified against jetbrains.com. Official Kotlin language support from the language vendor. Preferred over the unverified community extension.",
     "vscjava.vscode-gradle": "Microsoft, domain-verified. Gradle task and dependency tooling.",
     "redhat.vscode-yaml": "Red Hat, domain-verified. Schema-aware YAML for workflows and issue forms.",
     "redhat.vscode-xml": "Red Hat, domain-verified. Android manifests and resource XML.",
