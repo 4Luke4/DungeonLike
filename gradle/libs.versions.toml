@@ -7,34 +7,66 @@
 ##   * config/build-tool-security.versions -> forced pins that exist only to
 ##                                            remediate a build-tooling CVE.
 ##
-## `scripts/validate_toolchain.py` asserts that the `agp` and `kotlin` entries
-## below agree with `agp.version` / `kotlin.version` in toolchain.properties, so
-## the two files can never silently drift apart.
+## `scripts/validate_toolchain.py` asserts that the `agp`, `kotlin` and `godot`
+## entries below agree with `agp.version`, `kotlin.version` and
+## `godot.version`/`godot.channel` in toolchain.properties, so the two files can
+## never silently drift apart.
 ##
-## The catalogue is intentionally minimal: the repository does not yet contain a
-## Gradle project. Only versions that are already justified by a verified,
-## documented constraint are declared. Libraries are added alongside the module
-## that actually consumes them, so an unused entry never accumulates here.
+## The catalogue is intentionally minimal. Only versions that are already
+## justified by a verified, documented constraint are declared. Libraries are
+## added alongside the module that actually consumes them, so an unused entry
+## never accumulates here.
 
 [versions]
 # Android Gradle plugin. Supports a maximum compileSdk of API 37, which is the
 # level this project compiles against.
 agp = "9.4.0"
 
-# Kotlin. Used for the thin Android host layer (see ADR 0002); gameplay logic
-# lives in GDScript inside the Godot project.
-kotlin = "2.4.20"
+# Kotlin is deliberately absent.
+#
+# From AGP 9.0 onward Kotlin support is built into the Android Gradle plugin,
+# which carries its own Kotlin Gradle plugin. Applying
+# `org.jetbrains.kotlin.android` is not merely redundant: AGP 9 rejects it
+# outright, because it is incompatible with the new DSL. The version the build
+# compiles with is recorded in config/android/toolchain.properties, which also
+# explains why it is not forced higher than AGP's own.
+
+# Godot Engine Android library, standard (non-.NET) build.
+#
+# The coordinate version is `<godot.version>.<godot.channel>` from
+# toolchain.properties, which owns the engine pin (ADR 0002). It is declared
+# here as well, and cross-checked by validate_toolchain.py, for one reason: an
+# engine sitting in the catalogue is visible to Dependabot, whereas a coordinate
+# assembled at build time is not. The cross-check turns a Dependabot bump into a
+# deliberate, reviewed toolchain change rather than a silent engine swap.
+godot = "4.7.2.stable"
+
+# AndroidX Fragment.
+#
+# Required on the *compile* classpath because GodotActivity extends
+# FragmentActivity, and the engine's POM declares fragment at runtime scope
+# only. Pinned to the exact revision the engine itself depends on (1.8.6) rather
+# than the newest release, so the compile classpath matches the runtime
+# classpath the engine was built and tested against. This is the same reasoning
+# ADR 0003 applies to the NDK: deliberate coupling is the cheaper failure mode.
+androidx-fragment = "1.8.6"
+
+# JUnit 4. AGP's unit test source set runs on JUnit 4 by default.
+junit = "4.13.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 [libraries]
-# Deliberately empty.
-#
-# Runtime dependencies are introduced together with the source set that uses
-# them. Declaring them ahead of a consumer would create unreviewable, untested
-# surface area and would defeat Dependabot's ability to prove an update is safe.
+# The engine. Shipped inside the application as native code, which is why it is
+# resolved only from MavenCentral and verified by checksum and PGP signature
+# through gradle/verification-metadata.xml (THREAT_MODEL.md, boundary 3).
+godot = { module = "org.godotengine:godot", version.ref = "godot" }
+
+androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "androidx-fragment" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
 
 [bundles]
-# Deliberately empty; see [libraries].
+# Deliberately empty: with a single module there is no repeated dependency set
+# worth naming, and a bundle of one is just indirection.

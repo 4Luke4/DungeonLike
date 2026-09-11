@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DungeonLike application manifest.
+
+    NO PERMISSIONS ARE DECLARED, AND THAT IS DELIBERATE.
+    The game is single-player, offline, collects no personal data and operates no
+    backend. That property is what removes an entire class of risk from the
+    threat model, so a permission must never be added casually: each one has to
+    be justified in review and in the release readiness gates.
+
+    BACKUP IS DISABLED, AND THAT IS ALSO DELIBERATE.
+    android:allowBackup="false" switches off the backup and restore
+    infrastructure, and data_extraction_rules.xml independently excludes every
+    domain from both cloud backup and device-to-device transfer. Both controls
+    are set, so the outcome does not depend on how the two interact.
+
+    The reason is the one already recorded in the threat model: no save format
+    exists yet, so there is nothing whose version could be checked on restore,
+    and restoring data written by another build into a fresh install is exactly
+    the corrupt-input case that boundary 5 requires to fail safe. Revisit
+    together with the save system, not before.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        The engine renders with Vulkan where available and OpenGL ES otherwise.
+        Declared as not required so that the store does not exclude a device that
+        can still run the OpenGL ES renderer.
+    -->
+    <uses-feature
+        android:name="android.hardware.vulkan.version"
+        android:required="false" />
+
+    <!--
+        Mouse and physical keyboard are fully supported, and touch is not
+        required. By default an application implicitly requires a touchscreen,
+        which would exclude devices driven entirely by mouse and keyboard even
+        though the game supports them.
+    -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:localeConfig="@xml/locale_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.DungeonLike">
+
+        <!--
+            The single engine host. Godot supports only one engine instance per
+            process, so there is exactly one such Activity and it is the launcher
+            entry point.
+
+            android:configChanges is the mitigation Godot's Android library
+            documentation prescribes: automatic resizing and orientation
+            configuration events are NOT supported by the engine and may cause a
+            crash, so the Activity must declare that it handles them itself
+            rather than being destroyed and recreated underneath a live engine.
+            Narrowing this list will reintroduce that crash.
+
+            android:screenOrientation is deliberately NOT set. Godot's
+            documentation offers two mitigations: lock the orientation, or
+            declare configChanges. This app takes the second, because it has to
+            adapt to phones and tablets in both orientations. Declaring a fixed
+            orientation would also be ignored on recent Android releases, which
+            are moving to a model where apps adapt instead.
+        -->
+        <activity
+            android:name=".DungeonLikeActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|density|fontScale|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.DungeonLike">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

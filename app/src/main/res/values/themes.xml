@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Host theme.
+
+    Deliberately a platform theme rather than an AppCompat one: the host extends
+    FragmentActivity, not AppCompatActivity, and pulling in AppCompat would add a
+    UI toolkit that nothing draws with. The engine renders every pixel the player
+    sees (ADR 0002), so this theme exists only to describe the window the engine
+    draws into.
+-->
+<resources>
+    <style name="Theme.DungeonLike" parent="android:Theme.DeviceDefault.NoActionBar.Fullscreen">
+        <!--
+            The window background is visible for the instant between the window
+            being shown and the engine's first frame. Matching it to the game's
+            own background avoids a bright flash on launch.
+        -->
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:windowContentTransitions">false</item>
+    </style>
+</resources>

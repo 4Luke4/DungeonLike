@@ -63,7 +63,9 @@ Two rules make this durable:
 1. **No consumer restates a value owned here.** Workflows and build scripts read
    the properties file. `scripts/validate_toolchain.py` fails CI if a workflow
    hardcodes a value the file owns, and cross-checks that
-   `gradle/libs.versions.toml` agrees on the AGP and Kotlin versions.
+   `gradle/libs.versions.toml` agrees on the AGP version. (Kotlin is no longer
+   independently pinned: from AGP 9 onward the plugin provides Kotlin itself.
+   See ADR 0005.)
 2. **Product invariants are asserted, not merely documented.** The same script
    fails if `minSdk` moves off 34, if the ABI list is not exactly `arm64-v8a`, or
    if `compileSdk` drops below `targetSdk`.

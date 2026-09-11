@@ -110,21 +110,44 @@ The game runs on the Godot Engine, licensed under the **MIT License**.
 
 - Upstream: <https://github.com/godotengine/godot>
 - License: <https://github.com/godotengine/godot/blob/master/LICENSE.txt>
+- Shipped artifact: `org.godotengine:godot`, resolved from MavenCentral. The
+  published POM declares the MIT License, and the AAR is distributed with a PGP
+  signature and SHA-256/SHA-512 checksums, which Gradle dependency verification
+  checks on every build.
 
 Godot bundles a number of third-party components under their own permissive
 licenses. Its full, authoritative notice file is `COPYRIGHT.txt` in the engine
 repository.
 
-> **Pending obligation.** The engine is not yet integrated (see
-> [ADR 0002](docs/architecture/adr/0002-engine-and-ui-architecture.md)). When the
-> engine and its export templates are first shipped, the applicable MIT notice and
-> the relevant entries from Godot's `COPYRIGHT.txt` must be reproduced here **and**
-> surfaced in the in-app legal screen, because they are distributed in the
-> application binary.
+> **Obligation now live.** The engine ships inside the application as of the
+> engine integration work (ADR 0002, ADR 0005), so its MIT notice and the
+> relevant entries from Godot's `COPYRIGHT.txt` are distributed in the
+> application binary. They must be surfaced in the in-app legal screen, in the
+> user's active locale, when that screen is built. This is tracked as a release
+> gate in `docs/release/READINESS.md`; no release may ship without it.
 
 ---
 
-## 3. Build-time and development tooling
+## 3. Shipped runtime dependencies
+
+Components distributed inside the application binary. Each one creates a notice
+obligation in the shipped product, so a new entry here is added in the same pull
+request that introduces the dependency.
+
+| Component | Role | License |
+| --------- | ---- | ------- |
+| `org.godotengine:godot` | Game engine, embedded as an Android library (see section 2) | MIT |
+| `androidx.fragment:fragment` | Base activity type the engine's host component extends | Apache-2.0 |
+| `androidx.documentfile:documentfile` | Transitive dependency of the engine | Apache-2.0 |
+| `org.jetbrains.kotlin:kotlin-stdlib` | Kotlin standard library, used by the host and by the engine's Java layer | Apache-2.0 |
+
+Transitive dependencies of the entries above are covered by their own upstream
+notices; the authoritative, build-time-accurate set is the resolved dependency
+graph recorded in `gradle/verification-metadata.xml`.
+
+---
+
+## 4. Build-time and development tooling
 
 Tooling that is used to build, lint, or verify the project but is **not**
 distributed in the application binary does not create a notice obligation in the
@@ -136,14 +159,13 @@ shipped product. It is nonetheless recorded here for supply-chain transparency:
 | Gradle | Build system | Apache-2.0 |
 | Kotlin | Host-layer language and compiler | Apache-2.0 |
 | Android SDK, Build Tools, NDK, CMake | Android toolchain | Android SDK Terms of Service / per-component |
+| Godot Engine editor | Exports the game pack in CI; the editor binary itself is not shipped | MIT |
+| `gdtoolkit` (`gdlint`, `gdformat`) | GDScript lint and format checks | MIT |
 | GitHub Actions used in CI | Automation | see each action's repository |
-
-Runtime dependencies are added to this table as they are introduced, because
-those **do** ship to users.
 
 ---
 
-## 4. Trademarks
+## 5. Trademarks
 
 All product names, logos, and brands referenced in this file are the property of
 their respective owners. Their use is for identification only and does not imply

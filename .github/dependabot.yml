@@ -4,13 +4,23 @@ version: 2
 #
 # ECOSYSTEM SCOPE
 # ---------------
-# Only `github-actions` is enabled. `gradle` is deliberately absent: Dependabot
-# raises a persistent job error when an ecosystem is configured but no manifest
-# exists, and this repository has no Gradle project yet. It is added in the pull
-# request that introduces those manifests.
+# `github-actions` and `gradle` are both enabled. The Gradle ecosystem became
+# valid once the build manifests landed; configuring it earlier would have raised
+# a persistent job error, because Dependabot reports an ecosystem with no
+# manifest as a failure.
 #
 # No `nuget` ecosystem is planned. The game core is GDScript on the standard
 # Godot build, so the project has no .NET dependency graph (ADR 0002).
+#
+# INTERACTION WITH DEPENDENCY VERIFICATION
+# ----------------------------------------
+# Gradle dependency verification is enabled, so `gradle/verification-metadata.xml`
+# pins a checksum and signature for every resolved artifact. A Dependabot update
+# changes the resolved set and therefore FAILS the build until the metadata is
+# regenerated. That is the intended behaviour, not a defect: it is what stops a
+# substituted artifact from entering the build unnoticed. Refresh the metadata
+# through the `bootstrap` job in `android.yml` and commit the result onto the
+# Dependabot branch. The trade-off is recorded in ADR 0005.
 #
 # Every label referenced below is defined in `.github/labels.yml`.
 
@@ -43,6 +53,44 @@ updates:
       # review effort is spent on the diff that matters. Major bumps are excluded
       # so they arrive individually and are reviewed on their own merits.
       github-actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: gradle
+    # The version catalogue and build scripts both live at the repository root,
+    # so a single directory covers the whole build.
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    # Deliberately lower than the Actions cap. Every Gradle update also requires
+    # regenerated verification metadata before it can go green, so a queue of
+    # open updates costs real work rather than a click.
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - "area: build"
+    commit-message:
+      prefix: "build"
+      include: scope
+    ignore:
+      # The engine version is owned by config/android/toolchain.properties and is
+      # cross-checked against the catalogue by validate_toolchain.py. Bumping the
+      # engine changes the native code shipped to users, has to be re-validated
+      # against the documented Android library constraints (ADR 0002 and 0003),
+      # and may need a superseding ADR. That is a deliberate human decision, not
+      # a dependency bump, so Dependabot is kept out of it.
+      - dependency-name: org.godotengine:godot
+      # Owned by the same file, and a change to either invalidates the toolchain
+      # baseline recorded in ADR 0003.
+      - dependency-name: com.android.tools.build:gradle
+      - dependency-name: org.jetbrains.kotlin:*
+    groups:
+      gradle-minor-patch:
         applies-to: version-updates
         update-types:
           - minor

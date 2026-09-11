@@ -51,12 +51,10 @@ jobs:
           # the GitHub context, and setting it is documented as unnecessary here.
           #
           # Setting any VALIDATE_* variable to true switches super-linter to
-          # opt-in mode, so only the linters listed below run. Kotlin is absent
-          # because no Kotlin source exists yet; it is enabled by the pull request
-          # that introduces the host module.
+          # opt-in mode, so only the linters listed below run.
           #
           # GDScript is NOT listed because super-linter does not support it. The
-          # game core will therefore need a separate `gdtoolkit` step; see
+          # game core is covered by the dedicated `gdscript` job below; see
           # docs/architecture/adr/0002-engine-and-ui-architecture.md.
           VALIDATE_GITHUB_ACTIONS: true
           VALIDATE_YAML: true
@@ -64,6 +62,7 @@ jobs:
           VALIDATE_JSON: true
           VALIDATE_BASH: true
           VALIDATE_PYTHON_RUFF: true
+          VALIDATE_KOTLIN: true
           VALIDATE_GIT_MERGE_CONFLICT_MARKERS: true
           # Defence in depth against committing credentials, which SECURITY.md
           # forbids outright.
@@ -73,6 +72,37 @@ jobs:
           # a poor trade for a convenience: the annotations and the job summary
           # already carry the findings.
           ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
+
+  gdscript:
+    name: GDScript lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install gdtoolkit
+        # Hash-pinned, transitive dependencies included, for the same reason as
+        # the validation scripts: a retagged or compromised release must not be
+        # able to change what CI enforces.
+        run: python -m pip install --require-hashes -r .github/linters/gdtoolkit-requirements.txt
+
+      - name: Lint GDScript
+        # This is the coverage ADR 0002 committed to when it accepted that
+        # neither CodeQL nor super-linter can analyse the game core. It is the
+        # only automated check the engine-side code gets, so it is not optional.
+        run: gdlint game
+
+      - name: Check GDScript formatting
+        # `--check` reports differences without rewriting files, so CI never
+        # silently reformats a contributor's work.
+        run: gdformat --check game
 
   validate:
     name: Validate repository invariants

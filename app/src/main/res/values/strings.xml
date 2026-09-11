@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Host-level string resources.
+
+    There is deliberately almost nothing here. ADR 0002 gives the engine
+    ownership of everything the player sees, including menus, settings and error
+    text, so player-facing strings are localized inside the Godot project rather
+    than as Android resources. `res/xml/locale_config.xml` is what declares the
+    five supported languages to the system.
+
+    If a genuinely host-level, user-visible string is ever added, it must be
+    added for English, Italian, Spanish, French and German in the same change.
+    A locale that silently falls back to English is a defect, not a partial
+    feature.
+
+    Note that engine start-up failure is NOT handled here: the engine detects it
+    and shows its own localized alert before any host code could react.
+-->
+<resources>
+    <!-- Launcher label. A proper noun, so it is identical in every locale. -->
+    <string name="app_name" translatable="false">DungeonLike</string>
+</resources>

@@ -28,6 +28,7 @@
           - "**/*.gradle.kts"
           - "gradle.properties"
           - "settings.gradle*"
+          - "**/proguard-rules.pro"
           - "VERSION"
 
 "area: docs":
@@ -41,6 +42,7 @@
 "area: engine":
   - changed-files:
       - any-glob-to-any-file:
+          - "game/**"
           - "**/*.gd"
           - "**/*.gdshader"
           - "**/project.godot"
@@ -48,12 +50,19 @@
           - "**/*.tres"
           - "**/export_presets.cfg"
 
+"area: gameplay":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "game/scripts/**"
+
 "area: ui":
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.kt"
+          - "game/scenes/**"
           - "**/res/layout/**"
           - "**/res/drawable*/**"
+          - "**/res/mipmap*/**"
           - "**/res/values/themes*.xml"
 
 "area: localization":
@@ -61,6 +70,7 @@
       - any-glob-to-any-file:
           - "**/res/values-*/strings.xml"
           - "**/res/values/strings.xml"
+          - "**/res/xml/locale_config.xml"
           - "**/locale/**"
           - "**/*.po"
           - "**/*.csv"

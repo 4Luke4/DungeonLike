@@ -1,0 +1,49 @@
+; DungeonLike -- Godot project.
+;
+; The engine owns everything the player sees, including menus and adaptive
+; phone/tablet layout (ADR 0002). This project is exported to a single
+; `game.pck` by the `engine-pack` job in .github/workflows/android.yml and
+; loaded by the Kotlin host through `--main-pack`.
+;
+; The engine version is pinned in config/android/toolchain.properties, which is
+; also where the Maven coordinate of the Android library comes from. Keep
+; `config/features` in step with it when the engine is upgraded.
+
+config_version=5
+
+[application]
+
+config/name="DungeonLike"
+config/description="A roguelike dungeon crawler built on SRD 5.2.1 reference data."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+
+[display]
+
+; Adaptive layout is expressed inside the engine. `canvas_items` with an
+; `expand` aspect keeps controls at a consistent physical size while handing the
+; extra space on a tablet to the layout, rather than letterboxing a phone-shaped
+; viewport onto a larger screen.
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+; Any orientation the user's device allows. The host manifest deliberately sets
+; no android:screenOrientation, taking Godot's other documented mitigation --
+; handling the configuration change in the Activity -- so the engine must accept
+; every orientation rather than assume a locked one.
+window/handheld/orientation="sensor"
+
+[rendering]
+
+; The mobile renderer is the appropriate target for the phones and tablets this
+; ships to; the desktop-oriented method would cost performance for features the
+; game does not use.
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+
+; Required for Android, per Godot's Android export documentation: without it the
+; importer does not produce the compressed texture formats Android devices can
+; sample directly.
+textures/vram_compression/import_etc2_astc=true

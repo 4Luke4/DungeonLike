@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Launcher icon foreground: an original geometric dungeon archway.
+
+    Drawn as a vector rather than shipped as raster assets so the icon stays
+    reviewable in a diff, scales to every density without a binary per bucket,
+    and carries unambiguous provenance (CONTRIBUTING.md rule 5).
+
+    The 108dp canvas is the adaptive-icon standard; the inner 72dp is the
+    guaranteed-visible safe zone, so the artwork stays within roughly 27dp of
+    each edge.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Archway: a rounded opening standing on two piers. -->
+    <path
+        android:fillColor="#E8D8A0"
+        android:pathData="M36,78 L36,52 A18,18 0 0 1 72,52 L72,78 L64,78 L64,52 A10,10 0 0 0 44,52 L44,78 Z" />
+
+    <!-- Threshold step. -->
+    <path
+        android:fillColor="#E8D8A0"
+        android:pathData="M32,78 L76,78 L76,84 L32,84 Z" />
+
+    <!-- Keystone. -->
+    <path
+        android:fillColor="#C9A227"
+        android:pathData="M50,30 L58,30 L60,38 L48,38 Z" />
+</vector>

@@ -12,9 +12,9 @@ Enforced invariants:
 1. Every required key is present, and each value matches its expected shape.
 2. Product invariants hold: minSdk is 34, and arm64-v8a is the only ABI.
 3. compileSdk is not lower than targetSdk, and both are at least minSdk.
-4. ``gradle/libs.versions.toml`` agrees with the AGP and Kotlin versions declared
-   here, so the catalogue and the toolchain cannot diverge.
-5. No workflow hardcodes a value this file owns.
+4. ``gradle/libs.versions.toml`` agrees with the AGP, Kotlin and Godot versions
+   declared here, so the catalogue and the toolchain cannot diverge.
+5. No workflow or Gradle build script hardcodes a value this file owns.
 """
 
 from __future__ import annotations
@@ -29,6 +29,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 TOOLCHAIN_PATH = Path("config/android/toolchain.properties")
 CATALOG_PATH = Path("gradle/libs.versions.toml")
 WORKFLOW_DIR = Path(".github/workflows")
+
+# Gradle build scripts are checked alongside workflows: they became a second way
+# to restate a toolchain value the moment the build landed, and a value copied
+# into a build script drifts exactly as silently as one copied into a workflow.
+BUILD_SCRIPT_GLOBS = ("*.gradle.kts", "*/*.gradle.kts", "gradle.properties")
 
 # key -> (regex the value must match, human-readable description)
 REQUIRED_KEYS: dict[str, tuple[str, str]] = {
@@ -77,57 +82,136 @@ def check_catalog(root: Path, properties: dict[str, str]) -> list[str]:
         return [f"{CATALOG_PATH} is missing"]
 
     catalog = catalog_file.read_text(encoding="utf-8")
-    for catalog_key, property_key in (("agp", "agp.version"), ("kotlin", "kotlin.version")):
-        expected = properties.get(property_key)
-        if expected is None:
-            continue
-        match = re.search(
-            rf'^{re.escape(catalog_key)}\s*=\s*"([^"]+)"', catalog, re.MULTILINE
-        )
+
+    expected_agp = properties.get("agp.version")
+    if expected_agp is not None:
+        match = re.search(r'^agp\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
         if match is None:
-            errors.append(f"{CATALOG_PATH} does not declare a '{catalog_key}' version")
-        elif match.group(1) != expected:
+            errors.append(f"{CATALOG_PATH} does not declare an 'agp' version")
+        elif match.group(1) != expected_agp:
             errors.append(
-                f"{CATALOG_PATH} declares {catalog_key} = {match.group(1)!r} but "
-                f"{TOOLCHAIN_PATH} declares {property_key} = {expected!r}"
+                f"{CATALOG_PATH} declares agp = {match.group(1)!r} but "
+                f"{TOOLCHAIN_PATH} declares agp.version = {expected_agp!r}"
+            )
+
+    # Kotlin is checked only if the catalogue declares it. From AGP 9 onward
+    # Kotlin support is built into the Android Gradle plugin, so the catalogue
+    # has no Kotlin entry to keep in step; the guard remains so that a future
+    # re-introduction cannot silently disagree with the toolchain file.
+    expected_kotlin = properties.get("kotlin.version")
+    kotlin_match = re.search(r'^kotlin\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
+    if (
+        expected_kotlin is not None
+        and kotlin_match is not None
+        and kotlin_match.group(1) != expected_kotlin
+    ):
+        errors.append(
+            f"{CATALOG_PATH} declares kotlin = {kotlin_match.group(1)!r} but "
+            f"{TOOLCHAIN_PATH} declares kotlin.version = {expected_kotlin!r}"
+        )
+
+    # AGP 9 rejects the standalone Kotlin Android plugin outright: it is
+    # incompatible with the new DSL, and applying it fails the build with an
+    # error that does not obviously point back to the catalogue. Catching the
+    # declaration here turns that into a clear message.
+    #
+    # Comment lines are skipped: the catalogue explains *why* the plugin is
+    # absent, and that explanation must not trip the check that enforces it.
+    declarations = "\n".join(
+        line for line in catalog.splitlines() if not line.lstrip().startswith("#")
+    )
+    if "org.jetbrains.kotlin.android" in declarations:
+        errors.append(
+            f"{CATALOG_PATH} declares the 'org.jetbrains.kotlin.android' plugin, "
+            "which AGP 9 rejects: Kotlin support is built into the Android Gradle "
+            "plugin. Remove the plugin entry."
+        )
+
+    # The engine's Maven coordinate is `<godot.version>.<godot.channel>`. It is
+    # declared in the catalogue so the engine stays visible to Dependabot, and
+    # cross-checked here so that visibility cannot turn into a silent swap of the
+    # native code shipped inside the application.
+    engine_version = properties.get("godot.version")
+    engine_channel = properties.get("godot.channel")
+    if engine_version and engine_channel:
+        expected_coordinate = f"{engine_version}.{engine_channel}"
+        match = re.search(r'^godot\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
+        if match is None:
+            errors.append(f"{CATALOG_PATH} does not declare a 'godot' version")
+        elif match.group(1) != expected_coordinate:
+            errors.append(
+                f"{CATALOG_PATH} declares godot = {match.group(1)!r} but "
+                f"{TOOLCHAIN_PATH} declares godot.version/godot.channel = "
+                f"{expected_coordinate!r}"
             )
     return errors
 
 
-def check_workflows(root: Path, properties: dict[str, str]) -> list[str]:
-    """Fail if a workflow restates a value owned by the toolchain file.
+def guarded_values(properties: dict[str, str]) -> dict[str, str]:
+    """Return the toolchain values distinctive enough to search for verbatim.
 
-    Only values distinctive enough to be unambiguous are checked. Bare integers
-    such as the API level are excluded: they collide with unrelated numbers like
-    action versions and timeouts, and would produce false positives.
+    Bare integers such as the API level are excluded: they collide with unrelated
+    numbers like action versions and timeouts, and would produce false positives.
     """
-    errors: list[str] = []
-    workflow_dir = root / WORKFLOW_DIR
-    if not workflow_dir.is_dir():
-        return errors
-
-    guarded = {
+    return {
         key: properties[key]
         for key in ("build.tools", "ndk", "cmake", "agp.version", "kotlin.version")
         if key in properties and len(properties[key]) >= 5
     }
 
+
+def check_no_restated_values(
+    path: Path, display: Path, guarded: dict[str, str]
+) -> list[str]:
+    """Fail if ``path`` contains a literal value the toolchain file owns."""
+    errors: list[str] = []
+    for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        # A line that names the source of truth is reading from it, not
+        # duplicating it.
+        if TOOLCHAIN_PATH.as_posix() in raw:
+            continue
+        # Strip trailing comments for both comment syntaxes in scope: '#' for
+        # YAML, properties and shell, '//' for Kotlin build scripts. A comment
+        # that mentions a version is documentation, not a consumer.
+        line = raw.split("#", 1)[0].split("//", 1)[0]
+        for key, value in guarded.items():
+            if re.search(rf"(?<![\w.-]){re.escape(value)}(?![\w.-])", line):
+                errors.append(
+                    f"{display}:{number}: hardcodes {value!r}, "
+                    f"which is owned by {TOOLCHAIN_PATH} ({key}). Read it from "
+                    "the source of truth instead."
+                )
+    return errors
+
+
+def check_workflows(root: Path, properties: dict[str, str]) -> list[str]:
+    """Fail if a workflow restates a value owned by the toolchain file."""
+    errors: list[str] = []
+    workflow_dir = root / WORKFLOW_DIR
+    if not workflow_dir.is_dir():
+        return errors
+
+    guarded = guarded_values(properties)
     for workflow in sorted(workflow_dir.glob("*.yml")):
-        for number, raw in enumerate(
-            workflow.read_text(encoding="utf-8").splitlines(), start=1
-        ):
-            # A line that names the source of truth is reading from it, not
-            # duplicating it.
-            if TOOLCHAIN_PATH.as_posix() in raw:
-                continue
-            line = raw.split("#", 1)[0]
-            for key, value in guarded.items():
-                if re.search(rf"(?<![\w.-]){re.escape(value)}(?![\w.-])", line):
-                    errors.append(
-                        f"{WORKFLOW_DIR / workflow.name}:{number}: hardcodes {value!r}, "
-                        f"which is owned by {TOOLCHAIN_PATH} ({key}). Read it from "
-                        "the source of truth instead."
-                    )
+        errors.extend(
+            check_no_restated_values(workflow, WORKFLOW_DIR / workflow.name, guarded)
+        )
+    return errors
+
+
+def check_build_scripts(root: Path, properties: dict[str, str]) -> list[str]:
+    """Fail if a Gradle build script restates a value owned by the toolchain file."""
+    errors: list[str] = []
+    guarded = guarded_values(properties)
+
+    scripts: set[Path] = set()
+    for pattern in BUILD_SCRIPT_GLOBS:
+        scripts.update(path for path in root.glob(pattern) if path.is_file())
+
+    for script in sorted(scripts):
+        errors.extend(
+            check_no_restated_values(script, script.relative_to(root), guarded)
+        )
     return errors
 
 
@@ -183,6 +267,7 @@ def check(root: Path) -> list[str]:
 
     errors.extend(check_catalog(root, properties))
     errors.extend(check_workflows(root, properties))
+    errors.extend(check_build_scripts(root, properties))
     return errors
 
 

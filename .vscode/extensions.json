@@ -1,39 +1,65 @@
 {
   "//": [
-    "Recommended extensions for DungeonLike.",
-    "Every identifier below was confirmed to exist in the Visual Studio Marketplace.",
-    "Publisher verification status is noted per entry: 'domain-verified' means the",
-    "Marketplace has verified the publisher owns its stated domain. Extensions",
-    "without that badge are included only where they are the de facto standard for",
-    "their ecosystem and no first-party alternative exists."
+    "Recommended Visual Studio Code extensions for DungeonLike.",
+    "",
+    "SCOPE: SYNTAX HIGHLIGHTING ONLY.",
+    "This list covers languages Visual Studio Code cannot colour on its own, and",
+    "nothing else. It deliberately recommends no build, test, lint, debug or",
+    "workflow tooling, because the repository's verification policy states that",
+    "Gradle tasks, builds, tests, Android tooling, emulators and packaging are",
+    "never run locally -- all executable verification happens in GitHub Actions",
+    "(AGENTS.md, CONTRIBUTING.md). An extension that exists to build or test the",
+    "project locally would recommend a workflow the project does not permit.",
+    "",
+    "SELECTION BAR: each entry is either published by a Marketplace publisher",
+    "whose domain is verified, or maintained in the language's own upstream",
+    "project. Verification status is stated per entry rather than implied, so a",
+    "reader can judge the trust decision instead of taking it on faith."
   ],
 
   "recommendations": [
     "geequlim.godot-tools",
-    "JetBrains.kotlin-server",
-    "vscjava.vscode-gradle",
-    "redhat.vscode-yaml",
-    "redhat.vscode-xml",
-    "github.vscode-github-actions",
-    "github.vscode-pull-request-github",
-    "davidanson.vscode-markdownlint",
-    "timonwong.shellcheck",
-    "ms-python.python",
-    "editorconfig.editorconfig"
+    "JetBrains.kotlin-server"
   ],
 
-  "//publishers": {
-    "geequlim.godot-tools": "geequlim, not domain-verified. The reference Godot extension, linked from Godot's own docs. Provides GDScript language support, the debugger, and editor integration.",
-    "JetBrains.kotlin-server": "JetBrains, domain-verified against jetbrains.com. Official Kotlin language support from the language vendor. Preferred over the unverified community extension.",
-    "vscjava.vscode-gradle": "Microsoft, domain-verified. Gradle task and dependency tooling.",
-    "redhat.vscode-yaml": "Red Hat, domain-verified. Schema-aware YAML for workflows and issue forms.",
-    "redhat.vscode-xml": "Red Hat, domain-verified. Android manifests and resource XML.",
-    "github.vscode-github-actions": "GitHub, domain-verified. Workflow authoring and run inspection.",
-    "github.vscode-pull-request-github": "GitHub, domain-verified. Pull request and issue review in-editor.",
-    "davidanson.vscode-markdownlint": "DavidAnson, domain-verified. Matches the markdownlint rules CI enforces.",
-    "timonwong.shellcheck": "timonwong, not domain-verified. Wraps upstream ShellCheck, which CI also runs.",
-    "ms-python.python": "Microsoft, domain-verified. For the repository validation scripts.",
-    "editorconfig.editorconfig": "EditorConfig, not domain-verified. Maintained by the EditorConfig project itself."
+  "//entries": {
+    "geequlim.godot-tools": [
+      "GDScript, scene and resource syntax highlighting: .gd, .tscn, .tres,",
+      ".godot, .import and .gdshader -- none of which Visual Studio Code knows.",
+      "The game core is written in this language, so without it the largest body",
+      "of code in the repository is plain grey text.",
+      "PROVENANCE: the Marketplace publisher 'Geequlim' is NOT domain-verified.",
+      "The extension is nevertheless the official one: it is developed in the",
+      "Godot organisation's own repository, godotengine/godot-vscode-plugin, and",
+      "no alternative with a verified publisher exists. Stated plainly here",
+      "rather than omitted, because an unverified publisher is a real, if small,",
+      "supply-chain consideration and the reader should get to weigh it."
+    ],
+    "JetBrains.kotlin-server": [
+      "Kotlin syntax highlighting for the Android host module.",
+      "PROVENANCE: publisher 'JetBrains', domain-verified against jetbrains.com,",
+      "and the vendor of the language itself.",
+      "KNOWN GAP: this extension registers the .kt extension only, so Gradle",
+      "Kotlin DSL files (build.gradle.kts, settings.gradle.kts) are not",
+      "highlighted by default. .vscode/settings.json maps *.kts to the Kotlin",
+      "language to close that gap without recommending a second extension."
+    ]
+  },
+
+  "//removed": {
+    "//": [
+      "Previously recommended and deliberately dropped. Recorded so the",
+      "reasoning survives and the same extensions are not re-added by reflex."
+    ],
+    "vscjava.vscode-gradle": "Gradle task and dependency tooling. Not highlighting, and local Gradle execution is forbidden by policy.",
+    "timonwong.shellcheck": "A linter. CI already runs ShellCheck through super-linter.",
+    "davidanson.vscode-markdownlint": "A linter. CI already enforces the same markdownlint rules.",
+    "ms-python.python": "Language server, debugger and test runner for the validation scripts. Visual Studio Code highlights Python out of the box.",
+    "github.vscode-github-actions": "Workflow authoring and run inspection, not highlighting. Visual Studio Code highlights YAML out of the box.",
+    "github.vscode-pull-request-github": "Code review tooling, unrelated to editing this repository's languages.",
+    "redhat.vscode-yaml": "Provides schema validation; YAML highlighting is built in.",
+    "redhat.vscode-xml": "Provides a language server; XML highlighting is built in.",
+    "editorconfig.editorconfig": "Applies whitespace settings. Not a grammar, and its publisher is not domain-verified."
   },
 
   "unwantedRecommendations": []

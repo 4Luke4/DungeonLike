@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Monochrome variant of the launcher icon, used for themed icons. Identical
+    geometry with a single opaque colour so the system can tint it.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M36,78 L36,52 A18,18 0 0 1 72,52 L72,78 L64,78 L64,52 A10,10 0 0 0 44,52 L44,78 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M32,78 L76,78 L76,84 L32,84 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M50,30 L58,30 L60,38 L48,38 Z" />
+</vector>

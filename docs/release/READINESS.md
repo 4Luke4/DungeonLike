@@ -7,10 +7,14 @@ The gates a DungeonLike release must clear before it is published to Google Play
 A gate is either **met**, **not met**, or **not applicable with a recorded
 reason** — never silently skipped.
 
-> **Current state.** No release has been made. `0.1.0` is a repository foundation
-> with no application code, so most gates below are not yet applicable. They are
-> recorded now so that the first release is measured against a standard defined
-> in advance rather than one invented under deadline pressure.
+> **Current state.** No release has been made. `0.1.0` was a repository
+> foundation with no application code. The unreleased work adds the Gradle
+> build, the Kotlin host and the Godot engine integration, so the build,
+> toolchain and supply-chain gates below are now mechanically checkable; the
+> gameplay, store and device-verification gates remain not applicable until
+> there is a game to verify. They are recorded so that the first release is
+> measured against a standard defined in advance rather than one invented under
+> deadline pressure.
 
 ## How to use this document
 
@@ -53,9 +57,18 @@ reason** — never silently skipped.
       closed or explicitly accepted for this release.
 - [ ] **Boundary 3 resolved:** the Godot Android library is resolved from
       MavenCentral with Gradle dependency verification enabled, so its checksum
-      and PGP signature are checked on every build.
+      and PGP signature are checked on every build. *(Mechanism landed in
+      ADR 0005; confirm the release build ran with verification active.)*
+- [ ] `gradle/verification-metadata.xml` matches the dependencies actually
+      resolved, and was regenerated through the `bootstrap` job rather than by
+      disabling verification.
+- [ ] The Gradle wrapper validated against Gradle's published checksums.
+- [ ] The Godot editor used by `engine-pack` was verified against the release
+      SHA-512 manifest before being executed.
 - [ ] GDScript game core reviewed with extra care, since CodeQL does not cover it
       (ADR 0002); `gdtoolkit` linting passed.
+- [ ] Host-to-engine bridge surface reviewed; it exposes no file-system,
+      credential or entitlement capability.
 - [ ] Dependency updates reviewed; no known-vulnerable shipped dependency.
 - [ ] App requests only the permissions it genuinely needs, each justified.
 - [ ] No debug logging of sensitive data; debuggable flag unset in release.
