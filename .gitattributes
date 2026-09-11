@@ -22,6 +22,15 @@
 *.sh        text eol=lf
 gradlew     text eol=lf
 
+# Godot text formats. Scenes and resources are deliberately kept in Godot's
+# text-based variants so that a content change is reviewable line by line.
+*.gd        text
+*.gdshader  text
+*.gdshaderinc text
+*.tscn      text
+*.tres      text
+*.godot     text
+
 # Windows-only entry points must keep CRLF or cmd.exe mis-parses them.
 *.bat       text eol=crlf
 gradlew.bat text eol=crlf

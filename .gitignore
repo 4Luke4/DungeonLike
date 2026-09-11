@@ -19,6 +19,18 @@ venv/
 .gradle/
 build/
 
+# Kotlin compiler session directory, regenerated on every build.
+.kotlin/
+
+# Generated build inputs produced by CI, never committed.
+#
+# The Godot game pack is exported by the `engine-pack` job from the project in
+# `game/`, and the engine archive is downloaded and checksum-verified by the same
+# job. Both are outputs; committing either would put a binary in the repository
+# whose contents no diff can review.
+app/src/main/assets/*.pck
+engine/
+
 # Local configuration file (sdk path, etc)
 local.properties
 
