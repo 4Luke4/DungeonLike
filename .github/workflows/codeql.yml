@@ -7,14 +7,20 @@ name: CodeQL
 # workflow reported success while analysing nothing at all — a false assurance,
 # which is worse than having no scan. The matrix below is explicit.
 #
-# Only `actions` is analysed today because workflow definitions are the sole
-# analysable code in the repository. A `java-kotlin` entry is added by the pull
-# request that introduces the Android host module.
+# Only `actions` was analysable while the repository held no application code.
+# `java-kotlin` is added here alongside the Android host module.
+#
+# The Kotlin host is analysed with `build-mode: none`, so CodeQL extracts the
+# source directly instead of observing a Gradle build. That matters for more than
+# speed: a build mode would require the Android SDK, the NDK and the exported
+# game pack to be present inside the CodeQL job, duplicating the whole build
+# pipeline in a workflow whose purpose is analysis. `android.yml` already proves
+# the code compiles.
 #
 # The GDScript game core will NOT be covered: CodeQL does not support GDScript.
 # That gap is a known, deliberate consequence of the engine decision and is
 # recorded in docs/architecture/adr/0002-engine-and-ui-architecture.md and in the
-# threat model, along with its mitigations.
+# threat model. Its mitigation is the `gdscript` job in `ci.yml`.
 
 on:
   push:
@@ -48,6 +54,8 @@ jobs:
       matrix:
         include:
           - language: actions
+            build-mode: none
+          - language: java-kotlin
             build-mode: none
     steps:
       - name: Check out repository

@@ -1,14 +1,14 @@
 name: Android
 
-# Gradle build and unit tests for the Android application.
+# Gradle build, unit tests and lint for the Android application, plus the two
+# steps that have to run in Actions because repository policy forbids running
+# Gradle or Android tooling locally:
 #
-# GUARD: the repository does not contain a Gradle project yet. Every job below is
-# conditional on a Gradle wrapper being present, so this workflow reports success
-# without doing work until the application module lands. The previous version of
-# this file ran `./gradlew build` unconditionally and therefore failed on every
-# single run, which trains reviewers to ignore a red check. A configured but
-# inert workflow is preferable to a permanently failing one, and preferable to
-# deleting and later re-adding it.
+#   * `engine-pack` exports the Godot project to `game.pck` using the official,
+#     checksum-verified engine binary.
+#   * `bootstrap` generates the Gradle wrapper and the dependency verification
+#     metadata, which are Gradle outputs and therefore cannot be produced on a
+#     workstation under the verification policy in AGENTS.md.
 #
 # All toolchain values come from `config/android/toolchain.properties`, the
 # single source of truth. `scripts/validate_toolchain.py` fails CI if this file
@@ -33,11 +33,15 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       gradle-project: ${{ steps.detect.outputs.gradle-project }}
+      gradle-wrapper: ${{ steps.detect.outputs.gradle-wrapper }}
+      verification-metadata: ${{ steps.detect.outputs.verification-metadata }}
       java-version: ${{ steps.read.outputs.java-version }}
       build-tools: ${{ steps.read.outputs.build-tools }}
       compile-sdk-package: ${{ steps.read.outputs.compile-sdk-package }}
       ndk: ${{ steps.read.outputs.ndk }}
       cmake: ${{ steps.read.outputs.cmake }}
+      gradle-version: ${{ steps.read.outputs.gradle-version }}
+      godot-release: ${{ steps.read.outputs.godot-release }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -47,11 +51,33 @@ jobs:
       - name: Detect Gradle project
         id: detect
         run: |
-          if [ -f gradlew ] && [ -f settings.gradle.kts ] || [ -f settings.gradle ]; then
+          set -euo pipefail
+
+          # The settings file may be either Kotlin or Groovy DSL. The grouping
+          # braces are load-bearing: the previous form `a && b || c` binds as
+          # `(a && b) || c`, which reported a project whenever a bare Groovy
+          # settings file existed even with no wrapper at all.
+          if { [ -f settings.gradle.kts ] || [ -f settings.gradle ]; }; then
             echo "gradle-project=true" >> "$GITHUB_OUTPUT"
           else
             echo "gradle-project=false" >> "$GITHUB_OUTPUT"
             echo "::notice::No Gradle project found. Build and test jobs are skipped."
+          fi
+
+          # The wrapper and the verification metadata are generated artefacts.
+          # Their absence selects the bootstrap job rather than failing the run.
+          if [ -f gradlew ] && [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            echo "gradle-wrapper=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "gradle-wrapper=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No Gradle wrapper found. The bootstrap job will generate one."
+          fi
+
+          if [ -f gradle/verification-metadata.xml ]; then
+            echo "verification-metadata=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "verification-metadata=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No dependency verification metadata found. The bootstrap job will generate it."
           fi
 
       - name: Read toolchain source of truth
@@ -72,8 +98,12 @@ jobs:
           compile_sdk_minor="$(read_property 'sdk.compile.minor')"
           ndk="$(read_property 'ndk')"
           cmake="$(read_property 'cmake')"
+          gradle_version="$(read_property 'gradle.version')"
+          godot_version="$(read_property 'godot.version')"
+          godot_channel="$(read_property 'godot.channel')"
 
-          for name in java_version build_tools compile_sdk compile_sdk_minor ndk cmake; do
+          for name in java_version build_tools compile_sdk compile_sdk_minor ndk cmake \
+                      gradle_version godot_version godot_channel; do
             if [ -z "${!name}" ]; then
               echo "::error::'${name}' is missing from ${properties}"
               exit 1
@@ -82,24 +112,226 @@ jobs:
 
           # Android platforms are addressed as major.minor from API 36.1 onward,
           # so the SDK package id must carry both components.
+          #
+          # The Godot release tag is `<version>-<channel>`, which is also how the
+          # engine's release assets are named.
           {
             echo "java-version=${java_version}"
             echo "build-tools=${build_tools}"
             echo "compile-sdk-package=platforms;android-${compile_sdk}.${compile_sdk_minor}"
             echo "ndk=${ndk}"
             echo "cmake=${cmake}"
+            echo "gradle-version=${gradle_version}"
+            echo "godot-release=${godot_version}-${godot_channel}"
           } >> "$GITHUB_OUTPUT"
 
-  build:
-    name: Build and test
+  engine-pack:
+    name: Export game pack
     needs: toolchain
     if: needs.toolchain.outputs.gradle-project == 'true'
+    runs-on: ubuntu-latest
+    env:
+      GODOT_RELEASE: ${{ needs.toolchain.outputs.godot-release }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Restore cached engine
+        id: engine-cache
+        uses: actions/cache@v4
+        with:
+          path: engine
+          key: godot-editor-${{ needs.toolchain.outputs.godot-release }}-linux-x86_64
+
+      - name: Download and verify the engine
+        if: steps.engine-cache.outputs.cache-hit != 'true'
+        env:
+          # Official release assets, published by the Godot project alongside a
+          # SHA-512 manifest covering every asset in the release.
+          RELEASE_BASE: https://github.com/godotengine/godot-builds/releases/download
+        run: |
+          set -euo pipefail
+          archive="Godot_v${GODOT_RELEASE}_linux.x86_64.zip"
+
+          curl --fail --silent --show-error --location \
+            --output "${archive}" "${RELEASE_BASE}/${GODOT_RELEASE}/${archive}"
+          curl --fail --silent --show-error --location \
+            --output SHA512-SUMS.txt "${RELEASE_BASE}/${GODOT_RELEASE}/SHA512-SUMS.txt"
+
+          # The engine binary produces the pack that ships inside the
+          # application, so it is verified before it is ever executed. The
+          # manifest is the publisher's own release asset and is not separately
+          # signed; that residual risk is recorded in ADR 0005.
+          grep -F "  ${archive}" SHA512-SUMS.txt > expected.sha512
+          if [ ! -s expected.sha512 ]; then
+            echo "::error::${archive} is not listed in the release SHA512 manifest"
+            exit 1
+          fi
+          sha512sum --check --strict expected.sha512
+
+          mkdir -p engine
+          unzip -q "${archive}" -d engine
+          rm -f "${archive}" SHA512-SUMS.txt expected.sha512
+          chmod +x "engine/Godot_v${GODOT_RELEASE}_linux.x86_64"
+
+      - name: Import project resources
+        run: |
+          set -euo pipefail
+          godot="${PWD}/engine/Godot_v${GODOT_RELEASE}_linux.x86_64"
+
+          # Importing populates `game/.godot`, which the exporter reads. It is a
+          # generated cache and is deliberately not committed.
+          #
+          # A first import of a project that has never been imported reports a
+          # non-zero status while still producing a usable cache, so the status
+          # is tolerated here; the export step below is what gates the job.
+          "${godot}" --headless --path game --import || true
+
+      - name: Export game pack
+        run: |
+          set -euo pipefail
+          godot="${PWD}/engine/Godot_v${GODOT_RELEASE}_linux.x86_64"
+          mkdir -p app/src/main/assets
+
+          # `--export-pack` writes only the data pack; the Android binary itself
+          # is built by Gradle around the engine library, so the engine's own
+          # platform export template is not involved. The output path resolves
+          # relative to the project directory, never to the working directory.
+          "${godot}" --headless --path game --export-pack "Android" ../app/src/main/assets/game.pck
+
+          if [ ! -s app/src/main/assets/game.pck ]; then
+            echo "::error::The export produced no game pack"
+            exit 1
+          fi
+          ls -l app/src/main/assets/game.pck
+
+      - name: Upload game pack
+        uses: actions/upload-artifact@v7
+        with:
+          name: game-pack
+          path: app/src/main/assets/game.pck
+          retention-days: 7
+          if-no-files-found: error
+
+  bootstrap:
+    name: Bootstrap generated build inputs
+    needs: [toolchain, engine-pack]
+    # Runs only while the wrapper or the verification metadata is missing, and
+    # disables itself once both are committed. It stays in the workflow because
+    # it is also the supported way to refresh verification metadata after a
+    # dependency update: see ADR 0005.
+    if: >-
+      needs.toolchain.outputs.gradle-project == 'true' &&
+      (needs.toolchain.outputs.gradle-wrapper == 'false' ||
+      needs.toolchain.outputs.verification-metadata == 'false')
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ needs.toolchain.outputs.java-version }}
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        with:
+          packages: >-
+            ${{ needs.toolchain.outputs.compile-sdk-package }}
+            build-tools;${{ needs.toolchain.outputs.build-tools }}
+            ndk;${{ needs.toolchain.outputs.ndk }}
+            cmake;${{ needs.toolchain.outputs.cmake }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+        with:
+          # Provisioned directly because there is, by definition, no wrapper yet.
+          gradle-version: ${{ needs.toolchain.outputs.gradle-version }}
+          cache-read-only: true
+
+      - name: Download game pack
+        uses: actions/download-artifact@v7
+        with:
+          name: game-pack
+          path: app/src/main/assets
+
+      - name: Generate the Gradle wrapper
+        env:
+          GRADLE_VERSION: ${{ needs.toolchain.outputs.gradle-version }}
+        run: |
+          set -euo pipefail
+          # `--gradle-distribution-sha256-sum` writes the checksum into
+          # gradle-wrapper.properties, so the generated wrapper refuses a
+          # distribution whose bytes do not match.
+          checksum="$(curl --fail --silent --show-error --location \
+            "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip.sha256")"
+          gradle wrapper \
+            --gradle-version "${GRADLE_VERSION}" \
+            --gradle-distribution-sha256-sum "${checksum}" \
+            --no-daemon
+
+      - name: Generate dependency verification metadata
+        run: |
+          set -euo pipefail
+          # Real tasks are run rather than `help`, because verification metadata
+          # records only artefacts that were actually resolved. Anything reached
+          # exclusively by a task not listed here would be absent from the
+          # metadata and would fail the first build that needed it.
+          ./gradlew --write-verification-metadata sha256,pgp \
+            assembleDebug testDebugUnitTest lintDebug \
+            --no-daemon --stacktrace
+
+      - name: Upload generated build inputs
+        uses: actions/upload-artifact@v7
+        with:
+          name: gradle-bootstrap
+          path: |
+            gradlew
+            gradlew.bat
+            gradle/wrapper/gradle-wrapper.jar
+            gradle/wrapper/gradle-wrapper.properties
+            gradle/verification-metadata.xml
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Explain the next step
+        run: |
+          {
+            echo "### Bootstrap complete"
+            echo
+            echo "Download the \`gradle-bootstrap\` artifact and commit its contents."
+            echo "These files are Gradle outputs, and the repository's verification"
+            echo "policy forbids producing them locally, so this job is how they are"
+            echo "generated. Once committed, the job disables itself."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    name: Build and test
+    needs: [toolchain, engine-pack]
+    # Skipped until the generated inputs exist, so a bootstrap run reports a
+    # clean result instead of a build failure nobody can act on.
+    if: >-
+      needs.toolchain.outputs.gradle-project == 'true' &&
+      needs.toolchain.outputs.gradle-wrapper == 'true' &&
+      needs.toolchain.outputs.verification-metadata == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Validate the Gradle wrapper
+        # The wrapper jar is executable code committed as a binary. This checks
+        # it against Gradle's published checksums, which is the standard defence
+        # against a tampered wrapper smuggling code into every build.
+        uses: gradle/actions/wrapper-validation@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
 
       - name: Set up JDK
         uses: actions/setup-java@v6
@@ -127,18 +359,30 @@ jobs:
           # builds depend on.
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
+      - name: Download game pack
+        uses: actions/download-artifact@v7
+        with:
+          name: game-pack
+          path: app/src/main/assets
+
       - name: Assemble debug
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --no-daemon --stacktrace
 
-      - name: Upload test reports
+      - name: Run Android lint
+        run: ./gradlew lintDebug --no-daemon --stacktrace
+
+      - name: Upload reports
         # Reports are most valuable precisely when the build failed.
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: test-reports
-          path: "**/build/reports/tests/**"
+          path: |
+            **/build/reports/tests/**
+            **/build/reports/lint-results-*.html
+            **/build/reports/lint-results-*.xml
           retention-days: 14
           if-no-files-found: ignore
