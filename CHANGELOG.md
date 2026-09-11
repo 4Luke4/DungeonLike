@@ -10,6 +10,81 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
 
 ## [Unreleased]
 
+### Added
+
+- Gradle build: `settings.gradle.kts`, root build script, `gradle.properties`,
+  and a pinned wrapper. The Android toolchain and the application version are
+  read from `config/android/toolchain.properties` and `VERSION` through Gradle's
+  provider API, so both are tracked as configuration inputs and no build script
+  restates an SDK, NDK, ABI, Java or version value.
+- `:app` — the thin Kotlin host module. A single Activity hosts the embedded
+  engine, declares the `configChanges` set Godot's documentation prescribes, and
+  supplies the engine command line. Includes R8 keep rules for the engine's JNI
+  surface, a hand-written locale config declaring all five supported languages,
+  a vector adaptive launcher icon, and backup rules that restore nothing until a
+  versioned save format exists.
+- `HostBridge` — the complete, enumerated host-to-engine bridge. It reports the
+  current input mode (touch, mouse, keyboard, or both) from a closed set of
+  values and signals the engine when a peripheral is attached or removed
+  mid-session. It exposes no file-system, credential or entitlement capability.
+- `game/` — the Godot project and GDScript game core, exported to a single
+  `game.pck` and loaded with `--main-pack`.
+- JVM unit tests for the host's input-mode classification and engine
+  command-line contract, written over plain data so they need no framework
+  stubbing.
+- `engine-pack` workflow job: downloads the official Godot editor, verifies it
+  against the release SHA-512 manifest **before executing it**, and exports the
+  game pack. The pack is a build output and is never committed.
+- `bootstrap` workflow job: generates the Gradle wrapper and dependency
+  verification metadata in CI, because both are Gradle outputs and the
+  verification policy forbids producing them locally. It disables itself once
+  they are committed, and remains the supported way to refresh the metadata.
+- GDScript lint and format checks (`gdlint`, `gdformat --check`) with a
+  hash-pinned toolchain — the coverage ADR 0002 committed to when it accepted
+  that neither CodeQL nor super-linter can analyse the game core.
+- Scoped `AGENTS.md` files for `.github/`, `scripts/`, `app/` and `game/`.
+- ADR 0005, recording build structure, supply-chain verification, the engine
+  pack pipeline, and why generated build inputs are bootstrapped through Actions.
+
+### Changed
+
+- `.vscode/extensions.json` reduced to syntax highlighting only, consistent with
+  the policy that nothing is built or tested locally. Nine build, lint and
+  workflow extensions were removed with the reasoning recorded in the file; the
+  two that remain cover GDScript and Kotlin, which Visual Studio Code cannot
+  colour on its own. Publisher verification status is stated per entry.
+- `scripts/validate_toolchain.py` now also scans Gradle build scripts for
+  restated toolchain values, and cross-checks the engine coordinate in the
+  version catalogue against `godot.version`/`godot.channel`.
+- CodeQL analyses `java-kotlin` in addition to `actions`; super-linter validates
+  Kotlin.
+- Dependabot manages the `gradle` ecosystem. The engine, AGP and Kotlin are
+  excluded: changing any of them alters the shipped binary or the toolchain
+  baseline and is a reviewed decision, not a dependency bump.
+- `.editorconfig` and `.gitattributes` cover Godot's text formats, with tab
+  indentation for GDScript per the official style guide.
+
+### Fixed
+
+- The Gradle project detection in `android.yml` used `[ -f a ] && [ -f b ] || [ -f c ]`,
+  which binds as `(a && b) || c` and would have reported a project whenever a
+  Groovy settings file existed with no wrapper at all.
+
+### Security
+
+- Gradle dependency verification enabled with SHA-256 and PGP, with committed,
+  reviewable metadata. This closes boundary 3 of the threat model: the engine is
+  native code shipped to users, and its checksum and signature are now checked on
+  every build.
+- Dependency resolution restricted to Google Maven and MavenCentral, with content
+  filters binding coordinate groups to the repository entitled to serve them and
+  `FAIL_ON_PROJECT_REPOS` so no module can add a third source.
+- The committed Gradle wrapper jar is validated against Gradle's published
+  checksums on every run, and the distribution carries a `distributionSha256Sum`.
+- Boundary 4 of the threat model closed: the host-to-engine bridge surface is
+  defined, minimal, and validated in both directions.
+- The application declares no permissions.
+
 ## [0.1.0] - 2026-09-10
 
 Initial repository foundation. This release contains no application code: it

@@ -1,0 +1,26 @@
+{
+  "//": [
+    "Workspace editor settings, kept to the minimum that makes the repository",
+    "read correctly. Nothing here builds, tests, formats or runs anything:",
+    "executable verification happens in GitHub Actions (AGENTS.md).",
+    "",
+    "The .kts association exists because the recommended Kotlin extension",
+    "(JetBrains.kotlin-server) registers the .kt extension only, which leaves",
+    "build.gradle.kts and settings.gradle.kts unhighlighted. Mapping them to the",
+    "Kotlin language reuses the grammar that is already installed, rather than",
+    "recommending a second, lower-provenance extension for the same job."
+  ],
+  "files.associations": {
+    "*.kts": "kotlin"
+  },
+
+  "//gdscript": [
+    "GDScript indents with tabs, per the official style guide and gdformat,",
+    "which CI enforces. Stated here as well so the editor does not silently",
+    "insert spaces before the linter rejects them."
+  ],
+  "[gdscript]": {
+    "editor.insertSpaces": false,
+    "editor.detectIndentation": false
+  }
+}
