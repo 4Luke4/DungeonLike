@@ -23,7 +23,8 @@ plugins {
 // fails CI if it does.
 
 val toolchainProperties: Map<String, String> =
-    providers.fileContents(layout.settingsDirectory.file("config/android/toolchain.properties"))
+    providers
+        .fileContents(layout.settingsDirectory.file("config/android/toolchain.properties"))
         .asText
         .get()
         .lineSequence()
@@ -43,10 +44,7 @@ fun toolchain(key: String): String =
 // `VERSION` holds a bare SemVer string; the `v` prefix is a git tag convention
 // only, so nothing here has to strip it.
 val applicationVersion: String =
-    providers.fileContents(layout.settingsDirectory.file("VERSION"))
-        .asText
-        .get()
-        .trim()
+    providers.fileContents(layout.settingsDirectory.file("VERSION")).asText.get().trim()
 
 // versionCode must be a strictly increasing integer, while VERSION is SemVer.
 // Deriving it arithmetically keeps the two in lockstep without a second source
