@@ -265,10 +265,17 @@ val verifyGamePack =
     tasks.register("verifyGamePack") {
         description = "Fails early if the exported Godot game pack is missing."
         group = "verification"
+
+        // Captured into a local before the action is declared, so the action
+        // closes over a plain File rather than over the build script instance.
+        // The configuration cache cannot serialize a script object reference,
+        // and a task action that reads a script-level property captures exactly
+        // that.
+        val packFile = gamePackFile
         doLast {
-            if (!gamePackFile.isFile) {
+            if (!packFile.isFile) {
                 throw GradleException(
-                    "Missing ${gamePackFile.name}: the Godot game pack has not been exported.\n" +
+                    "Missing ${packFile.name}: the Godot game pack has not been exported.\n" +
                         "It is produced by the 'engine-pack' job in .github/workflows/android.yml " +
                         "and is intentionally not committed. Builds run in GitHub Actions only " +
                         "(see the verification policy in AGENTS.md).",
