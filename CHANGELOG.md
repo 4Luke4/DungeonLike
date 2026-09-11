@@ -21,8 +21,8 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
   engine, declares the `configChanges` set Godot's documentation prescribes, and
   supplies the engine command line. Includes R8 keep rules for the engine's JNI
   surface, a hand-written locale config declaring all five supported languages,
-  a vector adaptive launcher icon, and backup rules that restore nothing until a
-  versioned save format exists.
+  a vector adaptive launcher icon, and backup disabled outright until a versioned
+  save format exists.
 - `HostBridge` — the complete, enumerated host-to-engine bridge. It reports the
   current input mode (touch, mouse, keyboard, or both) from a closed set of
   values and signals the engine when a peripheral is attached or removed
@@ -96,7 +96,10 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
   SHA-512 manifest before it is executed.
 - Boundary 4 of the threat model closed: the host-to-engine bridge surface is
   defined, minimal, and validated in both directions.
-- The application declares no permissions.
+- The application declares no permissions, and backup and device-to-device
+  transfer are disabled outright: no save format exists yet that could version
+  and validate itself on restore, so restoring anything would be the
+  corrupt-input case the threat model requires to fail safe.
 
 ## [0.1.0] - 2026-09-10
 

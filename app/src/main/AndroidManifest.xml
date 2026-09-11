@@ -7,6 +7,18 @@
     backend. That property is what removes an entire class of risk from the
     threat model, so a permission must never be added casually: each one has to
     be justified in review and in the release readiness gates.
+
+    BACKUP IS DISABLED, AND THAT IS ALSO DELIBERATE.
+    android:allowBackup="false" switches off the backup and restore
+    infrastructure, and data_extraction_rules.xml independently excludes every
+    domain from both cloud backup and device-to-device transfer. Both controls
+    are set, so the outcome does not depend on how the two interact.
+
+    The reason is the one already recorded in the threat model: no save format
+    exists yet, so there is nothing whose version could be checked on restore,
+    and restoring data written by another build into a fresh install is exactly
+    the corrupt-input case that boundary 5 requires to fail safe. Revisit
+    together with the save system, not before.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -30,7 +42,7 @@
         android:required="false" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"

@@ -203,12 +203,14 @@ data leaking through world-readable storage or backups.
 **Planned controls.** App-private storage only. Treat all persisted data as
 untrusted on read and validate it. Fail safe on corruption rather than crashing.
 
-**Partial control in place.** `res/xml/data_extraction_rules.xml` excludes
-application data from both cloud backup and device transfer. Until a save format
-exists that can version and validate itself, restoring data written by another
-build into a fresh install is precisely the corrupt-input case this boundary
-requires to fail safe, so nothing is restored at all. Revisit when the save
-system lands.
+**Control in place — backup and transfer are disabled outright.** The manifest
+sets `android:allowBackup="false"`, and `res/xml/data_extraction_rules.xml`
+excludes every domain from both cloud backup and device-to-device transfer. Both
+controls are set, so the outcome does not depend on how the two interact. Until a
+save format exists that can version and validate itself, restoring data written
+by another build into a fresh install is precisely the corrupt-input case this
+boundary requires to fail safe, so nothing is backed up, transferred or restored
+at all. This is revisited when the save system lands, not before.
 
 **Accepted risk.** A single-player game on a device the player controls cannot be
 protected against a determined owner modifying their own save. This is explicitly
