@@ -100,12 +100,15 @@ def check_catalog(root: Path, properties: dict[str, str]) -> list[str]:
     # re-introduction cannot silently disagree with the toolchain file.
     expected_kotlin = properties.get("kotlin.version")
     kotlin_match = re.search(r'^kotlin\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
-    if expected_kotlin is not None and kotlin_match is not None:
-        if kotlin_match.group(1) != expected_kotlin:
-            errors.append(
-                f"{CATALOG_PATH} declares kotlin = {kotlin_match.group(1)!r} but "
-                f"{TOOLCHAIN_PATH} declares kotlin.version = {expected_kotlin!r}"
-            )
+    if (
+        expected_kotlin is not None
+        and kotlin_match is not None
+        and kotlin_match.group(1) != expected_kotlin
+    ):
+        errors.append(
+            f"{CATALOG_PATH} declares kotlin = {kotlin_match.group(1)!r} but "
+            f"{TOOLCHAIN_PATH} declares kotlin.version = {expected_kotlin!r}"
+        )
 
     # AGP 9 rejects the standalone Kotlin Android plugin outright: it is
     # incompatible with the new DSL, and applying it fails the build with an

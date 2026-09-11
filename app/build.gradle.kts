@@ -23,8 +23,7 @@ plugins {
 // fails CI if it does.
 
 val toolchainProperties: Map<String, String> =
-    providers
-        .fileContents(layout.settingsDirectory.file("config/android/toolchain.properties"))
+    providers.fileContents(layout.settingsDirectory.file("config/android/toolchain.properties"))
         .asText
         .get()
         .lineSequence()
@@ -44,8 +43,7 @@ fun toolchain(key: String): String =
 // `VERSION` holds a bare SemVer string; the `v` prefix is a git tag convention
 // only, so nothing here has to strip it.
 val applicationVersion: String =
-    providers
-        .fileContents(layout.settingsDirectory.file("VERSION"))
+    providers.fileContents(layout.settingsDirectory.file("VERSION"))
         .asText
         .get()
         .trim()
@@ -54,8 +52,9 @@ val applicationVersion: String =
 // Deriving it arithmetically keeps the two in lockstep without a second source
 // of truth, and the scheme stays monotonic as long as minor and patch stay below
 // 100 -- which is asserted rather than assumed.
-val semver = Regex("""^(\d+)\.(\d+)\.(\d+)$""").matchEntire(applicationVersion)
-    ?: error("VERSION must be a bare X.Y.Z SemVer string, found '$applicationVersion'")
+val semver =
+    Regex("""^(\d+)\.(\d+)\.(\d+)$""").matchEntire(applicationVersion)
+        ?: error("VERSION must be a bare X.Y.Z SemVer string, found '$applicationVersion'")
 val (major, minor, patch) = semver.destructured.toList().map(String::toInt)
 require(minor < 100 && patch < 100) {
     "VERSION '$applicationVersion' overflows the versionCode scheme (minor and patch must be < 100)"
@@ -172,11 +171,12 @@ android {
         resources {
             // Duplicate metadata from overlapping dependencies is a packaging
             // failure, not a code problem; drop it rather than failing the build.
-            excludes += setOf(
-                "/META-INF/{AL2.0,LGPL2.1}",
-                "/META-INF/DEPENDENCIES",
-                "/META-INF/*.version",
-            )
+            excludes +=
+                setOf(
+                    "/META-INF/{AL2.0,LGPL2.1}",
+                    "/META-INF/DEPENDENCIES",
+                    "/META-INF/*.version",
+                )
         }
     }
 

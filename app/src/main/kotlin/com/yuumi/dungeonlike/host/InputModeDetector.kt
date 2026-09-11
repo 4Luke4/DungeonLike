@@ -34,7 +34,10 @@ object InputModeDetector {
     /** Reads the currently attached devices and classifies them. */
     fun detect(inputManager: InputManager): InputMode =
         classify(
-            inputManager.inputDeviceIds.mapNotNull { deviceId ->
+            // `inputDeviceIds` is an IntArray, which the standard library does
+            // not give a `mapNotNull`; converting to a list first keeps the null
+            // filtering rather than silently dropping the check.
+            inputManager.inputDeviceIds.toList().mapNotNull { deviceId ->
                 inputManager.getInputDevice(deviceId)?.let(::snapshot)
             },
         )
