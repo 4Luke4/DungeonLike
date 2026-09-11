@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Adaptive launcher icon. Only the -v26 qualifier is needed because minSdk is
-    34, so every supported device understands adaptive icons and no legacy
-    raster fallback has to be maintained.
+    Adaptive launcher icon. No version qualifier is needed because minSdk is 34,
+    so every supported device understands adaptive icons and no legacy raster
+    fallback has to be maintained. A `-v26` qualifier would be dead weight, and
+    lint flags it as obsolete for exactly that reason.
 
     The monochrome layer supplies the themed-icon variant introduced in
     Android 13, so the launcher can tint the icon to the user's wallpaper

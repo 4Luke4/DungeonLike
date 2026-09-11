@@ -29,9 +29,10 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-; Must agree with android:screenOrientation in the host manifest: the host
-; declares `fullUser`, so the engine must accept any user-enabled orientation.
-; A mismatch here is one of the ways the documented resize crash is provoked.
+; Any orientation the user's device allows. The host manifest deliberately sets
+; no android:screenOrientation, taking Godot's other documented mitigation --
+; handling the configuration change in the Activity -- so the engine must accept
+; every orientation rather than assume a locked one.
 window/handheld/orientation="sensor"
 
 [rendering]

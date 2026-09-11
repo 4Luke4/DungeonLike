@@ -10,17 +10,27 @@ name: CodeQL
 # Only `actions` was analysable while the repository held no application code.
 # `java-kotlin` is added here alongside the Android host module.
 #
-# The Kotlin host is analysed with `build-mode: none`, so CodeQL extracts the
-# source directly instead of observing a Gradle build. That matters for more than
-# speed: a build mode would require the Android SDK, the NDK and the exported
-# game pack to be present inside the CodeQL job, duplicating the whole build
-# pipeline in a workflow whose purpose is analysis. `android.yml` already proves
-# the code compiles.
+# WHY THE KOTLIN ANALYSIS BUILDS THE PROJECT
+# ------------------------------------------
+# `build-mode: none` was tried first and is NOT viable here. CodeQL extracts
+# Kotlin by observing the Kotlin compiler, so with no build there is nothing to
+# observe; and because this repository contains no `.java` sources at all, the
+# run failed outright with "CodeQL could not process any code written in
+# Java/Kotlin". A check that analyses nothing is worse than no check, which is
+# the same mistake the empty matrix above once made.
 #
-# The GDScript game core will NOT be covered: CodeQL does not support GDScript.
-# That gap is a known, deliberate consequence of the engine decision and is
-# recorded in docs/architecture/adr/0002-engine-and-ui-architecture.md and in the
-# threat model. Its mitigation is the `gdscript` job in `ci.yml`.
+# So the Kotlin host is built here, in `manual` mode. Only `compileDebugKotlin`
+# is run: the game pack is required for packaging, not for compilation, so this
+# job does not have to reproduce the engine export pipeline.
+#
+# ADR 0002 relies on this coverage. It accepts that the GDScript game core is
+# unanalysable, on the explicit basis that the Kotlin host *is* covered, so
+# letting this silently analyse nothing would hollow out that decision.
+#
+# The GDScript game core is NOT covered: CodeQL does not support GDScript. That
+# gap is a known, deliberate consequence of the engine decision and is recorded
+# in docs/architecture/adr/0002-engine-and-ui-architecture.md and in the threat
+# model. Its mitigation is the `gdscript` job in `ci.yml`.
 
 on:
   push:
@@ -56,12 +66,62 @@ jobs:
           - language: actions
             build-mode: none
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+
+      - name: Read toolchain source of truth
+        # Only needed by the Kotlin build below. The values come from
+        # config/android/toolchain.properties so this workflow restates none of
+        # them, exactly as android.yml does.
+        if: matrix.language == 'java-kotlin'
+        id: toolchain
+        run: |
+          set -euo pipefail
+          properties="config/android/toolchain.properties"
+
+          read_property() {
+            grep -E "^$1=" "$properties" | head -n 1 | cut -d'=' -f2- | tr -d '[:space:]'
+          }
+
+          java_version="$(read_property 'java.version')"
+          build_tools="$(read_property 'build.tools')"
+          compile_sdk="$(read_property 'sdk.compile')"
+          compile_sdk_minor="$(read_property 'sdk.compile.minor')"
+          ndk="$(read_property 'ndk')"
+
+          for name in java_version build_tools compile_sdk compile_sdk_minor ndk; do
+            if [ -z "${!name}" ]; then
+              echo "::error::'${name}' is missing from ${properties}"
+              exit 1
+            fi
+          done
+
+          {
+            echo "java-version=${java_version}"
+            echo "build-tools=${build_tools}"
+            echo "compile-sdk-package=platforms;android-${compile_sdk}.${compile_sdk_minor}"
+            echo "ndk=${ndk}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up JDK
+        if: matrix.language == 'java-kotlin'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ steps.toolchain.outputs.java-version }}
+
+      - name: Set up Android SDK
+        if: matrix.language == 'java-kotlin'
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+        with:
+          packages: >-
+            ${{ steps.toolchain.outputs.compile-sdk-package }}
+            build-tools;${{ steps.toolchain.outputs.build-tools }}
+            ndk;${{ steps.toolchain.outputs.ndk }}
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -72,6 +132,14 @@ jobs:
           # top of the default security set. The repository is small, so the
           # extra analysis time is worth the coverage.
           queries: security-extended,security-and-quality
+
+      - name: Build the Kotlin host
+        # `manual` build mode requires the build to happen between init and
+        # analyze. Only Kotlin compilation is run: this job proves the code is
+        # analysable, while android.yml owns proving it assembles, tests and
+        # lints cleanly.
+        if: matrix.language == 'java-kotlin'
+        run: ./gradlew :app:compileDebugKotlin --no-daemon --stacktrace
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4

@@ -52,9 +52,12 @@
             rather than being destroyed and recreated underneath a live engine.
             Narrowing this list will reintroduce that crash.
 
-            android:screenOrientation="fullUser" allows every orientation the
-            user has enabled, which is what makes adaptive phone and tablet
-            layout possible; the engine handles the resulting resize internally.
+            android:screenOrientation is deliberately NOT set. Godot's
+            documentation offers two mitigations: lock the orientation, or
+            declare configChanges. This app takes the second, because it has to
+            adapt to phones and tablets in both orientations. Declaring a fixed
+            orientation would also be ignored on recent Android releases, which
+            are moving to a model where apps adapt instead.
         -->
         <activity
             android:name=".DungeonLikeActivity"
@@ -62,7 +65,6 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="fullUser"
             android:theme="@style/Theme.DungeonLike">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

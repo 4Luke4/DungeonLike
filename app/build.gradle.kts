@@ -22,19 +22,27 @@ plugins {
 // Nothing below may restate a value either file owns; `validate_toolchain.py`
 // fails CI if it does.
 
+// Reads a file from the repository root through the provider API, so Gradle
+// records it as a configuration input.
+fun readRepositoryFile(path: String): String =
+    providers.fileContents(layout.settingsDirectory.file(path)).asText.get()
+
+// Minimal java.util.Properties reader: `#`/`!` comments and blank lines are
+// skipped, and the first `=` separates key from value.
+fun parseProperties(text: String): Map<String, String> {
+    val values = mutableMapOf<String, String>()
+    for (rawLine in text.lines()) {
+        val line = rawLine.trim()
+        if (line.isEmpty() || line.startsWith("#") || line.startsWith("!")) continue
+        val separator = line.indexOf('=')
+        if (separator <= 0) continue
+        values[line.take(separator).trim()] = line.substring(separator + 1).trim()
+    }
+    return values
+}
+
 val toolchainProperties: Map<String, String> =
-    providers
-        .fileContents(layout.settingsDirectory.file("config/android/toolchain.properties"))
-        .asText
-        .get()
-        .lineSequence()
-        .map(String::trim)
-        .filter { line -> line.isNotEmpty() && !line.startsWith("#") && !line.startsWith("!") }
-        .mapNotNull { line ->
-            val separator = line.indexOf('=')
-            if (separator <= 0) null else line.take(separator).trim() to line.substring(separator + 1).trim()
-        }
-        .toMap()
+    parseProperties(readRepositoryFile("config/android/toolchain.properties"))
 
 fun toolchain(key: String): String =
     requireNotNull(toolchainProperties[key]) {
@@ -43,8 +51,7 @@ fun toolchain(key: String): String =
 
 // `VERSION` holds a bare SemVer string; the `v` prefix is a git tag convention
 // only, so nothing here has to strip it.
-val applicationVersion: String =
-    providers.fileContents(layout.settingsDirectory.file("VERSION")).asText.get().trim()
+val applicationVersion: String = readRepositoryFile("VERSION").trim()
 
 // versionCode must be a strictly increasing integer, while VERSION is SemVer.
 // Deriving it arithmetically keeps the two in lockstep without a second source
@@ -186,6 +193,24 @@ android {
         // findings would produce an unactionable red check -- the exact failure
         // mode that teaches reviewers to ignore CI.
         checkDependencies = false
+
+        disable +=
+            setOf(
+                // Dependency currency is Dependabot's job, and it is the only
+                // one of the two that can open a reviewable pull request with a
+                // changelog. Lint's version check also actively conflicts with a
+                // deliberate decision here: androidx.fragment is pinned to the
+                // revision the engine itself depends on, so that the compile and
+                // runtime classpaths agree (see the version catalogue).
+                "GradleDependency",
+                // ChromeOS wants an x86_64 slice. ADR 0003 ships arm64-v8a only,
+                // by product requirement, and explicitly accepts that a release
+                // artifact cannot run on an x86 emulator image. Failing the
+                // build over a decision already taken and documented adds noise,
+                // not safety.
+                "ChromeOsAbiSupport",
+            )
+
         // Report formats are not configured: from AGP 9 the HTML, XML and SARIF
         // reports are always generated, and the `htmlReport`/`xmlReport`
         // properties are deprecated. The workflow uploads whatever is produced.
@@ -253,6 +278,9 @@ val verifyGamePack =
         }
     }
 
-tasks.named("preBuild") {
-    dependsOn(verifyGamePack)
-}
+// Wired to asset merging rather than to `preBuild`, because that is where the
+// pack is genuinely required. Compiling Kotlin does not need it, and making
+// compilation depend on it would force every consumer that only type-checks the
+// host -- CodeQL's analysis among them -- to reproduce the export pipeline.
+tasks.matching { task -> task.name.startsWith("merge") && task.name.endsWith("Assets") }
+    .configureEach { dependsOn(verifyGamePack) }
