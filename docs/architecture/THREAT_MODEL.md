@@ -120,6 +120,11 @@ ordinary, signed, resolver-managed Gradle dependency.
   trusts appears in a diff and passes through review. The engine's own signing
   key is among the trusted keys, so `org.godotengine:godot:4.7.2.stable` is
   verified by signature, not merely by checksum.
+- `gradle/verification-keyring.keys` is committed alongside it, pinning the
+  trusted public key material itself. Without it every build would fetch keys
+  from a public key server during resolution, which is both a network dependency
+  and a reproducibility hole: an unreachable key server becomes a verification
+  failure on a build that changed nothing.
 - The Gradle wrapper jar is validated against Gradle's published checksums on
   every run, closing the adjacent "tampered wrapper" path.
 

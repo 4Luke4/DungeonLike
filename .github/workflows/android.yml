@@ -290,7 +290,14 @@ jobs:
           # dependency cache lets Gradle satisfy the buildscript classpath
           # without re-resolving it, so those artefacts never reach the writer
           # and the metadata silently omits them.
-          ./gradlew --write-verification-metadata sha256,pgp \
+          # `--export-keys` writes `gradle/verification-keyring.keys`. Without it,
+          # every build has to fetch the trusted public keys from a key server at
+          # resolution time, which is both a network dependency and a
+          # reproducibility hole: a key server that is slow, unreachable or
+          # blocked turns into a verification failure on a build that changed
+          # nothing. Committing the keyring pins the key material itself, so it
+          # is reviewed like any other trusted input.
+          ./gradlew --write-verification-metadata sha256,pgp --export-keys \
             assembleDebug testDebugUnitTest lintDebug \
             --no-daemon --no-configuration-cache --refresh-dependencies --stacktrace
 
@@ -304,6 +311,7 @@ jobs:
             gradle/wrapper/gradle-wrapper.jar
             gradle/wrapper/gradle-wrapper.properties
             gradle/verification-metadata.xml
+            gradle/verification-keyring.keys
           retention-days: 7
           if-no-files-found: error
 

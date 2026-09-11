@@ -74,10 +74,14 @@ dropped, so a future AGP release that adds the API can close the gap.
 ### 2. Dependency verification, enabled from the first build
 
 Gradle dependency verification is enabled with both `sha256` and `pgp`, and
-`gradle/verification-metadata.xml` is committed. Repositories are restricted to
-Google Maven and MavenCentral, with content filters binding each coordinate group
-to the repository entitled to serve it, and `FAIL_ON_PROJECT_REPOS` so no module
-can quietly add a third.
+`gradle/verification-metadata.xml` is committed, together with
+`gradle/verification-keyring.keys`. Committing the keyring pins the trusted
+public key material rather than fetching it from a key server on every build,
+which removes a network dependency from the security control and makes the keys
+themselves reviewable. Repositories are restricted to Google Maven and
+MavenCentral, with content filters binding each coordinate group to the
+repository entitled to serve it, and `FAIL_ON_PROJECT_REPOS` so no module can
+quietly add a third.
 
 This closes boundary 3 of the threat model. The engine is native code that runs
 inside the shipped application; substituting it would place attacker-controlled
