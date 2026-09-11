@@ -24,8 +24,7 @@ plugins {
 
 // Reads a file from the repository root through the provider API, so Gradle
 // records it as a configuration input.
-fun readRepositoryFile(path: String): String =
-    providers.fileContents(layout.settingsDirectory.file(path)).asText.get()
+fun readRepositoryFile(path: String): String = providers.fileContents(layout.settingsDirectory.file(path)).asText.get()
 
 // Minimal java.util.Properties reader: `#`/`!` comments and blank lines are
 // skipped, and the first `=` separates key from value.
@@ -281,6 +280,7 @@ val verifyGamePack =
 // Wired to asset merging rather than to `preBuild`, because that is where the
 // pack is genuinely required. Compiling Kotlin does not need it, and making
 // compilation depend on it would force every consumer that only type-checks the
-// host -- CodeQL's analysis among them -- to reproduce the export pipeline.
-tasks.matching { task -> task.name.startsWith("merge") && task.name.endsWith("Assets") }
-    .configureEach { dependsOn(verifyGamePack) }
+// host, CodeQL's analysis among them, to reproduce the export pipeline.
+val assetMergeTasks = tasks.matching { task -> task.name.startsWith("merge") && task.name.endsWith("Assets") }
+
+assetMergeTasks.configureEach { dependsOn(verifyGamePack) }
