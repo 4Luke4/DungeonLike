@@ -82,20 +82,47 @@ def check_catalog(root: Path, properties: dict[str, str]) -> list[str]:
         return [f"{CATALOG_PATH} is missing"]
 
     catalog = catalog_file.read_text(encoding="utf-8")
-    for catalog_key, property_key in (("agp", "agp.version"), ("kotlin", "kotlin.version")):
-        expected = properties.get(property_key)
-        if expected is None:
-            continue
-        match = re.search(
-            rf'^{re.escape(catalog_key)}\s*=\s*"([^"]+)"', catalog, re.MULTILINE
-        )
+
+    expected_agp = properties.get("agp.version")
+    if expected_agp is not None:
+        match = re.search(r'^agp\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
         if match is None:
-            errors.append(f"{CATALOG_PATH} does not declare a '{catalog_key}' version")
-        elif match.group(1) != expected:
+            errors.append(f"{CATALOG_PATH} does not declare an 'agp' version")
+        elif match.group(1) != expected_agp:
             errors.append(
-                f"{CATALOG_PATH} declares {catalog_key} = {match.group(1)!r} but "
-                f"{TOOLCHAIN_PATH} declares {property_key} = {expected!r}"
+                f"{CATALOG_PATH} declares agp = {match.group(1)!r} but "
+                f"{TOOLCHAIN_PATH} declares agp.version = {expected_agp!r}"
             )
+
+    # Kotlin is checked only if the catalogue declares it. From AGP 9 onward
+    # Kotlin support is built into the Android Gradle plugin, so the catalogue
+    # has no Kotlin entry to keep in step; the guard remains so that a future
+    # re-introduction cannot silently disagree with the toolchain file.
+    expected_kotlin = properties.get("kotlin.version")
+    kotlin_match = re.search(r'^kotlin\s*=\s*"([^"]+)"', catalog, re.MULTILINE)
+    if expected_kotlin is not None and kotlin_match is not None:
+        if kotlin_match.group(1) != expected_kotlin:
+            errors.append(
+                f"{CATALOG_PATH} declares kotlin = {kotlin_match.group(1)!r} but "
+                f"{TOOLCHAIN_PATH} declares kotlin.version = {expected_kotlin!r}"
+            )
+
+    # AGP 9 rejects the standalone Kotlin Android plugin outright: it is
+    # incompatible with the new DSL, and applying it fails the build with an
+    # error that does not obviously point back to the catalogue. Catching the
+    # declaration here turns that into a clear message.
+    #
+    # Comment lines are skipped: the catalogue explains *why* the plugin is
+    # absent, and that explanation must not trip the check that enforces it.
+    declarations = "\n".join(
+        line for line in catalog.splitlines() if not line.lstrip().startswith("#")
+    )
+    if "org.jetbrains.kotlin.android" in declarations:
+        errors.append(
+            f"{CATALOG_PATH} declares the 'org.jetbrains.kotlin.android' plugin, "
+            "which AGP 9 rejects: Kotlin support is built into the Android Gradle "
+            "plugin. Remove the plugin entry."
+        )
 
     # The engine's Maven coordinate is `<godot.version>.<godot.channel>`. It is
     # declared in the catalogue so the engine stays visible to Dependabot, and

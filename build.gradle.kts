@@ -1,10 +1,12 @@
 // Root build script.
 //
-// Deliberately declarative-only: plugins are resolved here but applied in the
-// modules that use them, so the root project stays free of Android or Kotlin
-// configuration that a single module owns.
+// Deliberately declarative-only: the plugin is resolved here but applied in the
+// module that uses it, so the root project stays free of Android configuration
+// that a single module owns.
+//
+// No Kotlin plugin is declared. AGP 9 provides Kotlin support itself and refuses
+// to run alongside `org.jetbrains.kotlin.android`.
 
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
 }

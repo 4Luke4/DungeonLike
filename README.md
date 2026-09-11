@@ -106,7 +106,7 @@ Every version below was verified against a primary source rather than assumed.
 | CMake | 4.1.2 | stable channel |
 | Android Gradle plugin | 9.4.0 | supports a maximum of API 37 |
 | Gradle | 9.7.1 | current release |
-| Kotlin | 2.4.20 | current release |
+| Kotlin | 2.2.10 | built into AGP 9.4.0; declared in its published POM |
 | JDK | 17 | AGP 9.4.0 ships Java 17 bytecode; Godot declares Java 17 |
 | Godot | 4.7.2-stable (standard build) | published to MavenCentral as `org.godotengine:godot`, signed |
 

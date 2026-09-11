@@ -22,9 +22,14 @@
 # level this project compiles against.
 agp = "9.4.0"
 
-# Kotlin. Used for the thin Android host layer (see ADR 0002); gameplay logic
-# lives in GDScript inside the Godot project.
-kotlin = "2.4.20"
+# Kotlin is deliberately absent.
+#
+# From AGP 9.0 onward Kotlin support is built into the Android Gradle plugin,
+# which carries its own Kotlin Gradle plugin. Applying
+# `org.jetbrains.kotlin.android` is not merely redundant: AGP 9 rejects it
+# outright, because it is incompatible with the new DSL. The version the build
+# compiles with is recorded in config/android/toolchain.properties, which also
+# explains why it is not forced higher than AGP's own.
 
 # Godot Engine Android library, standard (non-.NET) build.
 #
@@ -51,7 +56,6 @@ junit = "4.13.2"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 [libraries]
 # The engine. Shipped inside the application as native code, which is why it is

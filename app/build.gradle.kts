@@ -2,7 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    // No Kotlin plugin: AGP 9 compiles Kotlin itself and rejects
+    // `org.jetbrains.kotlin.android` as incompatible with its DSL. The
+    // `kotlin { }` block below is still the correct place to configure the
+    // compiler, and is the DSL AGP's own migration guidance points at.
 }
 
 // --- Values read from their single sources of truth ---------------------------

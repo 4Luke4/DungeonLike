@@ -61,6 +61,11 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
 - Dependabot manages the `gradle` ecosystem. The engine, AGP and Kotlin are
   excluded: changing any of them alters the shipped binary or the toolchain
   baseline and is a reviewed decision, not a dependency bump.
+- Kotlin is no longer pinned independently. AGP 9 provides Kotlin support itself
+  and rejects `org.jetbrains.kotlin.android`, so the build compiles with the
+  Kotlin Gradle plugin AGP declares (2.2.10 for AGP 9.4.0). Forcing a higher
+  version would ship a combination the plugin vendor never tested, for no
+  product benefit.
 - `.editorconfig` and `.gitattributes` cover Godot's text formats, with tab
   indentation for GDScript per the official style guide.
 

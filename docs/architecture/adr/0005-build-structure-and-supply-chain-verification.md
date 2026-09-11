@@ -24,6 +24,11 @@ change later, and that interact with each other:
   `CommonExtension` exposes `compileSdkMinor`. `TargetSdkSpec` and `MinSdkSpec`
   offer only `release(Int)` and `preview(String)`. Verified against the published
   `com.android.tools.build:gradle-api` and `gradle` artifacts for 9.4.0.
+- **AGP 9 provides Kotlin itself and rejects the standalone Kotlin plugin.**
+  Applying `org.jetbrains.kotlin.android` fails with "no longer required for
+  Kotlin support since AGP 9.0"; AGP's release notes state the standalone plugin
+  is incompatible with the new DSL. AGP 9.4.0's published POM declares
+  `org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.10`.
 - **The engine artifact is verifiable.** `org.godotengine:godot:4.7.2.stable` is
   published to MavenCentral with a `.asc` PGP signature and SHA-256/SHA-512
   checksums for the AAR, POM and Gradle module metadata.
@@ -132,6 +137,26 @@ Because the engine AAR ships no consumer rules, `app/proguard-rules.pro` declare
 the keep rules for the JNI surface, for `@UsedByGodot` methods reached by name
 from GDScript, for reflectively instantiated plugins, and for the host bridge.
 Without them a release build shrinks successfully and fails at runtime.
+
+### 6. Kotlin comes from AGP, not from a separate plugin
+
+From AGP 9.0 onward Kotlin support is built into the Android Gradle plugin,
+which carries its own Kotlin Gradle plugin as a runtime dependency. Applying
+`org.jetbrains.kotlin.android` is not merely redundant — AGP 9 rejects it as
+incompatible with the new DSL — so neither the catalogue nor any build script
+declares it, and `validate_toolchain.py` fails if one reappears.
+
+AGP 9.4.0 declares Kotlin Gradle plugin **2.2.10** in its published POM, so that
+is the version the build compiles with, and it is recorded in
+`config/android/toolchain.properties`. AGP documents how to force a higher
+version through a `buildscript` classpath entry, and that is deliberately not
+done: it would mean shipping an AGP/Kotlin combination the plugin vendor never
+tested, for no product benefit. This is the same reasoning ADR 0003 applies to
+the NDK — deliberate coupling is the cheaper failure mode. The value changes when
+AGP changes, so AGP's POM is re-read at every AGP bump.
+
+Compiler configuration still belongs in the `kotlin { compilerOptions { } }`
+block, which is the DSL AGP's own migration guidance points at.
 
 ## Consequences
 

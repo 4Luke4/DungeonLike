@@ -37,8 +37,7 @@ class HostBridge(
 ) : GodotPlugin(godot) {
     override fun getPluginName(): String = PLUGIN_NAME
 
-    override fun getPluginSignals(): MutableSet<SignalInfo> =
-        mutableSetOf(SignalInfo(SIGNAL_INPUT_MODE_CHANGED, String::class.java))
+    override fun getPluginSignals(): MutableSet<SignalInfo> = mutableSetOf(SignalInfo(SIGNAL_INPUT_MODE_CHANGED, String::class.java))
 
     /**
      * Returns the current interaction model as one of [InputMode.engineValue].

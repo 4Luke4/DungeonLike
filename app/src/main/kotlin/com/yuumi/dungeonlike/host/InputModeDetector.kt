@@ -46,10 +46,12 @@ object InputModeDetector {
             // SOURCE_MOUSE covers an ordinary mouse and a touchpad in pointer
             // mode; SOURCE_MOUSE_RELATIVE covers captured-pointer devices, which
             // report relative motion and would otherwise be missed.
-            supportsPointer = device.supportsSource(InputDevice.SOURCE_MOUSE) ||
-                device.supportsSource(InputDevice.SOURCE_MOUSE_RELATIVE),
-            hasAlphabeticKeys = device.keyboardType == InputDevice.KEYBOARD_TYPE_ALPHABETIC &&
-                device.supportsSource(InputDevice.SOURCE_KEYBOARD),
+            supportsPointer =
+                device.supportsSource(InputDevice.SOURCE_MOUSE) ||
+                    device.supportsSource(InputDevice.SOURCE_MOUSE_RELATIVE),
+            hasAlphabeticKeys =
+                device.keyboardType == InputDevice.KEYBOARD_TYPE_ALPHABETIC &&
+                    device.supportsSource(InputDevice.SOURCE_KEYBOARD),
         )
 
     private fun InputDevice.supportsSource(source: Int): Boolean = (sources and source) == source

@@ -8,7 +8,9 @@ package com.yuumi.dungeonlike.host
  * is part of the contract with the GDScript side and must not be renamed
  * without changing the engine code that matches on it.
  */
-enum class InputMode(val engineValue: String) {
+enum class InputMode(
+    val engineValue: String,
+) {
     /** No pointer or physical keyboard attached: touch only. */
     TOUCH("touch"),
 
@@ -29,7 +31,10 @@ enum class InputMode(val engineValue: String) {
          * Deliberately total: every combination maps to a mode, so the engine
          * never receives an undefined state.
          */
-        fun of(hasPointer: Boolean, hasPhysicalKeyboard: Boolean): InputMode =
+        fun of(
+            hasPointer: Boolean,
+            hasPhysicalKeyboard: Boolean,
+        ): InputMode =
             when {
                 hasPointer && hasPhysicalKeyboard -> MOUSE_AND_KEYBOARD
                 hasPointer -> MOUSE
