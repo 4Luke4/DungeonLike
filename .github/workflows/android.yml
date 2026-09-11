@@ -140,7 +140,7 @@ jobs:
 
       - name: Restore cached engine
         id: engine-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: engine
           key: godot-editor-${{ needs.toolchain.outputs.godot-release }}-linux-x86_64
