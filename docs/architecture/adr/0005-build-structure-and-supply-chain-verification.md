@@ -131,8 +131,18 @@ uploaded as an artifact, and committed from there.
 
 The job is conditional on those files being missing, so it disables itself once
 they exist, and it remains the supported way to refresh verification metadata
-after a dependency change. It runs real tasks rather than `help`, because
-verification metadata records only artifacts that were actually resolved.
+after a dependency change: **delete `gradle/verification-metadata.xml` and push**.
+Deleting it is the explicit, reviewable act of asking for regeneration, and it
+makes the regenerated content show up as a diff rather than as an opaque
+overwrite.
+
+It runs real tasks rather than `help`, because verification metadata records only
+artifacts that were actually resolved. It also runs with
+`--no-configuration-cache --refresh-dependencies`: without them a cached
+configuration or an already-populated dependency cache lets Gradle satisfy the
+buildscript classpath without re-resolving it, so those artifacts never reach the
+metadata writer and the file is silently incomplete — which surfaces later as a
+verification failure on a build that changed nothing.
 
 `gradle/actions/wrapper-validation` then checks the committed wrapper jar against
 Gradle's published checksums on every build. A wrapper jar is executable code

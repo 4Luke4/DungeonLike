@@ -283,9 +283,16 @@ jobs:
           # records only artefacts that were actually resolved. Anything reached
           # exclusively by a task not listed here would be absent from the
           # metadata and would fail the first build that needed it.
+          #
+          # `--no-configuration-cache` and `--refresh-dependencies` are both
+          # required for completeness, and their absence is not obvious until a
+          # later build fails: a cached configuration or an already-populated
+          # dependency cache lets Gradle satisfy the buildscript classpath
+          # without re-resolving it, so those artefacts never reach the writer
+          # and the metadata silently omits them.
           ./gradlew --write-verification-metadata sha256,pgp \
             assembleDebug testDebugUnitTest lintDebug \
-            --no-daemon --stacktrace
+            --no-daemon --no-configuration-cache --refresh-dependencies --stacktrace
 
       - name: Upload generated build inputs
         uses: actions/upload-artifact@v7
