@@ -300,6 +300,20 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
+      - name: Upload reports
+        # The bootstrap job runs real build, test and lint tasks, so it can fail
+        # for the same reasons the build job can. Without the reports, a failure
+        # here reports only that lint found something, not what.
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: bootstrap-reports
+          path: |
+            **/build/reports/**
+            **/build/intermediates/lint_intermediate_text_report/**
+          retention-days: 7
+          if-no-files-found: ignore
+
       - name: Explain the next step
         run: |
           {

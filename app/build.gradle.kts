@@ -186,10 +186,9 @@ android {
         // findings would produce an unactionable red check -- the exact failure
         // mode that teaches reviewers to ignore CI.
         checkDependencies = false
-        // Written so the workflow can upload a report whether the build
-        // succeeded or failed.
-        htmlReport = true
-        xmlReport = true
+        // Report formats are not configured: from AGP 9 the HTML, XML and SARIF
+        // reports are always generated, and the `htmlReport`/`xmlReport`
+        // properties are deprecated. The workflow uploads whatever is produced.
     }
 
     testOptions {
