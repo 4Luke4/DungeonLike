@@ -1,0 +1,11 @@
+# Godot editor state that is regenerated on import and must never be committed.
+#
+# `.godot/` holds the import cache, UIDs and editor metadata. It is large, it is
+# machine-specific, and it is rebuilt by `godot --headless --import` in CI before
+# the pack is exported.
+.godot/
+
+# Editor-local export credentials. `export_presets.cfg` is committed and
+# reviewable; this companion file holds secrets such as keystore passwords and
+# must stay out of version control (SECURITY.md).
+export_credentials.cfg
