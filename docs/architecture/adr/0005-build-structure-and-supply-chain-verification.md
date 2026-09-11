@@ -91,6 +91,14 @@ grouping routine updates, by capping open Gradle pull requests low, and by the
 refresh job described below. The alternative — no verification — was rejected
 because the failure it prevents is unrecoverable and silent.
 
+**Signature coverage is partial, and that is recorded rather than hidden.** Of
+the keys in the resolved graph, 18 could not be retrieved from any key server and
+were recorded as ignored; those artifacts are verified by SHA-256 checksum alone.
+The engine's own key is trusted, so `org.godotengine:godot` — the one dependency
+that ships native code to users, and the reason this control exists — is verified
+by signature. Reviewing the ignored-key list is part of reviewing a metadata
+refresh.
+
 ### 3. The game pack is a CI build output
 
 The Godot project lives in `game/`, outside the Android module, and is exported

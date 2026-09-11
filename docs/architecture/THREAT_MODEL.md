@@ -117,9 +117,20 @@ ordinary, signed, resolver-managed Gradle dependency.
   resolved artifact's checksum and signature are checked on every build, and the
   build fails on mismatch.
 - `gradle/verification-metadata.xml` is committed, so a change to what the build
-  trusts appears in a diff and passes through review.
+  trusts appears in a diff and passes through review. The engine's own signing
+  key is among the trusted keys, so `org.godotengine:godot:4.7.2.stable` is
+  verified by signature, not merely by checksum.
 - The Gradle wrapper jar is validated against Gradle's published checksums on
   every run, closing the adjacent "tampered wrapper" path.
+
+**Accepted risk — partial signature coverage.** 18 of the signing keys in the
+resolved dependency graph could not be retrieved from any key server, and Gradle
+recorded them as ignored keys. Those artifacts are verified by **SHA-256
+checksum only**, not by signature. This is a real limitation and is recorded
+rather than papered over: a checksum pins exactly the bytes reviewed at
+generation time, so substitution is still detected, but the chain back to a
+publisher identity is missing for those entries. The engine itself is not among
+them.
 
 **Accepted risk.** Dependabot is deliberately not allowed to bump the engine: an
 engine change alters shipped native code and must be a reviewed decision with the
