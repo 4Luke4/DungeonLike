@@ -45,6 +45,8 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
 - Scoped `AGENTS.md` files for `.github/`, `scripts/`, `app/` and `game/`.
 - ADR 0005, recording build structure, supply-chain verification, the engine
   pack pipeline, and why generated build inputs are bootstrapped through Actions.
+- `gradle/verification-keyring.keys`, pinning the trusted public keys so that
+  dependency verification does not depend on a key server being reachable.
 
 ### Changed
 
@@ -78,14 +80,20 @@ source of truth. `scripts/validate_version.py` fails CI if the two disagree.
 ### Security
 
 - Gradle dependency verification enabled with SHA-256 and PGP, with committed,
-  reviewable metadata. This closes boundary 3 of the threat model: the engine is
-  native code shipped to users, and its checksum and signature are now checked on
-  every build.
+  reviewable metadata and an exported keyring that pins the trusted public keys
+  rather than fetching them from a key server on every build. This closes
+  boundary 3 of the threat model: the engine is native code shipped to users, and
+  its checksum and signature are now checked on every build. Signature coverage
+  is partial and the limitation is recorded: keys that no key server would serve
+  are listed as ignored, leaving those artifacts on checksum-only verification.
+  The engine's own key is trusted, so the engine itself is signature-verified.
 - Dependency resolution restricted to Google Maven and MavenCentral, with content
   filters binding coordinate groups to the repository entitled to serve them and
   `FAIL_ON_PROJECT_REPOS` so no module can add a third source.
 - The committed Gradle wrapper jar is validated against Gradle's published
   checksums on every run, and the distribution carries a `distributionSha256Sum`.
+- The Godot editor used to export the game pack is verified against the release
+  SHA-512 manifest before it is executed.
 - Boundary 4 of the threat model closed: the host-to-engine bridge surface is
   defined, minimal, and validated in both directions.
 - The application declares no permissions.
