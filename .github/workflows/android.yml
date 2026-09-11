@@ -256,7 +256,7 @@ jobs:
           cache-read-only: true
 
       - name: Download game pack
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: game-pack
           path: app/src/main/assets
@@ -389,7 +389,7 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Download game pack
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: game-pack
           path: app/src/main/assets
