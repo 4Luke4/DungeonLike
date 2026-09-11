@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup and device-transfer rules.
+
+    Save data is deliberately excluded from cloud backup and device transfer for
+    now. The save format does not exist yet, and restoring a save written by a
+    future or past version into a different install is exactly the "corrupt or
+    truncated save data" case the threat model requires to fail safe. Until the
+    save system lands and can version and validate its own data, not restoring is
+    the safe default.
+
+    Revisit together with the save system (THREAT_MODEL.md, boundary 5).
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude
+            domain="file"
+            path="." />
+        <exclude
+            domain="database"
+            path="." />
+        <exclude
+            domain="sharedpref"
+            path="." />
+    </cloud-backup>
+
+    <device-transfer>
+        <exclude
+            domain="file"
+            path="." />
+        <exclude
+            domain="database"
+            path="." />
+        <exclude
+            domain="sharedpref"
+            path="." />
+    </device-transfer>
+</data-extraction-rules>

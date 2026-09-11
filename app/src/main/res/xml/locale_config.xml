@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The languages DungeonLike supports, declared to the system so that Android's
+    per-app language setting offers them.
+
+    WRITTEN BY HAND, NOT GENERATED, AND THAT IS THE POINT.
+    AGP can generate this file from the `values-*` directories present in `res/`,
+    which is the right choice for an app whose translations are Android string
+    resources. This app's are not: the engine renders and localizes everything
+    the player sees (ADR 0002), so its translations live in the Godot project's
+    own data. Generating the list from Android resources would therefore advertise
+    English only, while the application genuinely ships five languages.
+
+    The ultimate fallback locale, `en`, is listed first, matching `res/values`.
+
+    Keep in step with the locales the game data provides. Adding a sixth language
+    means adding it here as well, or the system picker will never offer it.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="it" />
+    <locale android:name="es" />
+    <locale android:name="fr" />
+    <locale android:name="de" />
+</locale-config>
