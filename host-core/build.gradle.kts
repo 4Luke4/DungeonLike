@@ -27,7 +27,13 @@ android {
     compileSdk {
         version = release(toolchain.getValue("android.compileSdk").toInt()) {
             minorApiLevel = toolchain.getValue("android.compileSdkMinor").toInt()
-            sdkExtension = toolchain.getValue("android.compileSdkExtension").toInt()
+            // sdkExtension is deliberately NOT set. The platform package for
+            // this release, `platforms;android-37.2`, already carries SDK
+            // extension level 24 as its base extension, and Google publishes no
+            // separately versioned `android-37.2-extNN` package. Declaring the
+            // extension here makes AGP resolve the compile SDK as
+            // `platforms;android-37.2-ext24` and fail with "Failed to find
+            // Platform SDK", because no such package exists to install.
         }
     }
     buildToolsVersion = toolchain.getValue("android.buildTools")

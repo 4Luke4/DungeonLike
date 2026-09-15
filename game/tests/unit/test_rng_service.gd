@@ -17,7 +17,7 @@ extends GutTest
 const VECTOR_SEED_HEX := "885f2e0818c469fdf70db469c23591acac8cd34a1a6ed318f59a3fce6fed66d9"
 
 ## Seed derived from the engine source alone, as happens in the editor.
-const VECTOR_ENGINE_ONLY_SEED_HEX := "e7d45c80c9427057a62ae89cf5dc1d877c8f525e8e04a954f8f08dcaf31d957f"
+const VECTOR_ENGINE_SEED_HEX := "e7d45c80c9427057a62ae89cf5dc1d877c8f525e8e04a954f8f08dcaf31d957f"
 
 ## First sixteen bytes of each stream derived from VECTOR_SEED_HEX.
 const VECTOR_STREAM_PREFIXES := {
@@ -51,8 +51,10 @@ func test_seed_derivation_matches_shared_vectors() -> void:
 
 
 func test_seed_derivation_without_platform_entropy_matches_shared_vector() -> void:
-	var derived: PackedByteArray = RngService.derive_run_seed(PackedByteArray(), _repeated(0x7f, 32))
-	assert_eq(derived.hex_encode(), VECTOR_ENGINE_ONLY_SEED_HEX)
+	var derived: PackedByteArray = RngService.derive_run_seed(
+		PackedByteArray(), _repeated(0x7f, 32)
+	)
+	assert_eq(derived.hex_encode(), VECTOR_ENGINE_SEED_HEX)
 
 
 func test_streams_match_shared_vectors() -> void:
@@ -99,7 +101,7 @@ func test_streams_are_independent() -> void:
 func test_different_seeds_produce_different_runs() -> void:
 	var first := RngService.next_bytes(RngService.STREAM_MAP, 32).hex_encode()
 
-	RngService.begin_run_with_seed(_seed_bytes(VECTOR_ENGINE_ONLY_SEED_HEX))
+	RngService.begin_run_with_seed(_seed_bytes(VECTOR_ENGINE_SEED_HEX))
 	var second := RngService.next_bytes(RngService.STREAM_MAP, 32).hex_encode()
 
 	assert_ne(first, second)

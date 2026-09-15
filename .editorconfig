@@ -26,9 +26,14 @@ indent_size = 4
 
 # GDScript is tab-indented by the official Godot style guide, and gdformat
 # enforces tabs. Spaces here would make every Godot file fail formatting.
+#
+# The line limit is gdformat's canonical width rather than the repository's 120,
+# for the same reason: the formatter rewrites anything longer, so declaring a
+# wider limit here would only mislead the author.
 [*.gd]
 indent_style = tab
 indent_size = 4
+max_line_length = 100
 
 # Godot-authored files (scenes, resources, project settings, import metadata)
 # are written by the editor with tabs; reformatting them creates noise diffs.

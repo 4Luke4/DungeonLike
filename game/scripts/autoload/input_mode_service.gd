@@ -97,7 +97,9 @@ func _resolve_initial_mode() -> void:
 	)
 
 
-func _on_input_devices_changed(has_keyboard: bool, has_pointer: bool, _has_controller: bool) -> void:
+func _on_input_devices_changed(
+	has_keyboard: bool, has_pointer: bool, _has_controller: bool
+) -> void:
 	# A keyboard is the most specific signal: a device with a keyboard attached
 	# is being used at a desk, and hiding key hints there would waste the most
 	# capable input the player has.

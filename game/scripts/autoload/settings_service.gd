@@ -23,7 +23,12 @@ func _ready() -> void:
 		# A settings file that exists but cannot be parsed is discarded rather
 		# than repaired: defaults are always playable, and refusing to start
 		# over a corrupt preferences file would be absurd.
-		push_warning("Settings at %s could not be read (%d); defaults will be used." % [SETTINGS_PATH, status])
+		push_warning(
+			(
+				"Settings at %s could not be read (%d); defaults will be used."
+				% [SETTINGS_PATH, status]
+			)
+		)
 		_config = ConfigFile.new()
 
 

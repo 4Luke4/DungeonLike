@@ -10,8 +10,7 @@ extends GutTest
 func test_every_declared_action_is_registered() -> void:
 	for action: String in InputModeService.KEY_BINDINGS:
 		assert_true(
-			InputMap.has_action(action),
-			"action '%s' is declared but was never registered" % action
+			InputMap.has_action(action), "action '%s' is declared but was never registered" % action
 		)
 
 

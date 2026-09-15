@@ -3,9 +3,11 @@
 # Only deviations from gdtoolkit's defaults are recorded. Each one is a
 # decision, not a preference.
 
-# Matches the 120-column limit the rest of the repository uses (.editorconfig),
-# rather than gdlint's narrower default.
-max-line-length: 120
+# 100 columns, which is the width gdformat normalises to. The rest of the
+# repository wraps at 120, but GDScript follows its formatter: a linter that
+# allowed 120 would accept lines the formatter then rewrites, so the check and
+# the formatter would disagree on every long signature.
+max-line-length: 100
 
 # Autoload singletons are referenced by the name registered in project.godot,
 # which is PascalCase by Godot convention. Without this, every call to

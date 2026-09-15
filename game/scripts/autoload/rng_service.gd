@@ -193,7 +193,9 @@ func shuffled(stream: String, items: Array) -> Array:
 ## Public because it is a meaningful operation in its own right and because the
 ## test suite pins it against vectors shared with the Kotlin implementation.
 ## Mirrors `SeedDerivation.deriveRunSeed` exactly; the two must not drift.
-func derive_run_seed(platform_entropy: PackedByteArray, engine_entropy: PackedByteArray) -> PackedByteArray:
+func derive_run_seed(
+	platform_entropy: PackedByteArray, engine_entropy: PackedByteArray
+) -> PackedByteArray:
 	# Both inputs are length-prefixed before concatenation. Without the prefix
 	# a longer draw from one source could impersonate a split across both.
 	var material := PackedByteArray()
@@ -213,6 +215,8 @@ func _adopt_seed(seed_bytes: PackedByteArray) -> void:
 	# run's sequence into the next.
 	_streams.clear()
 	run_seeded.emit(run_seed_hex())
+
+
 func _length_prefixed(bytes: PackedByteArray) -> PackedByteArray:
 	var size := bytes.size()
 	var prefixed := PackedByteArray()
@@ -236,7 +240,9 @@ func _stream_state(stream: String) -> Dictionary:
 	assert(not _run_seed.is_empty(), "no run has been seeded yet")
 
 	var info := (STREAM_INFO_PREFIX + stream).to_utf8_buffer()
-	var seed_material := _hkdf_expand(_hmac(SEED_SALT.to_utf8_buffer(), _run_seed), info, SEED_LENGTH)
+	var seed_material := _hkdf_expand(
+		_hmac(SEED_SALT.to_utf8_buffer(), _run_seed), info, SEED_LENGTH
+	)
 	var state := _drbg_instantiate(seed_material)
 	_streams[stream] = state
 	return state
@@ -309,7 +315,9 @@ func _next_uint32(stream: String) -> int:
 
 
 ## HKDF expand, RFC 5869 section 2.3.
-func _hkdf_expand(pseudo_random_key: PackedByteArray, info: PackedByteArray, length: int) -> PackedByteArray:
+func _hkdf_expand(
+	pseudo_random_key: PackedByteArray, info: PackedByteArray, length: int
+) -> PackedByteArray:
 	var output := PackedByteArray()
 	var block := PackedByteArray()
 	var counter := 1

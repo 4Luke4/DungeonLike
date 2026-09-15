@@ -17,10 +17,7 @@ func after_each() -> void:
 func test_ships_exactly_the_five_supported_languages() -> void:
 	# Must stay in step with app/src/main/res/values-*/ and
 	# game/localization/ui.csv; tools/scripts/check_locales.py enforces the rest.
-	assert_eq(
-		Array(LocaleService.available_locales()),
-		["en", "it", "es", "fr", "de"]
-	)
+	assert_eq(Array(LocaleService.available_locales()), ["en", "it", "es", "fr", "de"])
 
 
 func test_a_supported_locale_is_applied() -> void:
