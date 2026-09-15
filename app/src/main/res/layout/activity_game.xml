@@ -10,4 +10,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/surface_background"
+    android:contentDescription="@string/content_description_game_surface"
     android:keepScreenOn="true" />

@@ -1,7 +1,10 @@
 package com.yuumi.dungeonlike
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.yuumi.dungeonlike.bridge.HostPlugin
 import org.godotengine.godot.Godot
@@ -35,6 +38,14 @@ class GameActivity : AppCompatActivity(), GodotHost {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        // Checked before the engine is created. Without the pack the engine
+        // starts and renders nothing, which reaches the player as a black
+        // screen with no explanation; failing here can at least say why.
+        if (!isGamePackPresent()) {
+            showFatalError(R.string.error_game_pack_missing)
+            return
+        }
+
         // On a configuration-driven recreation the fragment manager restores the
         // existing fragment; creating a second one would create a second engine
         // instance in the same process.
@@ -42,12 +53,42 @@ class GameActivity : AppCompatActivity(), GodotHost {
         godotFragment = if (existing is GodotFragment) {
             existing
         } else {
-            GodotFragment().also { fragment ->
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.godot_fragment_container, fragment)
-                    .commitNowAllowingStateLoss()
-            }
+            runCatching {
+                GodotFragment().also { fragment ->
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.godot_fragment_container, fragment)
+                        .commitNowAllowingStateLoss()
+                }
+            }.onFailure { failure ->
+                Log.e(TAG, "The Godot engine could not be started.", failure)
+                showFatalError(R.string.error_engine_start_failed)
+            }.getOrNull()
         }
+    }
+
+    /**
+     * Whether the exported game pack shipped inside this package.
+     *
+     * A missing pack means a packaging fault rather than anything the player
+     * did, so the message offers the only action that can help.
+     */
+    private fun isGamePackPresent(): Boolean =
+        runCatching { assets.open(GAME_PACK_ASSET).close() }.isSuccess
+
+    /**
+     * Reports a failure the player cannot recover from and closes the game.
+     *
+     * A dialog rather than a toast: this is the end of the session, and a
+     * message that disappears on its own would leave the player looking at a
+     * blank window wondering what happened.
+     */
+    private fun showFatalError(@StringRes messageId: Int) {
+        AlertDialog.Builder(this)
+            .setMessage(messageId)
+            .setCancelable(false)
+            .setPositiveButton(android.R.string.ok) { _, _ -> finish() }
+            .setOnDismissListener { finish() }
+            .show()
     }
 
     /**
@@ -78,11 +119,16 @@ class GameActivity : AppCompatActivity(), GodotHost {
         mutableSetOf(HostPlugin(engine, this))
 
     private companion object {
+        const val TAG = "GameActivity"
+
+        /** Name of the exported pack inside the package's asset directory. */
+        const val GAME_PACK_ASSET = "game.pck"
+
         /**
-         * Asset-relative path of the exported game pack. CI writes the pack to
-         * `app/src/main/assets/game.pck`; the `res://` prefix is how the engine
-         * addresses its own asset directory.
+         * How the engine addresses that same file: CI writes the pack to
+         * `app/src/main/assets/game.pck`, and `res://` is the engine's name for
+         * its own asset directory.
          */
-        const val GAME_PACK_PATH = "res://game.pck"
+        const val GAME_PACK_PATH = "res://" + GAME_PACK_ASSET
     }
 }
