@@ -39,7 +39,7 @@ func test_registration_is_idempotent() -> void:
 	# not duplicate events, or one key press would be delivered as two — which
 	# in a turn-based game means taking two turns from a single keystroke.
 	var before := InputMap.action_get_events("confirm").size()
-	InputModeService._register_bindings()
+	InputModeService.register_bindings()
 	var after := InputMap.action_get_events("confirm").size()
 
 	assert_eq(after, before, "re-registering must replace bindings, not add to them")

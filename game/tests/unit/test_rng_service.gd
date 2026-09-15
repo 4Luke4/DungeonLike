@@ -32,7 +32,7 @@ const VECTOR_MAP_D20 := [11, 8, 10, 9, 4, 17, 8, 13, 0, 16]
 
 
 func _seed_bytes(hex: String) -> PackedByteArray:
-	return PackedByteArray(Array(hex.hex_decode()))
+	return hex.hex_decode()
 
 
 func before_each() -> void:
@@ -40,7 +40,7 @@ func before_each() -> void:
 
 
 func test_seed_derivation_matches_shared_vectors() -> void:
-	var derived: PackedByteArray = RngService._derive_run_seed(
+	var derived: PackedByteArray = RngService.derive_run_seed(
 		_repeated(0x11, 32), _repeated(0x22, 32)
 	)
 	assert_eq(
@@ -51,7 +51,7 @@ func test_seed_derivation_matches_shared_vectors() -> void:
 
 
 func test_seed_derivation_without_platform_entropy_matches_shared_vector() -> void:
-	var derived: PackedByteArray = RngService._derive_run_seed(PackedByteArray(), _repeated(0x7f, 32))
+	var derived: PackedByteArray = RngService.derive_run_seed(PackedByteArray(), _repeated(0x7f, 32))
 	assert_eq(derived.hex_encode(), VECTOR_ENGINE_ONLY_SEED_HEX)
 
 

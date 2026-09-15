@@ -59,7 +59,8 @@ jobs:
       - name: Report the resolved toolchain
         run: |
           echo "Java ${{ steps.read.outputs.java }}, Gradle ${{ steps.read.outputs.gradle }}"
-          echo "Android platform ${{ steps.read.outputs.compile-sdk }}, build tools ${{ steps.read.outputs.build-tools }}"
+          echo "Android platform ${{ steps.read.outputs.compile-sdk }}"
+          echo "Build tools ${{ steps.read.outputs.build-tools }}"
           echo "Godot ${{ steps.read.outputs.godot-version }}"
 
   # Consistency checks that need nothing but Python. They run first because they

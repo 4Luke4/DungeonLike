@@ -33,12 +33,14 @@ skipped.
 - [ ] Commits follow `.gitmessage` (Conventional Commits, subject ≤ 100 characters)
 - [ ] The change is focused; no unrelated cleanup or reformatting
 - [ ] Non-obvious security, lifecycle, compatibility and workflow decisions are commented
-- [ ] No value duplicated that already has a source of truth (`VERSION`, `config/android/toolchain.properties`, `gradle/libs.versions.toml`)
+- [ ] No value duplicated that already has a source of truth: `VERSION`,
+      `config/android/toolchain.properties`, `gradle/libs.versions.toml`
 - [ ] Automated coverage updated for the changed behaviour
 - [ ] Randomness goes through `RngService` only
 - [ ] User-visible strings updated in all five locales (en, it, es, fr, de)
 - [ ] UI changes account for accessibility, keyboard, mouse, touch, and phone/tablet layout
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] `THIRD_PARTY_NOTICES.md` updated if a shipped dependency or licensing obligation changed
-- [ ] Documented security or release gates updated (`SECURITY.md`, `docs/architecture/THREAT_MODEL.md`, `docs/release/READINESS.md`)
+- [ ] Documented security or release gates updated: `SECURITY.md`,
+      `docs/architecture/THREAT_MODEL.md`, `docs/release/READINESS.md`
 - [ ] No credential, key or keystore appears in the code, logs, artifacts or this description

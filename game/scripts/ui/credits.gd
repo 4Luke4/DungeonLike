@@ -38,8 +38,8 @@ func _build_notices() -> String:
 	sections.append(Engine.get_license_text())
 
 	sections.append("[b]%s[/b]" % tr("CREDITS_THIRD_PARTY_HEADING"))
-	for component: String in Engine.get_copyright_info().map(func(entry: Dictionary) -> String:
-		return entry.get("name", "")):
+	for entry: Dictionary in Engine.get_copyright_info():
+		var component: String = entry.get("name", "")
 		if not component.is_empty():
 			sections.append("- " + component)
 

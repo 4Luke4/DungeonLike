@@ -67,7 +67,7 @@ func begin_run() -> PackedByteArray:
 	var platform_entropy := HostBridge.host_entropy(SEED_LENGTH)
 
 	_platform_entropy_used = not platform_entropy.is_empty()
-	var seed_bytes := _derive_run_seed(platform_entropy, engine_entropy)
+	var seed_bytes := derive_run_seed(platform_entropy, engine_entropy)
 	_adopt_seed(seed_bytes)
 	return seed_bytes
 
@@ -188,21 +188,12 @@ func shuffled(stream: String, items: Array) -> Array:
 	return result
 
 
-# --- Internals ---------------------------------------------------------------
-
-
-func _adopt_seed(seed_bytes: PackedByteArray) -> void:
-	_run_seed = seed_bytes
-	# Streams are rebuilt from the new seed; keeping old state would leak one
-	# run's sequence into the next.
-	_streams.clear()
-	run_seeded.emit(run_seed_hex())
-
-
-## Mirrors `SeedDerivation.deriveRunSeed` on the Kotlin side exactly. The two
-## implementations are checked against the same vectors precisely because they
-## must not drift.
-func _derive_run_seed(platform_entropy: PackedByteArray, engine_entropy: PackedByteArray) -> PackedByteArray:
+## Combines entropy from two sources into a run seed.
+##
+## Public because it is a meaningful operation in its own right and because the
+## test suite pins it against vectors shared with the Kotlin implementation.
+## Mirrors `SeedDerivation.deriveRunSeed` exactly; the two must not drift.
+func derive_run_seed(platform_entropy: PackedByteArray, engine_entropy: PackedByteArray) -> PackedByteArray:
 	# Both inputs are length-prefixed before concatenation. Without the prefix
 	# a longer draw from one source could impersonate a split across both.
 	var material := PackedByteArray()
@@ -213,6 +204,15 @@ func _derive_run_seed(platform_entropy: PackedByteArray, engine_entropy: PackedB
 	return _hkdf_expand(prk, SEED_INFO.to_utf8_buffer(), SEED_LENGTH)
 
 
+# --- Internals ---------------------------------------------------------------
+
+
+func _adopt_seed(seed_bytes: PackedByteArray) -> void:
+	_run_seed = seed_bytes
+	# Streams are rebuilt from the new seed; keeping old state would leak one
+	# run's sequence into the next.
+	_streams.clear()
+	run_seeded.emit(run_seed_hex())
 func _length_prefixed(bytes: PackedByteArray) -> PackedByteArray:
 	var size := bytes.size()
 	var prefixed := PackedByteArray()

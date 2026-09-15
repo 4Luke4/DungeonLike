@@ -46,7 +46,7 @@ var _mode: Mode = Mode.TOUCH
 
 
 func _ready() -> void:
-	_register_bindings()
+	register_bindings()
 	HostBridge.input_devices_changed.connect(_on_input_devices_changed)
 	_resolve_initial_mode()
 
@@ -77,7 +77,7 @@ func should_use_touch_targets() -> bool:
 ## Keys are bound by physical keycode rather than by character, so the movement
 ## cluster stays in the same place on an AZERTY or QWERTZ keyboard instead of
 ## scattering across the board.
-func _register_bindings() -> void:
+func register_bindings() -> void:
 	for action: String in KEY_BINDINGS:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)

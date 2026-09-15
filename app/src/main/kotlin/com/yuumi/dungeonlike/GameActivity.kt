@@ -58,7 +58,10 @@ class GameActivity : AppCompatActivity(), GodotHost {
      * path is resolved relative to the application's asset directory.
      */
     override fun getCommandLine(): MutableList<String> {
-        val arguments = ArrayList(super.getCommandLine())
+        // Qualified because this class has two supertypes; an unqualified
+        // `super` would not compile, and the interface default must be kept:
+        // it carries arguments the engine relies on.
+        val arguments = ArrayList(super<GodotHost>.getCommandLine())
         arguments += "--main-pack"
         arguments += GAME_PACK_PATH
         return arguments

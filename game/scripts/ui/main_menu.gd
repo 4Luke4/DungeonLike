@@ -62,7 +62,9 @@ func _on_quit_pressed() -> void:
 	get_tree().quit()
 
 
-func _on_input_mode_changed(_mode: InputModeService.Mode) -> void:
+# The parameter is typed as int rather than as InputModeService.Mode: an
+# autoload is a node instance, not a class, so its enum cannot name a type here.
+func _on_input_mode_changed(_mode: int) -> void:
 	var show_hints := InputModeService.should_show_key_hints()
 	_new_run_button.text = tr("MENU_NEW_RUN") + (" [Enter]" if show_hints else "")
 
