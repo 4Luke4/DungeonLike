@@ -47,7 +47,9 @@ func test_a_fight_always_terminates() -> void:
 			guard += 1
 			assert_lt(guard, 500, "the fight did not terminate with seed %d" % seed_byte)
 		assert_eq(resolver.state, CombatResolver.State.FINISHED)
-		assert_ne(resolver.outcome, CombatResolver.Outcome.UNDECIDED, "a finished fight has a result")
+		assert_ne(
+			resolver.outcome, CombatResolver.Outcome.UNDECIDED, "a finished fight has a result"
+		)
 
 
 func test_hit_points_never_fall_below_zero() -> void:

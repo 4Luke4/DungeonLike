@@ -68,23 +68,32 @@ func _describe_effect(effect: Dictionary, item: Item) -> String:
 		"armour_class_bonus":
 			return "+%d %s" % [int(effect.get("amount", 0)), tr("RULES_ARMOUR_CLASS_SHORT")]
 		"ability_bonus":
-			return "+%d %s" % [
-				int(effect.get("amount", 0)),
-				tr(Abilities.name_key(String(effect.get("ability", "str")))),
-			]
+			return (
+				"+%d %s"
+				% [
+					int(effect.get("amount", 0)),
+					tr(Abilities.name_key(String(effect.get("ability", "str")))),
+				]
+			)
 		"bonus_damage":
 			var damage: Dictionary = effect.get("damage", {})
-			return "+%s %s" % [
-				String(damage.get("dice", "")),
-				tr(Damage.name_key(String(damage.get("type", "fire")))),
-			]
+			return (
+				"+%s %s"
+				% [
+					String(damage.get("dice", "")),
+					tr(Damage.name_key(String(damage.get("type", "fire")))),
+				]
+			)
 		"max_hit_points":
 			return "+%d %s" % [_rolled_value(effect, item), tr("RULES_HIT_POINTS_SHORT")]
 		"damage_resistance":
-			return "%s: %s" % [
-				tr("RULES_RESISTANCE"),
-				tr(Damage.name_key(String(effect.get("damage_type", "fire")))),
-			]
+			return (
+				"%s: %s"
+				% [
+					tr("RULES_RESISTANCE"),
+					tr(Damage.name_key(String(effect.get("damage_type", "fire")))),
+				]
+			)
 		"on_hit_condition":
 			return tr(Conditions.name_key(String(effect.get("condition", "poisoned"))))
 	return ""

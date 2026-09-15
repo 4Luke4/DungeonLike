@@ -7,7 +7,6 @@ extends RefCounted
 ## Dexterity" and have initiative, armour class and attack rolls all follow
 ## without any of them being told about the item.
 
-
 ## The six abilities, in their conventional order. The order is load-bearing
 ## only for display; lookups are by key.
 const ORDER: PackedStringArray = ["str", "dex", "con", "int", "wis", "cha"]

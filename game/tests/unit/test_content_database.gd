@@ -14,9 +14,7 @@ func before_each() -> void:
 
 
 func test_every_content_file_loads() -> void:
-	assert_true(
-		_content.is_loaded(), "content failed to load: %s" % ", ".join(_content.failures())
-	)
+	assert_true(_content.is_loaded(), "content failed to load: %s" % ", ".join(_content.failures()))
 
 
 func test_each_collection_holds_records() -> void:
@@ -33,9 +31,7 @@ func test_every_depth_has_a_theme() -> void:
 	# A gap here would strand a run mid-descent at a depth with nothing to
 	# generate from.
 	for depth in range(1, _content.deepest_depth() + 1):
-		assert_false(
-			_content.theme_for_depth(depth).is_empty(), "no theme covers depth %d" % depth
-		)
+		assert_false(_content.theme_for_depth(depth).is_empty(), "no theme covers depth %d" % depth)
 
 
 func test_a_missing_directory_is_reported_rather_than_crashing() -> void:

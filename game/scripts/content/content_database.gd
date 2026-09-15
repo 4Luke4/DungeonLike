@@ -90,7 +90,11 @@ func filtered(collection: String, predicate: Callable) -> Array:
 func theme_for_depth(depth: int) -> Dictionary:
 	for theme: Dictionary in all("dungeon_themes"):
 		var range_bounds: Array = theme.get("depth_range", [])
-		if range_bounds.size() == 2 and depth >= int(range_bounds[0]) and depth <= int(range_bounds[1]):
+		if (
+			range_bounds.size() == 2
+			and depth >= int(range_bounds[0])
+			and depth <= int(range_bounds[1])
+		):
 			return theme
 	return {}
 

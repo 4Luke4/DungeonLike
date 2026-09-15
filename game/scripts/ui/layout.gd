@@ -26,7 +26,11 @@ static func is_wide(control: Control) -> bool:
 
 ## The height a hittable control should have for the current input mode.
 static func target_height() -> int:
-	return TOUCH_TARGET_HEIGHT if InputModeService.should_use_touch_targets() else POINTER_TARGET_HEIGHT
+	return (
+		TOUCH_TARGET_HEIGHT
+		if InputModeService.should_use_touch_targets()
+		else POINTER_TARGET_HEIGHT
+	)
 
 
 ## Appends a key hint to [param label], but only when a keyboard is in use.

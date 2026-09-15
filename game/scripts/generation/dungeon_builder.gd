@@ -55,9 +55,7 @@ static func build(content: ContentDatabase) -> DungeonGraph:
 		for column in range(width):
 			var node := MapNode.new("node-%d-%d" % [depth, column], depth, column)
 			node.theme_id = String(theme.get("id", ""))
-			node.kind = (
-				MapNode.KIND_BOSS if is_final else _draw_kind(map_stream, theme)
-			)
+			node.kind = (MapNode.KIND_BOSS if is_final else _draw_kind(map_stream, theme))
 			var variants: int = maxi(1, int(theme.get("cosmetic_variants", 1)))
 			node.cosmetic_variant = RngService.next_below(cosmetic_stream, variants)
 			graph.add_node(node)

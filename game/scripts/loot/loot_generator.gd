@@ -64,8 +64,7 @@ static func generate(content: ContentDatabase, node: MapNode, depth: int) -> Ite
 ## generated item would have used; that keeps the two paths independent.
 static func _draw_unique(content: ContentDatabase, stream: String, depth: int) -> Item:
 	var eligible := content.filtered(
-		"uniques",
-		func(record: Dictionary) -> bool: return int(record.get("min_depth", 1)) <= depth
+		"uniques", func(record: Dictionary) -> bool: return int(record.get("min_depth", 1)) <= depth
 	)
 	if eligible.is_empty():
 		return null
@@ -116,7 +115,9 @@ static func _roll_affixes(
 		var candidates := content.filtered(
 			"affixes",
 			func(record: Dictionary) -> bool:
-				return _is_eligible(record, groups, item.item_level, budget, used_exclusive, roles_taken)
+				return _is_eligible(
+					record, groups, item.item_level, budget, used_exclusive, roles_taken
+				)
 		)
 		if candidates.is_empty():
 			return

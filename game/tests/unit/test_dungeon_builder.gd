@@ -51,9 +51,7 @@ func test_rooms_only_ever_lead_downward() -> void:
 	var graph := DungeonBuilder.build(_content)
 	for node in graph.nodes():
 		for exit_id in node.exits:
-			assert_eq(
-				graph.node(exit_id).depth, node.depth + 1, "an exit must lead one depth down"
-			)
+			assert_eq(graph.node(exit_id).depth, node.depth + 1, "an exit must lead one depth down")
 
 
 func test_each_depth_is_within_its_declared_width() -> void:

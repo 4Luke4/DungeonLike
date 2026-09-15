@@ -129,9 +129,7 @@ func conclude_fight() -> void:
 	# The room is finished with, so its generator state can go. The contents are
 	# derived from the seed, so forgetting costs nothing if it is asked again.
 	if node != null:
-		RngService.forget_stream(
-			RngService.stream_for(RngService.STREAM_ENCOUNTER, node.id)
-		)
+		RngService.forget_stream(RngService.stream_for(RngService.STREAM_ENCOUNTER, node.id))
 	encounter = null
 
 

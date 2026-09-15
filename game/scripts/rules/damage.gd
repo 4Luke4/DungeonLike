@@ -8,7 +8,6 @@ extends RefCounted
 ## slashing and fire has the fire halved against something that resists fire,
 ## and the slashing untouched.
 
-
 ## Every damage type content may name. Kept in step with the vocabulary
 ## tools/scripts/check_content.py validates against.
 const TYPES: PackedStringArray = [

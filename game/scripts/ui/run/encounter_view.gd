@@ -81,13 +81,16 @@ func _build_enemy_button(monster: Combatant) -> Button:
 		for condition in conditions:
 			names.append(tr(Conditions.name_key(condition)))
 		suffix = "\n(%s)" % ", ".join(names)
-	button.text = "%s\n%s %d/%d%s" % [
-		tr(monster.name_key),
-		tr("RULES_HIT_POINTS_SHORT"),
-		monster.hit_points,
-		monster.max_hit_points,
-		suffix,
-	]
+	button.text = (
+		"%s\n%s %d/%d%s"
+		% [
+			tr(monster.name_key),
+			tr("RULES_HIT_POINTS_SHORT"),
+			monster.hit_points,
+			monster.max_hit_points,
+			suffix,
+		]
+	)
 	button.pressed.connect(func() -> void: _select_target(monster.id))
 	return button
 
@@ -108,21 +111,20 @@ func _build_actions() -> void:
 		_actions.get_child(0).grab_focus()
 		return
 
-	_actions.add_child(
-		_action_button(tr("ENCOUNTER_ATTACK"), "Enter", func() -> void: _attack())
-	)
-	_actions.add_child(
-		_action_button(tr("ENCOUNTER_DEFEND"), ".", func() -> void: _defend())
-	)
+	_actions.add_child(_action_button(tr("ENCOUNTER_ATTACK"), "Enter", func() -> void: _attack()))
+	_actions.add_child(_action_button(tr("ENCOUNTER_DEFEND"), ".", func() -> void: _defend()))
 
 	var index := 1
 	for power_id in _power_ids():
 		var power := _controller.content.by_id(power_id)
 		var left := _resolver.power_uses_left(power_id)
-		var label := "%s (%s)" % [
-			tr(String(power.get("name_key", ""))),
-			tr("ENCOUNTER_USES_LEFT") % left if left > 0 else tr("ENCOUNTER_NO_USES_LEFT"),
-		]
+		var label := (
+			"%s (%s)"
+			% [
+				tr(String(power.get("name_key", ""))),
+				tr("ENCOUNTER_USES_LEFT") % left if left > 0 else tr("ENCOUNTER_NO_USES_LEFT"),
+			]
+		)
 		var button := _action_button(label, str(index), func() -> void: _use_power(power_id))
 		button.disabled = left <= 0
 		button.tooltip_text = tr(String(power.get("description_key", "")))

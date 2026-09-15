@@ -289,9 +289,7 @@ func _attack_modifier(attacker: Combatant, action: Dictionary) -> int:
 ## Each typed part is resisted separately, because a weapon that deals slashing
 ## and fire against something that resists fire should have the fire halved and
 ## the slashing left alone.
-func _deal_damage(
-	attacker: Combatant, defender: Combatant, records: Array, critical: bool
-) -> int:
+func _deal_damage(attacker: Combatant, defender: Combatant, records: Array, critical: bool) -> int:
 	var parts: Array = records.duplicate()
 	if attacker.is_player:
 		parts.append_array(attacker.bonus_damage)
@@ -301,9 +299,7 @@ func _deal_damage(
 		var expression := String(record.get("dice", "0d0"))
 		var damage_type := String(record.get("type", "bludgeoning"))
 		var rolled := (
-			Dice.roll_critical(_stream, expression)
-			if critical
-			else Dice.roll(_stream, expression)
+			Dice.roll_critical(_stream, expression) if critical else Dice.roll(_stream, expression)
 		)
 		var applied := Damage.apply(
 			damage_type,
@@ -337,20 +333,30 @@ func _apply_rider(attacker: Combatant, defender: Combatant, action: Dictionary) 
 	var riders: Array = []
 	if action.has("rider_save"):
 		var rider: Dictionary = action["rider_save"]
-		riders.append({
-			"ability": rider.get("ability", "con"),
-			"difficulty_class": rider.get("difficulty_class", 10),
-			"condition": rider.get("on_failure_condition", ""),
-			"rounds": rider.get("condition_rounds", 1),
-		})
+		(
+			riders
+			. append(
+				{
+					"ability": rider.get("ability", "con"),
+					"difficulty_class": rider.get("difficulty_class", 10),
+					"condition": rider.get("on_failure_condition", ""),
+					"rounds": rider.get("condition_rounds", 1),
+				}
+			)
+		)
 	if attacker.is_player:
 		for effect: Dictionary in attacker.on_hit_conditions:
-			riders.append({
-				"ability": effect.get("save_ability", "con"),
-				"difficulty_class": effect.get("difficulty_class", 10),
-				"condition": effect.get("condition", ""),
-				"rounds": effect.get("rounds", 1),
-			})
+			(
+				riders
+				. append(
+					{
+						"ability": effect.get("save_ability", "con"),
+						"difficulty_class": effect.get("difficulty_class", 10),
+						"condition": effect.get("condition", ""),
+						"rounds": effect.get("rounds", 1),
+					}
+				)
+			)
 
 	for rider: Dictionary in riders:
 		_saving_throw(defender, rider)
@@ -476,7 +482,9 @@ func _power_save(power: Dictionary, target: Combatant) -> void:
 
 ## The player's weapon attack, assembled from their equipment.
 func _player_weapon_attack() -> Dictionary:
-	return {"damage": _player.attacks[0].get("damage", []) if not _player.attacks.is_empty() else []}
+	return {
+		"damage": _player.attacks[0].get("damage", []) if not _player.attacks.is_empty() else []
+	}
 
 
 func _monster(target_id: String) -> Combatant:

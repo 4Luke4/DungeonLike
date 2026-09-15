@@ -200,9 +200,7 @@ func test_a_scoped_stream_is_independent_of_its_system() -> void:
 	for _draw in range(50):
 		RngService.next_bytes(first, 16)
 	assert_eq(
-		RngService.next_bytes(second, 8),
-		expected,
-		"draws in one scope must not shift another"
+		RngService.next_bytes(second, 8), expected, "draws in one scope must not shift another"
 	)
 
 
