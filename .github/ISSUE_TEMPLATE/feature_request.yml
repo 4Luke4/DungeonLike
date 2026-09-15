@@ -1,0 +1,58 @@
+name: Feature request
+description: Propose a change to the game or to the project's tooling
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: >-
+        What is not possible, or unpleasant, today? Describe the player or
+        contributor experience rather than a solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What you would like to happen instead.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Gameplay and content
+        - User interface and user experience
+        - Accessibility
+        - Performance or battery life
+        - Localisation
+        - Build, tooling or continuous integration
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed, and why you discarded them.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints acknowledged
+      description: >-
+        The project targets 64-bit Android phones and tablets, is offline and
+        single-player, ships in five languages, and must support touch, keyboard
+        and mouse.
+      options:
+        - label: This proposal fits those constraints, or the description explains why they should change.
+          required: true
