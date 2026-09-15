@@ -79,12 +79,19 @@ func test_the_adjective_agrees_with_a_feminine_noun() -> void:
 func test_word_order_differs_between_languages() -> void:
 	# English puts the adjective first, Italian puts it last. Both read from the
 	# same pattern row, so if the pattern were ignored these would match.
+	# Each expectation is read while its own locale is active. Reading both at
+	# the end would compare the English name against the Italian adjective,
+	# because tr() answers for whichever locale is current when it is called.
 	LocaleService.apply_locale("en")
 	var english := _named("longsword", "flaming")
+	var english_adjective := tr("AFFIX_FLAMING_NS")
+
 	LocaleService.apply_locale("it")
 	var italian := _named("longsword", "flaming")
-	assert_true(english.begins_with(tr("AFFIX_FLAMING_NS")), "English preposes the adjective")
-	assert_false(italian.begins_with(tr("AFFIX_FLAMING_FS")), "Italian postposes the adjective")
+	var italian_adjective := tr("AFFIX_FLAMING_FS")
+
+	assert_true(english.begins_with(english_adjective), "English preposes the adjective")
+	assert_false(italian.begins_with(italian_adjective), "Italian postposes the adjective")
 
 
 func test_a_unique_uses_its_own_name_and_no_pattern() -> void:

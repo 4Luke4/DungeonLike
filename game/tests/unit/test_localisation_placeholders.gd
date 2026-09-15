@@ -81,12 +81,18 @@ func _keys_with_placeholders() -> Dictionary:
 	return found
 
 
-## How many distinct {N} placeholders a template carries.
+## How many arguments a template needs, which is its highest index plus one.
+##
+## Counting a consecutive run from zero would be wrong: a row may legitimately
+## skip an index. ITEM_NAME_SUFFIX is "{0} {2}", because the caller always
+## passes base, prefix and suffix in that order and this row wants the first and
+## the third.
 func _placeholder_count(template: String) -> int:
-	var count := 0
-	while template.contains("{%d}" % count):
-		count += 1
-	return count
+	var highest := -1
+	for index in range(10):
+		if template.contains("{%d}" % index):
+			highest = index
+	return highest + 1
 
 
 func _arguments_for(count: int) -> Array:
