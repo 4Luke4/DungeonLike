@@ -16,9 +16,9 @@ extends RefCounted
 ## How the two dice of an advantaged or disadvantaged roll are combined.
 enum Bias { NONE, ADVANTAGE, DISADVANTAGE }
 
-
 ## The faces of the die every check is resolved on.
 const DIE_SIDES := 20
+
 
 ## The outcome of one check, with enough detail for the combat log to explain it.
 class Outcome:

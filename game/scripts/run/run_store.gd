@@ -23,7 +23,6 @@ extends RefCounted
 ## How a load went, so the interface can say something useful about each case.
 enum Result { LOADED, NONE, UNREADABLE, TAMPERED }
 
-
 const SAVE_PATH := "user://run.save"
 
 ## Where a save that failed its check is moved. Kept rather than deleted so it
@@ -31,6 +30,7 @@ const SAVE_PATH := "user://run.save"
 const QUARANTINE_PATH := "user://run.quarantine"
 
 const FORMAT_VERSION := 1
+
 
 ## Whether there is a save worth offering a Continue button for.
 ##

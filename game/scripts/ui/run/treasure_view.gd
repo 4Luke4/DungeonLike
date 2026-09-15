@@ -87,9 +87,7 @@ func _describe_effect(effect: Dictionary, item: Item) -> String:
 				]
 			)
 		"max_hit_points":
-			description = (
-				"+%d %s" % [_rolled_value(effect, item), tr("RULES_HIT_POINTS_SHORT")]
-			)
+			description = ("+%d %s" % [_rolled_value(effect, item), tr("RULES_HIT_POINTS_SHORT")])
 		"damage_resistance":
 			description = (
 				"%s: %s"

@@ -11,7 +11,6 @@ extends RefCounted
 ## How a defence changed an amount, so the combat log can say which applied.
 enum Applied { NORMAL, RESISTED, IMMUNE, VULNERABLE }
 
-
 ## Every damage type content may name. Kept in step with the vocabulary
 ## tools/scripts/check_content.py validates against.
 const TYPES: PackedStringArray = [
@@ -29,6 +28,7 @@ const TYPES: PackedStringArray = [
 	"slashing",
 	"thunder",
 ]
+
 
 ## One typed amount of damage after a target's defences have been applied.
 class Result:
