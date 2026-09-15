@@ -1,0 +1,27 @@
+# Security overrides for vulnerable transitive BUILD tooling.
+#
+# Scope: dependencies of the build itself (Gradle plugins and the libraries they
+# drag in), not dependencies of the shipped application. Application
+# dependencies are declared in gradle/libs.versions.toml and updated there.
+#
+# Why this file exists: when an advisory affects a transitive build dependency,
+# the fix is usually a forced version rather than a plugin upgrade, and that
+# force must be auditable. Putting it here keeps the reason, the advisory and
+# the removal condition next to the version, instead of burying a resolution
+# strategy in build.gradle.kts.
+#
+# Format — one override per line:
+#
+#   <group>:<artifact> = <version>  # <advisory-id> <reason> (remove when <condition>)
+#
+# Lines starting with '#' are comments; blank lines are ignored. The root build
+# script reads this file and applies each entry to the buildscript classpath.
+#
+# Rules:
+#   * Every entry cites the advisory it answers.
+#   * Every entry states the condition under which it must be removed, so that
+#     overrides do not outlive the vulnerability.
+#   * Entries are reviewed whenever the Android Gradle plugin or Kotlin version
+#     changes, because an upgrade frequently makes an override obsolete.
+#
+# There are no overrides at present.

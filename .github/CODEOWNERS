@@ -1,0 +1,28 @@
+# Code owners for DungeonLike.
+#
+# GitHub applies the LAST matching pattern in this file, so the catch-all rule
+# comes first and the narrower, higher-risk paths come after it. Every path
+# below still resolves to the same owner today; the split exists so that adding
+# a second maintainer later only requires editing the specific block instead of
+# re-deriving the ownership model.
+*                                   @4Luke4
+
+# Build and toolchain definitions. Changing these changes what every CI job and
+# every contributor's machine actually builds.
+/gradle/                            @4Luke4
+/config/                            @4Luke4
+/build.gradle.kts                   @4Luke4
+/settings.gradle.kts                @4Luke4
+/gradle.properties                  @4Luke4
+/VERSION                            @4Luke4
+
+# Repository automation. Workflow permissions and dependency automation are a
+# supply-chain boundary.
+/.github/                           @4Luke4
+
+# Documented security and release gates.
+/SECURITY.md                        @4Luke4
+/LICENSE.md                         @4Luke4
+/THIRD_PARTY_NOTICES.md             @4Luke4
+/docs/architecture/                 @4Luke4
+/docs/release/                      @4Luke4

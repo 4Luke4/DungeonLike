@@ -1,97 +1,114 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
+name: CodeQL
+
+# Static security analysis.
 #
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
+# Two languages are analysed and one is deliberately absent:
 #
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
+#   java-kotlin  the Android host, in build-mode `manual`. Buildless analysis
+#                was tried first and worked until the Gradle wrapper was
+#                committed, at which point the extractor stopped producing a
+#                database at all and failed with "could not process any code
+#                written in Java/Kotlin". Watching a real compilation is the
+#                mode CodeQL documents for Kotlin in any case, and it yields a
+#                more complete database than reading source alone, so the build
+#                is worth the minutes it costs.
+#   actions      the workflows themselves. Workflow permissions and untrusted
+#                input handling are a real attack surface for a public
+#                repository, and this is the only job that inspects them.
 #
-name: "CodeQL Advanced"
+# GDScript is not a language CodeQL supports. The game core is covered by gdlint
+# and by the repository's own checks in tools/scripts/ instead; the gap is
+# recorded in docs/release/READINESS.md so that it stays a known limitation
+# rather than an assumed absence of findings.
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '41 9 * * 5'
+    # Weekly, so that newly published queries reach the default branch even
+    # during a quiet period.
+    - cron: "41 9 * * 5"
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    # Runner size impacts CodeQL analysis time. To learn more, please see:
-    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
-    #   - https://gh.io/supported-runners-and-hardware-resources
-    #   - https://gh.io/using-larger-runners (GitHub.com only)
-    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    runs-on: ubuntu-24.04
     permissions:
-      # required for all workflows
+      # Required to upload the results to the security tab.
       security-events: write
-
-      # required to fetch internal or private CodeQL packs
+      # Required to fetch the CodeQL query packs.
       packages: read
-
-      # only required for workflows in private repositories
-      actions: read
       contents: read
 
     strategy:
       fail-fast: false
       matrix:
         include:
-        # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
-        # Use `c-cpp` to analyze code written in C, C++ or both
-        # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
-        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
-        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
-        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+          - language: java-kotlin
+            build-mode: manual
+          - language: actions
+            build-mode: none
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
-    # Add any setup steps before running the `github/codeql-action/init` action.
-    # This includes steps like installing compilers or runtimes (`actions/setup-node`
-    # or others). This is typically only required for manual builds.
-    # - name: Setup runtime (example)
-    #   uses: actions/setup-example@v1
+      # The Android toolchain, read from the one file that owns it so this
+      # workflow cannot drift from the build it is analysing.
+      - name: Read the toolchain
+        if: matrix.build-mode == 'manual'
+        id: toolchain
+        run: |
+          set -euo pipefail
+          properties=config/android/toolchain.properties
+          read_property() { sed -n "s/^${1}=//p" "${properties}" | tr -d '\r'; }
+          {
+            echo "java=$(read_property 'build.java')"
+            echo "build-tools=$(read_property 'android.buildTools')"
+            echo "compile-sdk=$(read_property 'android.compileSdk').$(read_property 'android.compileSdkMinor')"
+          } >> "$GITHUB_OUTPUT"
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
+      - name: Set up the build toolchain
+        if: matrix.build-mode == 'manual'
+        uses: actions/setup-java@v6.0.1
+        with:
+          distribution: temurin
+          java-version: ${{ steps.toolchain.outputs.java }}
 
-        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-        # queries: security-extended,security-and-quality
+      - name: Set up the Android SDK
+        if: matrix.build-mode == 'manual'
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
+        with:
+          packages: >-
+            platforms;android-${{ steps.toolchain.outputs.compile-sdk }}
+            build-tools;${{ steps.toolchain.outputs.build-tools }}
 
-    # If the analyze step fails for one of the languages you are analyzing with
-    # "We were unable to automatically build your code", modify the matrix above
-    # to set the build mode to "manual" for that language. Then modify this step
-    # to build your code.
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - name: Run manual build steps
-      if: matrix.build-mode == 'manual'
-      shell: bash
-      run: |
-        echo 'If you are using a "manual" build mode for one or more of the' \
-          'languages you are analyzing, replace this with the commands to build' \
-          'your code, for example:'
-        echo '  make bootstrap'
-        echo '  make release'
-        exit 1
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          # The extended suites add correctness and maintainability queries on
+          # top of the default security set.
+          queries: security-extended,security-and-quality
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+      # CodeQL watches this compilation to build its database, so the build has
+      # to happen between init and analyze. Only the classes are needed, not a
+      # packaged application, so the cheapest task that compiles everything is
+      # used rather than assembling a bundle.
+      - name: Build the Kotlin sources
+        if: matrix.build-mode == 'manual'
+        run: ./gradlew --no-daemon :host-core:compileDebugKotlin :app:compileDebugKotlin
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"

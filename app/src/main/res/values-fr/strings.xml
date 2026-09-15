@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Le nom de l'application n'est pas traduit : c'est le nom du produit. -->
+    <string name="error_game_pack_missing">Impossible de charger les données du jeu. Réinstaller DungeonLike devrait résoudre le problème.</string>
+    <string name="error_engine_start_failed">DungeonLike n\'a pas pu démarrer sur cet appareil.</string>
+    <string name="content_description_game_surface">Zone de jeu</string>
+</resources>

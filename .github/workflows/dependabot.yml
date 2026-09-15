@@ -1,0 +1,137 @@
+name: Dependabot
+
+# Automation for Dependabot's pull requests, in two parts:
+#
+#   auto-merge  approves and enables auto-merge for updates that cannot change
+#               what ships to players — test tooling, CI actions and Python
+#               tooling — and only for patch and minor versions.
+#   rebase      asks Dependabot to rebase its open pull requests once they have
+#               fallen behind the default branch, so they are merged against
+#               what main actually contains rather than what it contained when
+#               they were opened.
+#
+# Everything else stays manual on purpose. A major version, or any change to the
+# Godot library, the Android Gradle plugin or an AndroidX library that ships
+# inside the application, is a change to the product and gets read by a person.
+#
+# Auto-merge additionally requires the repository setting "Allow auto-merge" and
+# branch protection with required checks; without required checks, enabling
+# auto-merge would merge before CI has finished.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  schedule:
+    # Once a day is enough: Dependabot opens its pull requests weekly, and a
+    # rebase is only useful after main has moved.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    name: Auto-merge low-risk updates
+    if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Read the update's metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decide whether this update may merge itself
+        id: decision
+        env:
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          DEPENDENCY_TYPE: ${{ steps.metadata.outputs.dependency-type }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+          ECOSYSTEM: ${{ steps.metadata.outputs.package-ecosystem }}
+        run: |
+          set -euo pipefail
+
+          allowed=false
+
+          case "${UPDATE_TYPE}" in
+            version-update:semver-patch|version-update:semver-minor) ;;
+            *)
+              echo "::notice::${UPDATE_TYPE} requires review."
+              echo "allowed=false" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+          esac
+
+          case "${ECOSYSTEM}" in
+            github_actions|pip)
+              # Neither reaches the installed application.
+              allowed=true
+              ;;
+            gradle)
+              # Only development dependencies: anything on the runtime classpath
+              # ships to players and is reviewed by a person.
+              if [ "${DEPENDENCY_TYPE}" = "direct:development" ]; then
+                allowed=true
+              fi
+              ;;
+          esac
+
+          # A belt-and-braces guard: these decide what the product is, and must
+          # never merge unattended even if the rules above are relaxed later.
+          case "${DEPENDENCY_NAMES}" in
+            *godot*|*com.android.tools.build*|*play-services*)
+              echo "::notice::${DEPENDENCY_NAMES} always requires review."
+              allowed=false
+              ;;
+          esac
+
+          echo "allowed=${allowed}" >> "$GITHUB_OUTPUT"
+
+      - name: Approve and enable auto-merge
+        if: steps.decision.outputs.allowed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+          gh pr review --approve "${PR_URL}"
+          # --auto waits for the required checks; it does not merge immediately.
+          gh pr merge --auto --squash "${PR_URL}"
+
+  rebase:
+    name: Rebase out-of-date updates
+    if: github.event_name != 'pull_request_target'
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Ask Dependabot to rebase anything behind main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # mergeStateStatus is BEHIND when the branch no longer contains the
+          # tip of its base. Those are the ones worth rebasing; a pull request
+          # that is merely CONFLICTING needs a person, and Dependabot will say
+          # so itself.
+          numbers="$(gh pr list \
+            --author 'app/dependabot' \
+            --state open \
+            --json number,mergeStateStatus \
+            --jq '.[] | select(.mergeStateStatus == "BEHIND") | .number')"
+
+          if [ -z "${numbers}" ]; then
+            echo "No Dependabot pull requests are behind main."
+            exit 0
+          fi
+
+          for number in ${numbers}; do
+            echo "Requesting a rebase of #${number}."
+            gh pr comment "${number}" --body '@dependabot rebase'
+          done

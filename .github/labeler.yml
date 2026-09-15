@@ -1,0 +1,71 @@
+# Path-to-label mapping for actions/labeler.
+#
+# Every label referenced here must already exist in the repository, otherwise
+# the labelling step fails silently and pull requests go untriaged. The
+# canonical taxonomy — including colours and descriptions — is tools/labels.yml.
+
+"area:android":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "app/**"
+          - "host-core/**"
+
+"area:game":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "game/**"
+
+"area:build":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "gradle/**"
+          - "config/**"
+          - "*.gradle.kts"
+          - "gradle.properties"
+          - "gradlew"
+          - "gradlew.bat"
+          - "VERSION"
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/linters/**"
+          - "tools/**"
+
+"area:docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+"area:i18n":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "game/localization/**"
+          - "app/src/main/res/values-*/**"
+          - "docs/i18n/**"
+
+"area:security":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "SECURITY.md"
+          - "docs/architecture/THREAT_MODEL.md"
+          - "config/build-tool-security.versions"
+          - "app/src/main/kotlin/com/yuumi/dungeonlike/save/**"
+
+performance:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "game/scripts/autoload/frame_pacing_service.gd"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "gradle/libs.versions.toml"
+          - "tools/requirements.txt"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"

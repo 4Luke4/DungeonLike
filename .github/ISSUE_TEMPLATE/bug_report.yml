@@ -1,0 +1,113 @@
+name: Bug report
+description: Something in the game or the build behaves incorrectly
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do **not** use this form for security
+        vulnerabilities — report those privately through
+        [Security Advisories](https://github.com/4Luke4/DungeonLike/security/advisories/new).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: What you observed, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The shortest sequence that reliably triggers the problem.
+      placeholder: |
+        1. Start a new run
+        2. …
+        3. Observed: …
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Application version
+      description: Shown in the title screen, or the value of `VERSION` for a development build.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: seed
+    attributes:
+      label: Run seed
+      description: >-
+        Copied from the run summary or the pause screen. Runs are exactly
+        reproducible from their seed, so this is usually the difference between
+        a fixable report and an unfixable one.
+    validations:
+      required: false
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: Manufacturer and model, and whether it is a phone or a tablet.
+      placeholder: "Pixel 8 Pro (phone)"
+    validations:
+      required: true
+
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      placeholder: "Android 15 (API 35)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: locale
+    attributes:
+      label: Game language
+      options:
+        - English
+        - Italiano
+        - Español
+        - Français
+        - Deutsch
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: input-devices
+    attributes:
+      label: Input devices in use
+      options:
+        - label: Touch screen
+        - label: Physical keyboard
+        - label: Mouse or trackpad
+        - label: Game controller
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logcat output
+      description: >-
+        Relevant `adb logcat` lines, if you have them. Please redact anything
+        personal before pasting.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

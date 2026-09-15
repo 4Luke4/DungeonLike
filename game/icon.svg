@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Project mark: an original stone archway with a keyhole, the same geometry as
+    the Android launcher icon in app/src/main/res/drawable/.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="24" fill="#161320"/>
+  <path fill="#e8c87a"
+        d="M64 26C47 26 38 38 38 55v47h14V55c0-8 5-14 12-14s12 6 12 14v47h14V55c0-17-9-29-26-29z"/>
+  <circle cx="64" cy="62" r="6" fill="#e8c87a"/>
+  <path fill="#e8c87a" d="M60 69h8l3 20H57z"/>
+</svg>

@@ -1,0 +1,77 @@
+; DungeonLike — Godot project configuration.
+;
+; Only settings that differ from the engine defaults are recorded here, so that
+; every line in this file is a decision somebody made. The reasoning for the
+; display and frame pacing settings is in
+; game/scripts/autoload/frame_pacing_service.gd.
+;
+; This file is edited by the Godot editor. When resolving a conflict in it,
+; keep the comments: the editor preserves them.
+
+config_version=5
+
+[application]
+
+config/name="DungeonLike"
+; Kept identical to the repository VERSION file; tools/scripts/check_version.py
+; fails the build if the two disagree.
+config/version="0.1.0"
+run/main_scene="res://scenes/boot.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+config/icon="res://icon.svg"
+
+[autoload]
+
+; Order matters: each service below may use the ones declared above it.
+; HostBridge first, because every other service asks the platform something;
+; SettingsService before LocaleService, which reads the stored language.
+HostBridge="*res://scripts/autoload/host_bridge.gd"
+SettingsService="*res://scripts/autoload/settings_service.gd"
+RngService="*res://scripts/autoload/rng_service.gd"
+FramePacingService="*res://scripts/autoload/frame_pacing_service.gd"
+InputModeService="*res://scripts/autoload/input_mode_service.gd"
+LocaleService="*res://scripts/autoload/locale_service.gd"
+
+[display]
+
+; Base resolution for the adaptive layout. Scenes are laid out with anchors and
+; containers, so this is a reference size rather than a fixed one.
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+; Sensor landscape: the game plays in landscape but follows the device when it
+; is turned around. This value is DisplayServer.SCREEN_SENSOR_LANDSCAPE and must
+; stay in agreement with android:screenOrientation in the host manifest — the
+; embedded engine does not tolerate an orientation change the host did not
+; declare it would handle.
+window/handheld/orientation=4
+
+; Stretch the base resolution across whatever window the device gives us and
+; let the extra space widen the layout rather than letterbox it. This is what
+; makes one scene work on a phone and on a tablet.
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+; Android frame pacing. Swappy is enabled by default and stays on; the mode is
+; not the default. Mode 0 is pipeline_forced_on, which honours Engine.max_fps.
+; The automatic modes lower the cap by themselves after missed frames and never
+; raise it again, which would strand a 120 Hz device at a lower rate for the
+; rest of the session.
+window/frame_pacing/android/swappy_mode=0
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/ui.en.translation", "res://localization/ui.it.translation", "res://localization/ui.es.translation", "res://localization/ui.fr.translation", "res://localization/ui.de.translation")
+locale/fallback="en"
+
+[rendering]
+
+; The mobile renderer: lower base overhead than Forward+, which is what a
+; battery-powered device needs.
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+
+; Import textures in the compressed formats Android GPUs can sample directly.
+; Without this the device decompresses at load time and holds uncompressed
+; textures in memory.
+textures/vram_compression/import_etc2_astc=true

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Host strings.
+
+    The host owns only what must exist before the engine runs: the launcher
+    label and the failures that can happen while starting the engine. Every
+    other player-facing string lives in game/localization/ui.csv, so that the
+    game can change its own wording without a store release of the host.
+
+    Every string here exists in all five shipped locales; CI fails on a missing
+    or empty translation.
+-->
+<resources>
+    <!-- The product name, deliberately identical in every language. -->
+    <string name="app_name" translatable="false">DungeonLike</string>
+
+    <!-- Shown if the game content cannot be read from the installed package. -->
+    <string name="error_game_pack_missing">The game data could not be loaded. Reinstalling DungeonLike should fix this.</string>
+
+    <!-- Shown if the engine fails to start on this device. -->
+    <string name="error_engine_start_failed">DungeonLike could not start on this device.</string>
+
+    <!-- Spoken by screen readers for the area the game is drawn into. -->
+    <string name="content_description_game_surface">Game view</string>
+</resources>

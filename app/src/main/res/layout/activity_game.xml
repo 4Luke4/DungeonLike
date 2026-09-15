@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Host layout: a single full-bleed container that the Godot fragment is
+    committed into. It intentionally contains nothing else — every pixel the
+    player sees is drawn by the engine, and any Android view placed over it
+    would need its own localisation, theming and accessibility handling.
+
+    No background is set here: the theme already paints the window, and painting
+    it twice is a full-screen overdraw on every frame of a game that is trying
+    to hold a steady frame rate.
+
+    MergeRootFrame is suppressed for a specific reason rather than out of
+    convenience. Lint is right that a root FrameLayout is usually redundant with
+    the activity's own content frame, but the replacement it suggests, a <merge>
+    tag, cannot carry an id — and this view exists precisely to be addressed by
+    id, both by the fragment transaction that commits the engine into it and by
+    the fragment manager when it restores that fragment after a configuration
+    change.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/godot_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/content_description_game_surface"
+    android:keepScreenOn="true"
+    tools:ignore="MergeRootFrame" />

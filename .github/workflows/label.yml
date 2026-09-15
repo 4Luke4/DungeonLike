@@ -1,22 +1,35 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler
-
 name: Labeler
-on: [pull_request_target]
+
+# Applies area labels from the paths a pull request touches, so that triage does
+# not depend on the author remembering. The mapping is .github/labeler.yml, and
+# every label it names must already exist in the repository — a missing label is
+# not an error, the pull request simply goes unlabelled.
+
+on:
+  # pull_request_target runs with the base repository's configuration and a
+  # token that can write labels, which a fork's pull_request run cannot do. The
+  # job below checks out nothing and runs no repository code, which is what
+  # makes this trigger safe to use here.
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: labeler-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   label:
-
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
+    name: Apply area labels
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/labeler@v4
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/labeler@v7.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          # Labels applied by a person are not removed when the paths change;
+          # a maintainer's triage decision outranks the path mapping.
+          sync-labels: false

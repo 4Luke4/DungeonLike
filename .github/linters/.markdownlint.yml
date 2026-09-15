@@ -1,0 +1,29 @@
+# markdownlint rules.
+#
+# Only deviations from the defaults are recorded, each with its reason.
+
+# The repository wraps prose at 120 columns, matching .editorconfig, rather than
+# markdownlint's narrower default.
+MD013:
+  line_length: 120
+  # Tables, code blocks and long link targets cannot always be wrapped without
+  # breaking them.
+  tables: false
+  code_blocks: false
+  headings: false
+
+# Documents are titled by their file name and their first heading; requiring a
+# single top-level heading would forbid the appendix-style sections used in the
+# architecture documents.
+MD025: false
+
+# Duplicate headings are legitimate under different parents, for example a
+# "Rationale" heading beneath several decisions.
+MD024:
+  siblings_only: true
+
+# Inline HTML is used sparingly for anchors and details blocks.
+MD033: false
+
+# Bare URLs appear inside licence text that must be reproduced verbatim.
+MD034: false

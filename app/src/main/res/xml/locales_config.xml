@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Languages the application ships. Declaring them lets the system offer a
+    per-application language picker, so a player can run the game in one
+    language without changing the whole device. The list must stay in step with
+    the resource qualifiers under res/ and with game/localization/ui.csv;
+    tools/scripts/check_locales.py enforces that.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="it" />
+    <locale android:name="es" />
+    <locale android:name="fr" />
+    <locale android:name="de" />
+</locale-config>

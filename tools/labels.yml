@@ -1,0 +1,51 @@
+# Canonical label taxonomy for DungeonLike.
+#
+# This file is the record of which labels must exist in the repository. The
+# labeller workflow (.github/labeler.yml) may only reference labels listed here,
+# and a label must be created in the repository before it is referenced.
+#
+# To reconcile the repository with this file, a maintainer runs, for each entry:
+#   gh label create "<name>" --color "<color>" --description "<description>" --force
+#
+# It is applied by a maintainer rather than by a workflow so that label
+# management never needs a token with write access to repository metadata.
+
+- name: "area:android"
+  color: "1f6feb"
+  description: "Kotlin Android host, :app or :host-core"
+
+- name: "area:game"
+  color: "8957e5"
+  description: "Godot game core and GDScript"
+
+- name: "area:build"
+  color: "0e8a16"
+  description: "Gradle build, toolchain and versioning"
+
+- name: "area:ci"
+  color: "5319e7"
+  description: "Workflows, automation and repository tooling"
+
+- name: "area:docs"
+  color: "0075ca"
+  description: "Documentation"
+
+- name: "area:i18n"
+  color: "fbca04"
+  description: "Localisation and translated content"
+
+- name: "area:security"
+  color: "b60205"
+  description: "Security boundaries, threat model and supply chain"
+
+- name: "performance"
+  color: "d93f0b"
+  description: "Frame pacing, battery life and runtime performance"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Dependency updates"
+
+# Default GitHub labels the project keeps using as-is:
+#   bug, documentation, duplicate, enhancement, good first issue,
+#   help wanted, invalid, question, wontfix, accessibility

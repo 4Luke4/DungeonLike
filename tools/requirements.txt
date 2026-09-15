@@ -1,0 +1,8 @@
+# Python tooling used by continuous integration.
+#
+# Pinned exactly so that a lint failure is always a change in this repository
+# rather than a change in a tool that was picked up silently. Dependabot
+# proposes updates weekly; see .github/dependabot.yml.
+
+# gdlint and gdformat: the GDScript linter and formatter.
+gdtoolkit==4.5.0

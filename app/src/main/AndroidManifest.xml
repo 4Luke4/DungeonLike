@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DungeonLike application manifest.
+
+    No permissions are declared. The game is offline and single-player, and a
+    permission may only be added together with the reasoning in
+    docs/architecture/THREAT_MODEL.md. In particular INTERNET belongs to the
+    Play Games integration alone, never to the base application.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        The product ships for 64-bit ARM phones and tablets. Declaring the
+        touchscreen as not required keeps the application installable on
+        keyboard-and-mouse devices such as desktop-mode tablets, which the
+        input handling explicitly supports.
+    -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
+        android:name=".DungeonLikeApplication"
+        android:allowBackup="false"
+        android:appCategory="game"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
+        android:theme="@style/Theme.DungeonLike.Splash">
+
+        <!--
+            The engine is hosted by a single activity.
+
+            android:configChanges is the load-bearing attribute: the Godot
+            Android library does not support automatic resize or orientation
+            configuration events for an embedded instance and can crash when the
+            activity is recreated by one, so the activity declares that it
+            handles those changes itself.
+
+            android:screenOrientation states the game's landscape-first
+            preference, and the Godot project's
+            display/window/handheld/orientation must match it. Android 16 and
+            later ignore fixed orientations on large screens, which is why lint
+            flags it as discouraged and why it is only a preference: the layout
+            adapts either way, and configChanges keeps the engine alive when the
+            platform overrides the request.
+
+            android:resizeableActivity is deliberately absent. Setting it to
+            false is ignored from Android 16 onwards, so it bought nothing that
+            configChanges does not already provide, while making the
+            application look like one that refuses to adapt to large screens.
+
+            android:excludeFromRecents is deliberately absent: a game the player
+            switches away from should come back exactly where they left it.
+        -->
+        <activity
+            android:name=".GameActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|density|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.DungeonLike.Splash"
+            tools:ignore="DiscouragedApi">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
