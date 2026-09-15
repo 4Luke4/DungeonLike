@@ -124,6 +124,21 @@ android {
         // the shipped engine libraries to serve a device class it was never
         // designed for.
         disable += "ChromeOsAbiSupport"
+
+        // GradleDependency compares the declared versions against whatever is
+        // published upstream at the moment the job runs, so it turns "someone
+        // released a new version" into "this pull request is broken" — a red
+        // build caused by nothing in the change under review, and one that no
+        // amount of re-running fixes. It also makes a build non-reproducible:
+        // the same commit passes today and fails tomorrow.
+        //
+        // Nothing is lost by disabling it. Dependabot already proposes updates
+        // weekly, and .github/dependabot.yml deliberately keeps Play services,
+        // the Godot library and the Android Gradle plugin out of the automatic
+        // merge rules so that a person reviews each one. Lint nagging about the
+        // same versions duplicates that and blocks unrelated work while it
+        // waits.
+        disable += "GradleDependency"
         // Report formats are not configured: AGP 9 generates every lint report
         // unconditionally and deprecated the switches that used to select them.
         // The CI job collects the generated reports as an artifact.
