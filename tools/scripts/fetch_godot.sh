@@ -82,9 +82,24 @@ chmod +x godot
 echo "Unpacking the export templates…"
 # The templates archive is a zip whose contents live under templates/; the
 # editor looks for them in a directory named after the exact version.
-unzip -q -o "${templates_archive}"
+#
+# Extraction goes through a staging directory rather than unpacking in place.
+# The version directory is named "4.7.2.stable", so a glob like templates/*.*
+# would match the destination itself and the move would fail silently, leaving
+# the editor with no templates and a build that fails much later with a far
+# less obvious message.
+rm -rf templates_staging
+unzip -q -o "${templates_archive}" -d templates_staging
 mkdir -p "templates/${version}"
-mv templates/*.* "templates/${version}/" 2>/dev/null || true
+mv templates_staging/templates/* "templates/${version}/"
+rm -rf templates_staging
+
+# An empty template directory would take the failure all the way to the export
+# step, where the cause is no longer visible.
+if [ -z "$(ls -A "templates/${version}")" ]; then
+    echo "No export templates were extracted into templates/${version}." >&2
+    exit 1
+fi
 
 rm -f "${editor_archive}" "${templates_archive}" SHA512-SUMS.txt
 
