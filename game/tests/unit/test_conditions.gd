@@ -22,8 +22,12 @@ func test_a_condition_applies_and_is_reported() -> void:
 func test_an_unknown_condition_is_refused() -> void:
 	# Content could otherwise name a condition nothing implements, and it would
 	# be a silent no-op rather than an error.
-	_conditions.apply("bewildered", 3)
-	assert_false(_conditions.has("bewildered"))
+	#
+	# The predicate is asserted rather than the refusal itself: apply() reports
+	# an unknown name with push_error, which is what it should do, and GUT
+	# treats an engine error raised during a test as a failure.
+	assert_false(Conditions.is_known("bewildered"), "an invented name is not a condition")
+	assert_true(Conditions.is_known(Conditions.POISONED), "a declared one is")
 
 
 func test_a_second_application_extends_but_never_shortens() -> void:

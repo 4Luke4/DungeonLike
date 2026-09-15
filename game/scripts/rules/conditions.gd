@@ -77,10 +77,20 @@ var _active: Dictionary = {}
 ## Extending rather than replacing means a second dose of poison cannot shorten
 ## the first, which is what a plain assignment would do.
 func apply(condition: String, rounds: int) -> void:
-	if not condition in ALL:
+	if not is_known(condition):
 		push_error("Unknown condition: %s" % condition)
 		return
 	_active[condition] = maxi(int(_active.get(condition, 0)), rounds)
+
+
+## Whether [param condition] is one this project implements.
+##
+## Content cannot introduce an unknown one — tools/scripts/check_content.py
+## validates every condition name against the same set — so a name that fails
+## here came from code, which is why [method apply] reports it rather than
+## ignoring it quietly.
+static func is_known(condition: String) -> bool:
+	return condition in ALL
 
 
 ## Removes [param condition] outright.

@@ -193,7 +193,11 @@ func test_a_scoped_stream_is_independent_of_its_system() -> void:
 	var second := RngService.stream_for(RngService.STREAM_ENCOUNTER, "node-2")
 	assert_ne(first, second, "two scopes must name two streams")
 
+	# Both halves must start from the same seed, or this compares two separate
+	# runs and proves nothing about scoping.
+	RngService.begin_run_with_seed(_fixed_seed())
 	var expected := RngService.next_bytes(second, 8)
+
 	RngService.begin_run_with_seed(_fixed_seed())
 	# Draw heavily from the first room before touching the second. If the scopes
 	# shared state, this would change what the second produces.
@@ -208,7 +212,9 @@ func test_a_forgotten_stream_replays_identically() -> void:
 	# Forgetting releases state, it does not reseed: the stream is derived from
 	# the run seed, so asking again must give the same answer.
 	var stream := RngService.stream_for(RngService.STREAM_LOOT, "node-9")
+	RngService.begin_run_with_seed(_fixed_seed())
 	var expected := RngService.next_bytes(stream, 16)
+
 	RngService.forget_stream(stream)
 	RngService.begin_run_with_seed(_fixed_seed())
 	assert_eq(RngService.next_bytes(stream, 16), expected)

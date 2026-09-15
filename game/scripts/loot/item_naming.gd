@@ -32,16 +32,20 @@ extends RefCounted
 ## do not the neuter row repeats the masculine.
 const DEFAULT_GRAMMAR := "ns"
 
+# Every function here is static, and [method Object.tr] is an instance method,
+# so lookups go through the translation singleton directly. It is the same
+# table [method Object.tr] consults.
+
 
 ## The name to show for [param item].
 static func display_name(item: Item, content: ContentDatabase) -> String:
 	if item.is_unique():
 		var unique := content.by_id(item.unique_id)
-		return tr(String(unique.get("name_key", "")))
+		return TranslationServer.translate(String(unique.get("name_key", "")))
 
 	var base := content.by_id(item.base_id)
 	var base_key := String(base.get("name_key", ""))
-	var base_name := tr(base_key)
+	var base_name := TranslationServer.translate(base_key)
 	var grammar := _grammar_of(base_key)
 
 	var prefix := ""
@@ -52,7 +56,7 @@ static func display_name(item: Item, content: ContentDatabase) -> String:
 	var suffix := ""
 	if not item.suffix_id.is_empty():
 		var affix := content.by_id(item.suffix_id)
-		suffix = tr(String(affix.get("name_key", "")))
+		suffix = TranslationServer.translate(String(affix.get("name_key", "")))
 
 	var pattern := "ITEM_NAME_BASE"
 	if not prefix.is_empty() and not suffix.is_empty():
@@ -62,7 +66,7 @@ static func display_name(item: Item, content: ContentDatabase) -> String:
 	elif not suffix.is_empty():
 		pattern = "ITEM_NAME_SUFFIX"
 
-	return tr(pattern) % [base_name, prefix, suffix]
+	return TranslationServer.translate(pattern) % [base_name, prefix, suffix]
 
 
 ## The gender tag of a base noun's translation in the current language.
@@ -74,7 +78,7 @@ static func _grammar_of(base_key: String) -> String:
 	if base_key.is_empty():
 		return DEFAULT_GRAMMAR
 	var grammar_key := base_key + "_GRAMMAR"
-	var tag := tr(grammar_key)
+	var tag := TranslationServer.translate(grammar_key)
 	return DEFAULT_GRAMMAR if tag == grammar_key or tag.length() != 2 else tag
 
 
@@ -84,5 +88,5 @@ static func _affix_name(affix: Dictionary, grammar: String) -> String:
 	if key.is_empty():
 		return ""
 	if not bool(affix.get("inflected", false)):
-		return tr(key)
-	return tr("%s_%s" % [key, grammar.to_upper()])
+		return TranslationServer.translate(key)
+	return TranslationServer.translate("%s_%s" % [key, grammar.to_upper()])
