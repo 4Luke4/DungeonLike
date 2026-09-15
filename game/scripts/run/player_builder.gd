@@ -127,13 +127,11 @@ static func _armour_class(state: RunState, content: ContentDatabase, player: Com
 
 
 ## The damage the equipped weapon deals, including the ability modifier.
-static func _weapon_damage(
-	state: RunState, content: ContentDatabase, player: Combatant
-) -> Array:
+static func _weapon_damage(state: RunState, content: ContentDatabase, player: Combatant) -> Array:
 	var weapon: Item = state.equipped("main_hand")
 	if weapon == null:
 		# An unarmed player still has to be able to act.
-		return [{"dice": "1d%d" % 4, "type": "bludgeoning"}]
+		return [{"dice": "1d4", "type": "bludgeoning"}]
 
 	var base := content.by_id(weapon.base_id)
 	var damage: Dictionary = base.get("damage", {"dice": "1d4", "type": "bludgeoning"})

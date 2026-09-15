@@ -60,12 +60,12 @@ func _ready() -> void:
 
 
 ## Mounts a view, replacing whatever was showing.
-func _show_view(name: String) -> Control:
+func _show_view(view_name: String) -> Control:
 	if _current_view != null:
 		_current_view.queue_free()
 		_current_view = null
 
-	var packed: PackedScene = load(VIEW_SCENES[name])
+	var packed: PackedScene = load(VIEW_SCENES[view_name])
 	var view: Control = packed.instantiate()
 	view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	view.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -187,9 +187,9 @@ func _refresh_status() -> void:
 	if state == null:
 		return
 	_depth_label.text = tr("MAP_DEPTH") % state.depth
-	_health_label.text = "%s %d/%d" % [
-		tr("RULES_HIT_POINTS_SHORT"), state.hit_points, state.max_hit_points
-	]
+	_health_label.text = (
+		"%s %d/%d" % [tr("RULES_HIT_POINTS_SHORT"), state.hit_points, state.max_hit_points]
+	)
 	_seed_label.text = tr("RUN_SEED_LABEL") % state.seed_hex
 
 
