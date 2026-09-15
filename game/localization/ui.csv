@@ -7,8 +7,6 @@ MENU_NEW_RUN,New run,Nuova partita,Nueva partida,Nouvelle partie,Neuer Lauf
 MENU_CREDITS,Credits,Riconoscimenti,Créditos,Crédits,Danksagungen
 MENU_QUIT,Quit,Esci,Salir,Quitter,Beenden
 MENU_SEED_LABEL,Seed: %s,Seme: %s,Semilla: %s,Graine : %s,Startwert: %s
-RUN_PLACEHOLDER_HEADING,The descent begins here,La discesa comincia qui,El descenso empieza aquí,La descente commence ici,Hier beginnt der Abstieg
-RUN_PLACEHOLDER_BODY,"Dungeon generation, encounters and loot are not implemented yet. This screen exists so that the path from the menu into a seeded run is exercised from the first day.","La generazione del dungeon, gli incontri e il bottino non sono ancora implementati. Questa schermata esiste perché il percorso dal menu a una partita con seme sia verificato fin da subito.","La generación de la mazmorra, los encuentros y el botín aún no están implementados. Esta pantalla existe para que el camino desde el menú hasta una partida con semilla se pruebe desde el primer día.","La génération du donjon, les rencontres et le butin ne sont pas encore implémentés. Cet écran existe pour que le chemin du menu vers une partie avec graine soit vérifié dès le premier jour.","Verliesgenerierung, Begegnungen und Beute sind noch nicht implementiert. Dieser Bildschirm stellt sicher, dass der Weg vom Menü in einen Lauf mit Startwert von Anfang an geprüft wird."
 RUN_SEED_LABEL,Run seed: %s,Seme della partita: %s,Semilla de la partida: %s,Graine de la partie : %s,Startwert des Laufs: %s
 COMMON_BACK,Back,Indietro,Atrás,Retour,Zurück
 CREDITS_HEADING,Credits and licences,Riconoscimenti e licenze,Créditos y licencias,Crédits et licences,Danksagungen und Lizenzen
@@ -18,3 +16,59 @@ CREDITS_RULES_HEADING,Game rules,Regole di gioco,Reglas del juego,Règles du jeu
 CREDITS_SRD_ATTRIBUTION,"This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
 CREDITS_ENGINE_HEADING,Engine,Motore,Motor,Moteur,Engine
 CREDITS_THIRD_PARTY_HEADING,Third-party components,Componenti di terze parti,Componentes de terceros,Composants tiers,Komponenten von Drittanbietern
+ITEM_NAME_BASE,%1$s,%1$s,%1$s,%1$s,%1$s
+ITEM_NAME_PREFIX,%2$s %1$s,%1$s %2$s,%1$s %2$s,%1$s %2$s,%2$s %1$s
+ITEM_NAME_SUFFIX,%1$s %3$s,%1$s %3$s,%1$s %3$s,%1$s %3$s,%1$s %3$s
+ITEM_NAME_PREFIX_SUFFIX,%2$s %1$s %3$s,%1$s %2$s %3$s,%1$s %2$s %3$s,%1$s %2$s %3$s,%2$s %1$s %3$s
+MENU_CONTINUE_RUN,Continue run,Riprendi partita,Continuar partida,Reprendre la partie,Lauf fortsetzen
+ARCHETYPE_SELECT_HEADING,Choose your delver,Scegli chi scende,Elige a tu explorador,Choisissez votre explorateur,Wähle deinen Absteiger
+ARCHETYPE_SELECT_BEGIN,Begin the descent,Inizia la discesa,Comienza el descenso,Commencer la descente,Abstieg beginnen
+MAP_HEADING,Choose your path,Scegli il percorso,Elige tu camino,Choisissez votre chemin,Wähle deinen Weg
+MAP_DEPTH,Depth %1$s,Profondità %1$s,Profundidad %1$s,Profondeur %1$s,Tiefe %1$s
+MAP_ROOM_ENCOUNTER,Encounter,Scontro,Combate,Rencontre,Begegnung
+MAP_ROOM_ELITE,Elite,Élite,Élite,Élite,Elite
+MAP_ROOM_TREASURE,Treasure,Tesoro,Tesoro,Trésor,Schatz
+MAP_ROOM_REST,Rest,Riposo,Descanso,Repos,Rast
+MAP_ROOM_BOSS,The throne,Il trono,El trono,Le trône,Der Thron
+MAP_ROOM_CLEARED,Cleared,Completata,Despejada,Nettoyée,Geräumt
+MAP_ROOM_UNREACHABLE,Unreachable from here,Irraggiungibile da qui,Inalcanzable desde aquí,Inaccessible d'ici,Von hier nicht erreichbar
+ENCOUNTER_HEADING,Encounter,Scontro,Combate,Rencontre,Begegnung
+ENCOUNTER_YOUR_TURN,Your turn,Il tuo turno,Tu turno,À vous de jouer,Du bist am Zug
+ENCOUNTER_ATTACK,Attack,Attacca,Atacar,Attaquer,Angreifen
+ENCOUNTER_DEFEND,Defend,Difenditi,Defender,Se défendre,Verteidigen
+ENCOUNTER_POWERS,Powers,Poteri,Poderes,Pouvoirs,Kräfte
+ENCOUNTER_TARGET,Target: %1$s,Bersaglio: %1$s,Objetivo: %1$s,Cible : %1$s,Ziel: %1$s
+ENCOUNTER_USES_LEFT,%1$s left,%1$s rimasti,Quedan %1$s,%1$s restants,%1$s übrig
+ENCOUNTER_NO_USES_LEFT,Spent,Esaurito,Agotado,Épuisé,Verbraucht
+ENCOUNTER_LOG,Combat log,Registro di combattimento,Registro de combate,Journal de combat,Kampfprotokoll
+ENCOUNTER_CONTINUE,Continue,Continua,Continuar,Continuer,Weiter
+TREASURE_HEADING,You find something,Trovi qualcosa,Encuentras algo,Vous trouvez quelque chose,Du findest etwas
+TREASURE_NOTHING,Nothing here but dust.,Qui non c'è altro che polvere.,Aquí no hay más que polvo.,Il n'y a ici que de la poussière.,Hier ist nichts als Staub.
+TREASURE_TAKE,Take it,Prendilo,Cógelo,Le prendre,Nehmen
+TREASURE_LEAVE,Leave it,Lascialo,Déjalo,Le laisser,Zurücklassen
+TREASURE_EQUIPPED,Equipped,Equipaggiato,Equipado,Équipé,Ausgerüstet
+REST_HEADING,A moment's quiet,Un momento di quiete,Un momento de calma,Un instant de calme,Ein Augenblick Ruhe
+REST_RECOVER,Bind your wounds,Fascia le ferite,Venda tus heridas,Pansez vos blessures,Wunden verbinden
+REST_RECOVER_RESULT,You recover %1$s hit points.,Recuperi %1$s punti ferita.,Recuperas %1$s puntos de golpe.,Vous récupérez %1$s points de vie.,Du stellst %1$s Trefferpunkte wieder her.
+REST_PRESS_ON,Press on without resting,Prosegui senza riposare,Sigue sin descansar,Continuer sans vous reposer,Ohne Rast weiter
+INVENTORY_HEADING,Equipment,Equipaggiamento,Equipo,Équipement,Ausrüstung
+INVENTORY_SLOT_MAIN_HAND,Main hand,Mano primaria,Mano principal,Main directrice,Haupthand
+INVENTORY_SLOT_OFF_HAND,Off hand,Mano secondaria,Mano torpe,Main secondaire,Nebenhand
+INVENTORY_SLOT_ARMOUR,Armour,Armatura,Armadura,Armure,Rüstung
+INVENTORY_SLOT_TRINKET,Trinket,Ninnolo,Abalorio,Babiole,Schmuckstück
+INVENTORY_EMPTY_SLOT,Empty,Vuoto,Vacío,Vide,Leer
+PAUSE_HEADING,Paused,In pausa,En pausa,En pause,Pausiert
+PAUSE_RESUME,Resume,Riprendi,Reanudar,Reprendre,Fortsetzen
+PAUSE_ABANDON,Abandon run,Abbandona la partita,Abandonar partida,Abandonner la partie,Lauf aufgeben
+PAUSE_ABANDON_CONFIRM,Abandon this run? It cannot be resumed.,Abbandonare questa partita? Non potrà essere ripresa.,¿Abandonar esta partida? No podrá reanudarse.,Abandonner cette partie ? Elle ne pourra pas être reprise.,Diesen Lauf aufgeben? Er kann nicht fortgesetzt werden.
+SUMMARY_VICTORY,The throne is empty,Il trono è vuoto,El trono está vacío,Le trône est vide,Der Thron ist leer
+SUMMARY_DEFEAT,Your descent ends here,La tua discesa finisce qui,Tu descenso termina aquí,Votre descente s'achève ici,Dein Abstieg endet hier
+SUMMARY_DEPTH_REACHED,Depth reached: %1$s,Profondità raggiunta: %1$s,Profundidad alcanzada: %1$s,Profondeur atteinte : %1$s,Erreichte Tiefe: %1$s
+SUMMARY_ENEMIES_DEFEATED,Enemies defeated: %1$s,Nemici sconfitti: %1$s,Enemigos derrotados: %1$s,Ennemis vaincus : %1$s,Besiegte Feinde: %1$s
+SUMMARY_BEST_ITEM,Finest find: %1$s,Miglior ritrovamento: %1$s,Mejor hallazgo: %1$s,Plus belle trouvaille : %1$s,Bester Fund: %1$s
+SUMMARY_ARCHETYPE,Delver: %1$s,Personaggio: %1$s,Explorador: %1$s,Explorateur : %1$s,Absteiger: %1$s
+SUMMARY_COPY_SEED,Copy seed,Copia il seme,Copiar semilla,Copier la graine,Startwert kopieren
+SUMMARY_SEED_COPIED,Seed copied,Seme copiato,Semilla copiada,Graine copiée,Startwert kopiert
+SUMMARY_NEW_RUN,New run,Nuova partita,Nueva partida,Nouvelle partie,Neuer Lauf
+SAVE_INTEGRITY_FAILED,"This saved run could not be verified on this device and has been set aside. Its seed is shown above, so the same dungeon can be played again.","Questa partita salvata non ha superato la verifica su questo dispositivo ed è stata messa da parte. Il suo seme è mostrato sopra, così lo stesso dungeon può essere rigiocato.","Esta partida guardada no se ha podido verificar en este dispositivo y se ha apartado. Su semilla se muestra arriba, así que puedes volver a jugar la misma mazmorra.",Cette partie sauvegardée n'a pas pu être vérifiée sur cet appareil et a été mise de côté. Sa graine est affichée ci-dessus : le même donjon peut être rejoué.,"Dieser gespeicherte Lauf konnte auf diesem Gerät nicht überprüft werden und wurde beiseitegelegt. Sein Startwert steht oben, sodass dasselbe Verlies erneut gespielt werden kann."
+SAVE_UNVERIFIED_NOTICE,This run was restored from a save that carries no device signature.,Questa partita è stata ripristinata da un salvataggio privo di firma del dispositivo.,Esta partida se restauró desde un guardado sin firma del dispositivo.,Cette partie a été restaurée depuis une sauvegarde sans signature d'appareil.,Dieser Lauf wurde aus einem Speicherstand ohne Gerätesignatur wiederhergestellt.

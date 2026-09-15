@@ -1,0 +1,71 @@
+keys,en,it,es,fr,de
+ABILITY_STR,Strength,Forza,Fuerza,Force,Stärke
+ABILITY_DEX,Dexterity,Destrezza,Destreza,Dextérité,Geschicklichkeit
+ABILITY_CON,Constitution,Costituzione,Constitución,Constitution,Konstitution
+ABILITY_INT,Intelligence,Intelligenza,Inteligencia,Intelligence,Intelligenz
+ABILITY_WIS,Wisdom,Saggezza,Sabiduría,Sagesse,Weisheit
+ABILITY_CHA,Charisma,Carisma,Carisma,Charisme,Charisma
+ABILITY_STR_SHORT,STR,FOR,FUE,FOR,ST
+ABILITY_DEX_SHORT,DEX,DES,DES,DEX,GE
+ABILITY_CON_SHORT,CON,COS,CON,CON,KO
+ABILITY_INT_SHORT,INT,INT,INT,INT,IN
+ABILITY_WIS_SHORT,WIS,SAG,SAB,SAG,WE
+ABILITY_CHA_SHORT,CHA,CAR,CAR,CHA,CH
+DAMAGE_ACID,acid,acido,ácido,acide,Säure
+DAMAGE_BLUDGEONING,bludgeoning,contundente,contundente,contondant,Wucht
+DAMAGE_COLD,cold,freddo,frío,froid,Kälte
+DAMAGE_FIRE,fire,fuoco,fuego,feu,Feuer
+DAMAGE_FORCE,force,forza,fuerza,force,Energie
+DAMAGE_LIGHTNING,lightning,elettricità,relámpago,foudre,Blitz
+DAMAGE_NECROTIC,necrotic,necrotico,necrótico,nécrotique,nekrotisch
+DAMAGE_PIERCING,piercing,perforante,perforante,perforant,Stich
+DAMAGE_POISON,poison,veleno,veneno,poison,Gift
+DAMAGE_PSYCHIC,psychic,psichico,psíquico,psychique,psychisch
+DAMAGE_RADIANT,radiant,radiante,radiante,radiant,gleißend
+DAMAGE_SLASHING,slashing,tagliente,cortante,tranchant,Hieb
+DAMAGE_THUNDER,thunder,tuono,trueno,tonnerre,Schall
+CONDITION_BLINDED,Blinded,Accecato,Cegado,Aveuglé,Blind
+CONDITION_FRIGHTENED,Frightened,Spaventato,Asustado,Effrayé,Verängstigt
+CONDITION_INCAPACITATED,Incapacitated,Incapacitato,Incapacitado,Neutralisé,Handlungsunfähig
+CONDITION_INVISIBLE,Invisible,Invisibile,Invisible,Invisible,Unsichtbar
+CONDITION_PARALYSED,Paralysed,Paralizzato,Paralizado,Paralysé,Gelähmt
+CONDITION_POISONED,Poisoned,Avvelenato,Envenenado,Empoisonné,Vergiftet
+CONDITION_PRONE,Prone,Prono,Derribado,À terre,Liegend
+CONDITION_RESTRAINED,Restrained,Trattenuto,Apresado,Entravé,Festgesetzt
+CONDITION_STUNNED,Stunned,Stordito,Aturdido,Étourdi,Betäubt
+CONDITION_UNCONSCIOUS,Unconscious,Privo di sensi,Inconsciente,Inconscient,Bewusstlos
+RULES_ARMOUR_CLASS,Armour Class,Classe Armatura,Clase de Armadura,Classe d'Armure,Rüstungsklasse
+RULES_ARMOUR_CLASS_SHORT,AC,CA,CA,CA,RK
+RULES_HIT_POINTS,Hit Points,Punti Ferita,Puntos de Golpe,Points de Vie,Trefferpunkte
+RULES_HIT_POINTS_SHORT,HP,PF,PG,PV,TP
+RULES_INITIATIVE,Initiative,Iniziativa,Iniciativa,Initiative,Initiative
+RULES_PROFICIENCY_BONUS,Proficiency Bonus,Bonus di Competenza,Bonificador de Competencia,Bonus de Maîtrise,Übungsbonus
+RULES_SAVING_THROW,Saving Throw,Tiro Salvezza,Tirada de Salvación,Jet de Sauvegarde,Rettungswurf
+RULES_DIFFICULTY_CLASS,Difficulty Class,Classe Difficoltà,Clase de Dificultad,Degré de Difficulté,Schwierigkeitsgrad
+RULES_ADVANTAGE,Advantage,Vantaggio,Ventaja,Avantage,Vorteil
+RULES_DISADVANTAGE,Disadvantage,Svantaggio,Desventaja,Désavantage,Nachteil
+RULES_CRITICAL_HIT,Critical Hit,Colpo Critico,Golpe Crítico,Coup Critique,Kritischer Treffer
+RULES_RESISTANCE,Resistance,Resistenza,Resistencia,Résistance,Resistenz
+RULES_IMMUNITY,Immunity,Immunità,Inmunidad,Immunité,Immunität
+RULES_VULNERABILITY,Vulnerability,Vulnerabilità,Vulnerabilidad,Vulnérabilité,Verwundbarkeit
+RULES_ATTUNEMENT,Requires attunement,Richiede sintonia,Requiere sintonía,Nécessite une harmonisation,Erfordert Einstimmung
+LOG_ROUND_BEGINS,— Round %1$s —,— Round %1$s —,— Asalto %1$s —,— Round %1$s —,— Runde %1$s —
+LOG_INITIATIVE,%1$s rolls %2$s for initiative.,%1$s ottiene %2$s in iniziativa.,%1$s saca %2$s en iniciativa.,%1$s obtient %2$s en initiative.,%1$s würfelt %2$s für die Initiative.
+LOG_ATTACK_HIT,%1$s hits %2$s for %3$s damage.,%1$s colpisce %2$s infliggendo %3$s danni.,%1$s golpea a %2$s causando %3$s de daño.,%1$s touche %2$s et inflige %3$s dégâts.,%1$s trifft %2$s für %3$s Schaden.
+LOG_ATTACK_MISS,%1$s misses %2$s.,%1$s manca %2$s.,%1$s falla contra %2$s.,%1$s manque %2$s.,%1$s verfehlt %2$s.
+LOG_ATTACK_CRIT,%1$s lands a critical hit on %2$s for %3$s damage.,%1$s mette a segno un colpo critico su %2$s infliggendo %3$s danni.,%1$s asesta un golpe crítico a %2$s causando %3$s de daño.,%1$s porte un coup critique à %2$s et inflige %3$s dégâts.,%1$s landet einen kritischen Treffer auf %2$s für %3$s Schaden.
+LOG_SAVE_SUCCESS,%1$s succeeds on a %2$s saving throw.,%1$s supera un tiro salvezza su %2$s.,%1$s supera una tirada de salvación de %2$s.,%1$s réussit un jet de sauvegarde de %2$s.,%1$s besteht einen %2$s-Rettungswurf.
+LOG_SAVE_FAILURE,%1$s fails a %2$s saving throw.,%1$s fallisce un tiro salvezza su %2$s.,%1$s falla una tirada de salvación de %2$s.,%1$s rate un jet de sauvegarde de %2$s.,%1$s scheitert an einem %2$s-Rettungswurf.
+LOG_CONDITION_APPLIED,%1$s is now %2$s.,%1$s è ora %2$s.,%1$s está ahora %2$s.,%1$s est maintenant %2$s.,%1$s ist jetzt %2$s.
+LOG_CONDITION_ENDED,%1$s is no longer %2$s.,%1$s non è più %2$s.,%1$s ya no está %2$s.,%1$s n'est plus %2$s.,%1$s ist nicht mehr %2$s.
+LOG_RESISTED,%1$s resists the %2$s damage.,%1$s resiste ai danni da %2$s.,%1$s resiste el daño de %2$s.,%1$s résiste aux dégâts de %2$s.,%1$s widersteht dem %2$s-Schaden.
+LOG_IMMUNE,%1$s is immune to %2$s damage.,%1$s è immune ai danni da %2$s.,%1$s es inmune al daño de %2$s.,%1$s est immunisé aux dégâts de %2$s.,%1$s ist immun gegen %2$s-Schaden.
+LOG_VULNERABLE,%1$s is vulnerable to %2$s damage.,%1$s è vulnerabile ai danni da %2$s.,%1$s es vulnerable al daño de %2$s.,%1$s est vulnérable aux dégâts de %2$s.,%1$s ist verwundbar gegen %2$s-Schaden.
+LOG_DEFEATED,%1$s is defeated.,%1$s è sconfitto.,%1$s es derrotado.,%1$s est vaincu.,%1$s ist besiegt.
+LOG_HEALED,%1$s recovers %2$s hit points.,%1$s recupera %2$s punti ferita.,%1$s recupera %2$s puntos de golpe.,%1$s récupère %2$s points de vie.,%1$s stellt %2$s Trefferpunkte wieder her.
+LOG_POWER_USED,%1$s uses %2$s.,%1$s usa %2$s.,%1$s usa %2$s.,%1$s utilise %2$s.,%1$s setzt %2$s ein.
+LOG_DEFEND,%1$s takes a defensive stance.,%1$s assume una posizione difensiva.,%1$s adopta una postura defensiva.,%1$s adopte une posture défensive.,%1$s geht in Verteidigungshaltung.
+LOG_WITH_ADVANTAGE,%1$s attacks with advantage.,%1$s attacca con vantaggio.,%1$s ataca con ventaja.,%1$s attaque avec avantage.,%1$s greift mit Vorteil an.
+LOG_WITH_DISADVANTAGE,%1$s attacks with disadvantage.,%1$s attacca con svantaggio.,%1$s ataca con desventaja.,%1$s attaque avec désavantage.,%1$s greift mit Nachteil an.
+LOG_VICTORY,The way ahead is clear.,La via è libera.,El camino está despejado.,La voie est libre.,Der Weg ist frei.
+LOG_DEFEAT,You fall where you stand.,Cadi dove ti trovi.,Caes donde estás.,Vous tombez sur place.,"Du fällst, wo du stehst."

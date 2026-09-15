@@ -11,7 +11,9 @@ string to others.
 Checks performed:
 
 * every declaration site lists exactly the same locales;
-* every key in the translation table has a non-empty value in every language;
+* every key in every translation table has a non-empty value in every language;
+* no key is declared in two tables, which would shadow one of them silently;
+* every _GRAMMAR row holds a grammar tag rather than prose;
 * every string in the Android default resources exists in every translated one.
 
 Exits non-zero, listing every problem found.
@@ -29,7 +31,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 LOCALES_CONFIG = REPOSITORY_ROOT / "app" / "src" / "main" / "res" / "xml" / "locales_config.xml"
 ANDROID_RES = REPOSITORY_ROOT / "app" / "src" / "main" / "res"
-TRANSLATION_TABLE = REPOSITORY_ROOT / "game" / "localization" / "ui.csv"
+LOCALIZATION_ROOT = REPOSITORY_ROOT / "game" / "localization"
 GODOT_PROJECT = REPOSITORY_ROOT / "game" / "project.godot"
 LOCALE_SERVICE = REPOSITORY_ROOT / "game" / "scripts" / "autoload" / "locale_service.gd"
 
@@ -40,6 +42,19 @@ DEFAULT_LOCALE = "en"
 # statement is reproduced verbatim under the terms of the licence it comes with,
 # so translating it would be a licence violation rather than a courtesy.
 UNTRANSLATED_KEYS = frozenset({"CREDITS_SRD_ATTRIBUTION", "MENU_TITLE", "CREDITS_GAME_HEADING"})
+
+# Item names are assembled from parts, and these rows carry the word order for
+# each language rather than any words of their own. Several are identical across
+# languages simply because several languages order the parts the same way; that
+# is the correct answer, not a missing translation.
+# docs/i18n/LOCALIZATION.md explains the scheme.
+NAME_PATTERN_PREFIX = "ITEM_NAME_"
+
+# A _GRAMMAR row records the grammatical gender of the translation beside it, so
+# that a prefix adjective can agree with the noun it qualifies. Its value is a
+# tag, not prose, and two languages agreeing on a gender is ordinary.
+GRAMMAR_SUFFIX = "_GRAMMAR"
+GRAMMAR_TAG = re.compile(r"^(m|f|n)(s|p)$")
 
 
 def declared_in_locales_config() -> list[str]:
@@ -59,10 +74,28 @@ def declared_in_android_resources() -> list[str]:
     return locales
 
 
-def declared_in_translation_table() -> list[str]:
-    with TRANSLATION_TABLE.open(encoding="utf-8", newline="") as handle:
-        header = next(csv.reader(handle))
-    return header[1:]
+def translation_tables() -> list[Path]:
+    """Every translation table, in a stable order.
+
+    The strings are split across several tables — interface, rules vocabulary
+    and content — so that a reviewer can read one domain at a time instead of a
+    single file of several hundred rows. Every table has the same shape and the
+    same rules apply to all of them.
+    """
+    return sorted(LOCALIZATION_ROOT.glob("*.csv"))
+
+
+def declared_in_translation_tables() -> list[str]:
+    """The locale columns, which must be identical in every table."""
+    headers = set()
+    for table in translation_tables():
+        with table.open(encoding="utf-8", newline="") as handle:
+            headers.add(tuple(next(csv.reader(handle))[1:]))
+    if len(headers) != 1:
+        # Reported as a disagreement by the caller; returning one of them keeps
+        # the comparison meaningful.
+        return sorted(sorted(headers)[0]) if headers else []
+    return list(headers.pop())
 
 
 def declared_in_godot_project() -> list[str]:
@@ -70,7 +103,7 @@ def declared_in_godot_project() -> list[str]:
     match = re.search(r"^locale/translations=PackedStringArray\((.*)\)$", text, re.MULTILINE)
     if match is None:
         return []
-    return re.findall(r"ui\.([a-z]{2})\.translation", match.group(1))
+    return sorted({locale for _, locale in re.findall(r"([a-z_]+)\.([a-z]{2})\.translation", match.group(1))})
 
 
 def declared_in_locale_service() -> list[str]:
@@ -100,7 +133,7 @@ def main() -> int:
 
     sites = {
         "app/src/main/res/values-*": declared_in_android_resources(),
-        "game/localization/ui.csv": declared_in_translation_table(),
+        "game/localization/*.csv": declared_in_translation_tables(),
         "game/project.godot": declared_in_godot_project(),
         "game/scripts/autoload/locale_service.gd": declared_in_locale_service(),
     }
@@ -110,23 +143,50 @@ def main() -> int:
                 f"{name} declares {sorted(declared)} but locales_config.xml declares {sorted(expected)}."
             )
 
-    with TRANSLATION_TABLE.open(encoding="utf-8", newline="") as handle:
-        rows = list(csv.DictReader(handle))
+    # A key must be unique across every table, not merely within one of them:
+    # the engine merges them into a single lookup, so a duplicate would silently
+    # shadow whichever table happened to load second.
+    seen_keys: dict[str, str] = {}
 
-    for row in rows:
-        key = (row.get("keys") or "").strip()
-        if not key:
-            problems.append("game/localization/ui.csv contains a row with no key.")
-            continue
-        for locale in expected:
-            value = (row.get(locale) or "").strip()
-            if not value:
-                problems.append(f"ui.csv: key '{key}' has no {locale} translation.")
-        if key not in UNTRANSLATED_KEYS:
+    for table in translation_tables():
+        name = table.name
+        with table.open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+
+        for row in rows:
+            key = (row.get("keys") or "").strip()
+            if not key:
+                problems.append(f"{name} contains a row with no key.")
+                continue
+            if key in seen_keys:
+                problems.append(f"{name}: key '{key}' is already declared in {seen_keys[key]}.")
+            else:
+                seen_keys[key] = name
+
+            for locale in expected:
+                value = (row.get(locale) or "").strip()
+                if not value:
+                    problems.append(f"{name}: key '{key}' has no {locale} translation.")
+
+            if key.endswith(GRAMMAR_SUFFIX):
+                # Not prose but a grammatical tag, and languages legitimately
+                # agree on gender, so the identical-value rule does not apply.
+                for locale in expected:
+                    value = (row.get(locale) or "").strip()
+                    if value and not GRAMMAR_TAG.fullmatch(value):
+                        problems.append(
+                            f"{name}: key '{key}' has {locale} value '{value}', which is not a "
+                            f"grammar tag such as 'ms', 'fs' or 'ns'."
+                        )
+                continue
+
+            if key.startswith(NAME_PATTERN_PREFIX) or key in UNTRANSLATED_KEYS:
+                continue
+
             values = {(row.get(locale) or "").strip() for locale in expected}
             if len(values) == 1 and len(expected) > 1:
                 problems.append(
-                    f"ui.csv: key '{key}' is identical in every language. If that is intended, "
+                    f"{name}: key '{key}' is identical in every language. If that is intended, "
                     f"add it to UNTRANSLATED_KEYS in this script with the reason."
                 )
 

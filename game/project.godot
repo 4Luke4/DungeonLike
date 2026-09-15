@@ -61,7 +61,12 @@ window/frame_pacing/android/swappy_mode=0
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://localization/ui.en.translation", "res://localization/ui.it.translation", "res://localization/ui.es.translation", "res://localization/ui.fr.translation", "res://localization/ui.de.translation")
+; Three tables rather than one: interface wording, rules vocabulary and game
+; content are reviewed by different people for different qualities, and a
+; single file of several hundred rows cannot be reviewed for any of them.
+; The engine merges them into one lookup, and tools/scripts/check_locales.py
+; fails the build if a key is declared in two of them.
+locale/translations=PackedStringArray("res://localization/ui.en.translation", "res://localization/ui.it.translation", "res://localization/ui.es.translation", "res://localization/ui.fr.translation", "res://localization/ui.de.translation", "res://localization/rules.en.translation", "res://localization/rules.it.translation", "res://localization/rules.es.translation", "res://localization/rules.fr.translation", "res://localization/rules.de.translation", "res://localization/content.en.translation", "res://localization/content.it.translation", "res://localization/content.es.translation", "res://localization/content.fr.translation", "res://localization/content.de.translation")
 locale/fallback="en"
 
 [rendering]
