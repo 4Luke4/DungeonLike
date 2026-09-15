@@ -28,7 +28,13 @@ into Kotlin, it is in the wrong module.
 
 `bridge/HostPlugin.kt` is the **only** surface exposed to GDScript. Adding a
 capability means adding a method there and documenting it, not opening a second
-channel.
+channel — and updating `docs/architecture/THREAT_MODEL.md`, whose review
+triggers name exactly this.
+
+Every method treats its arguments as untrusted, because they arrive from game
+script: bound what you allocate, and never let an exception cross the boundary.
+`hostEntropy`, `saveIntegrityTag` and `verifySaveIntegrity` all bound their
+input and all return a neutral value rather than throwing.
 
 - A method callable from GDScript must carry `@UsedByGodot`. The name is matched
   exactly — Godot performs no `snake_case` to `camelCase` coercion — so the
@@ -54,9 +60,8 @@ documentation, not from preference:
   `display/window/handheld/orientation` must agree with the manifest value.
   Changing one without the other is a defect.
 - The game pack is loaded through `GodotHost.getCommandLine()` with
-  `--main-pack`. The `aaptOptions.ignoreAssetsPattern` override in
-  `app/build.gradle.kts` is required for Godot's asset layout; removing it
-  breaks the packaged game silently.
+  `--main-pack`, from `app/src/main/assets/game.pck`, which CI produces. A local
+  build has no pack and reports the missing-data dialog by design.
 
 ## Testability
 

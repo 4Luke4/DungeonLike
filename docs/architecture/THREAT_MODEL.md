@@ -51,8 +51,10 @@ Consequences that follow, deliberately:
 The only path between the Kotlin host and the game core is `HostPlugin`. It is
 reachable from GDScript by name, so every method treats its arguments as
 untrusted: `hostEntropy` bounds the requested length rather than allocating what
-it is asked for, and the achievement calls swallow failures rather than throwing
-across the engine boundary, where an exception would take the process down.
+it is asked for, `saveIntegrityTag` and `verifySaveIntegrity` bound their
+payload for the same reason, and every one of them swallows failures rather than
+throwing across the engine boundary, where an exception would take the process
+down.
 
 The bridge exposes no file paths, no arbitrary reflection and no way to launch
 an intent. Adding a method that did any of those would change this boundary and
@@ -74,7 +76,28 @@ Saves and settings are in application-private storage, which the platform keeps
 other applications out of. Saves carry an HMAC-SHA256 tag produced with a key
 generated in the Android Keystore and never exported, so a save copied from
 another device fails its check. The tag comparison is constant-time, because a
-comparison that returns early leaks how much of a forged tag was correct.
+comparison that returns early leaks how much of a forged tag was correct; it
+lives in `:host-core` as `ConstantTime` so that CI can unit-test it, the
+Keystore having no JVM implementation.
+
+The run in progress is written to `user://run.save` at every room boundary and
+when the application is paused — never mid-turn. Android kills backgrounded
+processes whenever it needs the memory, which is the case this exists for.
+
+What happens when a save does not verify follows from the decision above that
+the device owner is not an adversary. A save whose tag is wrong is **moved
+aside** to `user://run.quarantine` rather than deleted, and the player is told,
+with the seed shown so they can play the same dungeon again; keeping the file
+means it can be attached to a bug report. A save carrying **no** tag at all —
+written where no host existed, in the editor or on a desktop build, and then
+copied to a device — is honoured with a visible notice rather than refused.
+Refusing it would punish an honest player for a case that is not an attack, and
+the purpose here is detection, not a lock.
+
+Key invalidation falls into the same bucket as tampering: a device that has
+discarded the key reports every save as unverifiable, which is why the seed and
+the archetype are stored in the clear beside the signed payload. A player whose
+key is gone loses the run in progress, not the dungeon they were enjoying.
 
 Settings are not authenticated. There is nothing in them worth forging.
 

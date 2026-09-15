@@ -5,9 +5,10 @@ and tablets. Every run generates its own dungeon, encounters and loot, and is
 resolved through turn-based combat built on the rules vocabulary of the System
 Reference Document 5.2.1.
 
-> **Status:** pre-release scaffolding. The build, toolchain, host, engine
-> integration and continuous integration are in place; gameplay systems are not
-> implemented yet. See [`CHANGELOG.md`](CHANGELOG.md) and
+> **Status:** playable, not releasable. A run can be played from end to end and
+> resumed after an interruption. There is no store presence, no signing, and
+> nothing has yet been measured or verified on a physical device. See
+> [`CHANGELOG.md`](CHANGELOG.md) and
 > [`docs/release/READINESS.md`](docs/release/READINESS.md).
 
 ## Platform envelope
@@ -43,7 +44,8 @@ repository is allowed to restate them.
                 │ JNI · @UsedByGodot methods and signals
 ┌───────────────▼──────────────────────────────────────────┐
 │ game/ — Godot 4 project (GDScript), shipped as game.pck  │
-│   all game logic, all UI, all content                    │
+│   rules · generation · combat · loot · run · interface   │
+│   content as JSON in game/data, validated in CI          │
 └──────────────────────────────────────────────────────────┘
 
 :host-core — pure JVM Kotlin shared by the host and its unit tests
@@ -68,7 +70,7 @@ and read-only inspection — see the verification policy in
 
 | Workflow | What it proves |
 | --- | --- |
-| `CI / meta` | `VERSION`, changelog, locales and random-number usage are consistent |
+| `CI / meta` | `VERSION`, changelog, locales, content data and random-number usage are consistent |
 | `CI / gradle` | Kotlin host and `:host-core` compile, unit tests and Android Lint pass |
 | `CI / godot` | GDScript lints, formats and passes its GUT test suite |
 | `CI / bundle` | The Godot pack exports and an unsigned debug bundle builds end to end |

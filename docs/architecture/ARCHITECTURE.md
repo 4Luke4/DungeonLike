@@ -20,6 +20,7 @@ has deliberately chosen not to take.
 │    hostEntropy · displayRefreshRateHz · supportedRefreshRates│
 │    hasPhysicalKeyboard · hasPointerDevice · hasGameController│
 │    achievementsAvailable · unlockAchievement · increment…    │
+│    saveIntegrityTag · verifySaveIntegrity                    │
 │    signal input_devices_changed                              │
 │                                                              │
 │  HostEntropySource · RefreshRateProvider · InputDeviceWatcher│
@@ -35,6 +36,13 @@ has deliberately chosen not to take.
 │  LocaleService · SettingsService                             │
 │                                                              │
 │  scenes: boot → main_menu → run_shell · credits              │
+│                                                              │
+│  scripts/rules/       dice · checks · damage · conditions    │
+│  scripts/content/     ContentDatabase over game/data         │
+│  scripts/generation/  DungeonBuilder · EncounterBuilder      │
+│  scripts/combat/      CombatResolver · CombatEvent           │
+│  scripts/loot/        LootGenerator · ItemNaming             │
+│  scripts/run/         RunState · RunController · RunStore    │
 └──────────────────────────────────────────────────────────────┘
 
 :host-core — Kotlin with no Android API usage, unit-tested in CI
@@ -96,6 +104,30 @@ documentation:
 3. **The pack is passed on the command line.** The game is exported to
    `game.pck` and loaded with `--main-pack`, rather than shipping the raw
    project inside `assets/`.
+
+## The run
+
+A run is a pure function of its seed, its archetype and the ordered list of
+decisions the player takes. Everything under `scripts/run/`, `scripts/combat/`,
+`scripts/generation/` and `scripts/loot/` is a plain object — no `Node`, no
+scene, no signal — and `RunController` is the only thing allowed to change
+`RunState`. The interface sends one decision and renders what came back; it
+never computes an outcome and never draws from a gameplay stream.
+
+That is what makes a recorded seed reproduce a reported bug, and what lets a
+whole run be replayed in a test with no scene tree at all.
+
+**No autoload was added for it, deliberately.** Autoloads are services;
+a run is state. The run lives in `run_shell.tscn`, which mounts each part of the
+run — archetype select, map, encounter, treasure, rest, summary — as a view
+inside itself rather than as a scene of its own. Nothing changes scene while a
+run is in progress, so nothing destroys it. `ContentDatabase` is likewise a
+plain object constructed with the directory to read, not an autoload, so a test
+can build one over a fixture and fail hermetically.
+
+The main menu therefore instantiates and configures the run shell before adding
+it to the tree, rather than calling `change_scene_to_file()`, which defers the
+swap and offers no opportunity to tell the new scene whether it is resuming.
 
 ## Build
 

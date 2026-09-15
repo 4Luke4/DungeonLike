@@ -6,16 +6,20 @@ record of where each one stands today.
 This document exists to keep "not done yet" distinguishable from "done and
 verified". Anything unverified is written down here rather than assumed.
 
-**Current state: pre-release scaffolding.** The toolchain, host, engine
-integration and continuous integration are in place. There is no gameplay, no
-store presence and no signing. The application is not releasable and no gate
-below should be read as passed unless it says so.
+**Current state: playable, unreleasable.** A run can be played end to end —
+archetype, generated dungeon, turn-based encounters, procedural loot, death or
+victory — and resumed after an interruption. There is still no store presence
+and no signing, no release build has been produced, and nothing has been run on
+a physical device. The application is not releasable and no gate below should be
+read as passed unless it says so.
 
 ## Verification gates
 
 | Gate | State | Notes |
 | --- | --- | --- |
 | Metadata consistency | Automated | `CI / meta` checks `VERSION`, changelog, locales and randomness usage |
+| Game content data | Automated | `CI / meta`, `check_content.py`: schema, references, ranges, locale keys |
+| Content reaches the pack | Automated | `CI / bundle` greps the exported pack for `game/data` |
 | Kotlin unit tests | Automated | `CI / gradle` |
 | Android Lint | Automated | `CI / gradle`, warnings are errors |
 | GDScript lint and format | Automated | `CI / godot` |
@@ -36,10 +40,17 @@ runners provide no matching device or emulator. It must be run on real hardware,
 or on an ARM runner, before the first release.
 
 **On-device performance.** The sustained 60/90/120 fps target and its battery
-cost cannot be measured in CI, and cannot be measured meaningfully at all until
-there is gameplay to measure. The frame pacing policy is built to be
-measurable — the cap is derived from the panel and reported through
-`FramePacingService` — but no number has been taken.
+cost cannot be measured in CI. There is now gameplay to measure, which there was
+not before, so this has moved from impossible to merely undone: **no number has
+been taken**, and the target must not be described as met until one has. The
+frame pacing policy is built to be measurable — the cap is derived from the
+panel and reported through `FramePacingService`.
+
+**The Android Keystore path.** `KeystoreSaveIntegrity` can only run on a device;
+there is no JVM implementation of the Android Keystore and the project has no
+Robolectric dependency. The constant-time comparison it depends on was extracted
+to `:host-core` as `ConstantTime` and is unit-tested, but tagging, verification
+and key invalidation are unexercised until they run on hardware.
 
 **GDScript static analysis.** CodeQL does not support GDScript. The game core is
 covered by `gdlint` and by the repository's own checks in `tools/scripts/`. This
@@ -83,6 +94,10 @@ up only at runtime.
       Play requires for applications targeting recent Android versions
 - [ ] Confirm the bundle contains `arm64-v8a` only and no other architecture
 - [ ] Run the instrumentation suite on physical hardware, phone and tablet
+- [ ] Play a full run on a device and verify that saving, killing the process
+      and resuming restores the same dungeon
+- [ ] Verify that a save written in the editor and copied to a device is
+      reported as unsigned rather than refused
 - [ ] Measure sustained frame rate and battery drain on a 60, a 90 and a 120 Hz
       device
 - [ ] Verify the application with a keyboard and a mouse attached, including
