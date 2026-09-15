@@ -6,6 +6,8 @@ import com.yuumi.dungeonlike.achievements.NoOpAchievementGateway
 import com.yuumi.dungeonlike.display.RefreshRateProvider
 import com.yuumi.dungeonlike.entropy.HostEntropySource
 import com.yuumi.dungeonlike.input.InputDeviceWatcher
+import com.yuumi.dungeonlike.save.KeystoreSaveIntegrity
+import com.yuumi.dungeonlike.save.SaveIntegrity
 import org.godotengine.godot.Godot
 import org.godotengine.godot.plugin.GodotPlugin
 import org.godotengine.godot.plugin.SignalInfo
@@ -37,6 +39,7 @@ class HostPlugin(
     private val entropySource: HostEntropySource = HostEntropySource(),
     private val refreshRates: RefreshRateProvider = RefreshRateProvider(context),
     private val achievements: AchievementGateway = NoOpAchievementGateway(),
+    private val saveIntegrity: SaveIntegrity = KeystoreSaveIntegrity(),
 ) : GodotPlugin(godot) {
 
     private val inputDevices = InputDeviceWatcher(context) { capabilities ->
@@ -68,6 +71,14 @@ class HostPlugin(
         // holding the activity alive, and matches when the game can actually
         // react to a device change.
         inputDevices.start()
+
+        // Generating the save-integrity key is the one operation behind this
+        // bridge that is not trivially cheap, and every bridge method runs on
+        // the engine's thread. Doing it here, off that thread, means the first
+        // autosave of a run does not stall a frame.
+        (saveIntegrity as? KeystoreSaveIntegrity)?.let { keystore ->
+            Thread { keystore.warmUp() }.apply { isDaemon = true }.start()
+        }
     }
 
     override fun onMainStop() {
@@ -142,7 +153,58 @@ class HostPlugin(
         runCatching { achievements.increment(achievementId, steps) }
     }
 
+    // --- Save integrity ------------------------------------------------------
+
+    /**
+     * Returns this device's authentication tag for [payload].
+     *
+     * The tag lets the game detect a save it did not write, so that an altered
+     * or corrupted file is reported instead of loaded as though it were valid.
+     * It is **not** a lock: the threat model is explicit that the device owner
+     * is not an adversary, and a player editing their own save is making a
+     * decision about their own game.
+     *
+     * Returns an empty array rather than throwing when anything goes wrong,
+     * including on a device whose Keystore has invalidated the key. The game
+     * treats that as "this save carries no signature" and says so, rather than
+     * losing the run.
+     *
+     * The size bound exists because this is reachable from game code across the
+     * engine boundary and must therefore treat its argument as untrusted; a
+     * scripting mistake must not be able to ask the host to hash an arbitrary
+     * amount of memory.
+     */
+    @UsedByGodot
+    fun saveIntegrityTag(payload: ByteArray): ByteArray =
+        if (payload.isEmpty() || payload.size > MAX_SAVE_PAYLOAD_BYTES) {
+            ByteArray(0)
+        } else {
+            runCatching { saveIntegrity.tag(payload) }.getOrElse { ByteArray(0) }
+        }
+
+    /**
+     * Whether [tag] is the tag this device would produce for [payload].
+     *
+     * False on any failure, which the game reports as a save it cannot vouch
+     * for rather than as an error.
+     */
+    @UsedByGodot
+    fun verifySaveIntegrity(payload: ByteArray, tag: ByteArray): Boolean =
+        if (payload.isEmpty() || payload.size > MAX_SAVE_PAYLOAD_BYTES) {
+            false
+        } else {
+            runCatching { saveIntegrity.verify(payload, tag) }.getOrElse { false }
+        }
+
     companion object {
+        /**
+         * Largest save payload the host will authenticate, in bytes. A run's
+         * state is a few kilobytes; this is generous enough never to be reached
+         * by the game and small enough to bound what a scripting mistake can
+         * ask for.
+         */
+        const val MAX_SAVE_PAYLOAD_BYTES = 4 * 1024 * 1024
+
         /**
          * The name the game looks the plugin up by, through
          * `Engine.get_singleton()`. Changing it silently disconnects the game
