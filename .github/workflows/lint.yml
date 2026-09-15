@@ -67,4 +67,13 @@ jobs:
 
           # Copyright and licence files are formatted as their licences require,
           # not as a linter would prefer.
-          FILTER_REGEX_EXCLUDE: (LICENSE\.md|THIRD_PARTY_NOTICES\.md)
+          #
+          # GDScript is excluded because it is already linted and formatted by
+          # gdlint and gdformat in `CI / godot`, and because super-linter cannot
+          # tell it apart from Python. GDScript borrows Python's indentation,
+          # its `#` comments and its `class Name:` block header, so a .gd file
+          # declaring an inner class is detected as Python and handed to ruff,
+          # which then reports every `extends`, `const` and `:=` in it as a
+          # syntax error. Selecting validators does not help: the detection
+          # happens per file, before a validator is chosen.
+          FILTER_REGEX_EXCLUDE: (LICENSE\.md|THIRD_PARTY_NOTICES\.md|.*\.gd)

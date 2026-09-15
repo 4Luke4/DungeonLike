@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "encounter_tables": [
+    {
+      "id": "crypt_shallow",
+      "entries": [
+        {
+          "weight": 30,
+          "groups": [
+            {
+              "monster": "giant_rat",
+              "count": "2d3"
+            }
+          ]
+        },
+        {
+          "weight": 24,
+          "groups": [
+            {
+              "monster": "kobold_skirmisher",
+              "count": "1d3+1"
+            }
+          ]
+        },
+        {
+          "weight": 20,
+          "groups": [
+            {
+              "monster": "skeleton_warrior",
+              "count": "1d2+1"
+            }
+          ]
+        },
+        {
+          "weight": 14,
+          "groups": [
+            {
+              "monster": "skeleton_warrior",
+              "count": "1d2"
+            },
+            {
+              "monster": "giant_rat",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 12,
+          "groups": [
+            {
+              "monster": "shambling_husk",
+              "count": "1d2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "undercroft",
+      "entries": [
+        {
+          "weight": 26,
+          "groups": [
+            {
+              "monster": "giant_spider",
+              "count": "1d2+1"
+            }
+          ]
+        },
+        {
+          "weight": 22,
+          "groups": [
+            {
+              "monster": "dire_wolf",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 20,
+          "groups": [
+            {
+              "monster": "crypt_ghoul",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 18,
+          "groups": [
+            {
+              "monster": "shambling_husk",
+              "count": "1d2"
+            },
+            {
+              "monster": "skeleton_warrior",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 14,
+          "groups": [
+            {
+              "monster": "animated_plate",
+              "count": "1d2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reliquary",
+      "entries": [
+        {
+          "weight": 26,
+          "groups": [
+            {
+              "monster": "cairn_wight",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 22,
+          "groups": [
+            {
+              "monster": "ember_mephit",
+              "count": "1d3+1"
+            }
+          ]
+        },
+        {
+          "weight": 20,
+          "groups": [
+            {
+              "monster": "bandit_captain",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 18,
+          "groups": [
+            {
+              "monster": "crypt_ghoul",
+              "count": "1d2"
+            },
+            {
+              "monster": "animated_plate",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 14,
+          "groups": [
+            {
+              "monster": "cairn_wight",
+              "count": 1
+            },
+            {
+              "monster": "ember_mephit",
+              "count": "1d2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hollow_throne",
+      "entries": [
+        {
+          "weight": 60,
+          "groups": [
+            {
+              "monster": "hollow_tyrant",
+              "count": 1
+            },
+            {
+              "monster": "cairn_wight",
+              "count": "1d2"
+            }
+          ]
+        },
+        {
+          "weight": 40,
+          "groups": [
+            {
+              "monster": "hollow_tyrant",
+              "count": 1
+            },
+            {
+              "monster": "animated_plate",
+              "count": "1d2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

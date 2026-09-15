@@ -2,6 +2,7 @@ package com.yuumi.dungeonlike.save
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.yuumi.dungeonlike.core.ConstantTime
 import java.security.KeyStore
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
@@ -42,9 +43,18 @@ class KeystoreSaveIntegrity(
         return mac.doFinal(payload)
     }
 
-    override fun verify(payload: ByteArray, tag: ByteArray): Boolean {
-        val expected = tag(payload)
-        return expected.constantTimeEquals(tag)
+    override fun verify(payload: ByteArray, tag: ByteArray): Boolean =
+        ConstantTime.equals(tag(payload), tag)
+
+    /**
+     * Generates the device key now, so the first save does not pay for it.
+     *
+     * Key generation is the one part of this class that is not trivially cheap,
+     * and every other entry point is reached from the engine's own thread. The
+     * caller runs this off that thread while the game is starting.
+     */
+    fun warmUp() {
+        runCatching { loadOrCreateKey() }
     }
 
     /**
@@ -65,22 +75,6 @@ class KeystoreSaveIntegrity(
                 .build(),
         )
         return generator.generateKey()
-    }
-
-    /**
-     * Compares in time independent of where the first difference is. A tag
-     * comparison that returns early leaks, through timing, how much of a forged
-     * tag was correct.
-     */
-    private fun ByteArray.constantTimeEquals(other: ByteArray): Boolean {
-        if (size != other.size) {
-            return false
-        }
-        var difference = 0
-        for (index in indices) {
-            difference = difference or (this[index].toInt() xor other[index].toInt())
-        }
-        return difference == 0
     }
 
     private companion object {

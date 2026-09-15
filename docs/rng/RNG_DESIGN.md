@@ -75,11 +75,67 @@ HKDF under its own label:
 | `loot` | Drops, item generation, rarity |
 | `cosmetic` | Anything with no effect on play |
 
+Presentation variation — which backdrop a room shows, which idle pose a monster
+takes — is drawn from `cosmetic` **once, when the room is generated**, and
+stored on the record. Interface code never draws at all: a shuffled flourish or
+a randomised hit-spark offset that reached into `map`, `encounter` or `loot`
+would shift every later draw, and nothing would appear to break. The run would
+simply stop replaying from its seed, and nobody would find out until a reported
+bug could not be reproduced.
+
 This is not tidiness. With a single sequence, adding a system — or changing how
 many numbers an existing one draws — shifts every later draw, so every recorded
 seed would generate a different run after such a change and every seeded test
 would need rewriting. With independent streams, a change to encounters leaves
 the dungeons that existing seeds generate untouched.
+
+## Stream scoping
+
+A stream name may be composed of a system and a scope, written
+`<system>:<scope>` and produced by `RngService.stream_for()`:
+
+```gdscript
+var stream := RngService.stream_for(RngService.STREAM_ENCOUNTER, "node-17")
+```
+
+Every piece of generated content draws from a stream scoped to **the thing being
+generated** — a dungeon room draws under its own identifier, not from a
+long-lived `encounter` stream shared by the whole run.
+
+The reason is resume. A run visits thirty rooms; a single shared stream would be
+thirty encounters deep by the end, so restoring a saved run would mean writing
+the generator's internal state into the save file, coupling the save format to
+the implementation of HMAC_DRBG. Scoping instead makes a room's contents a pure
+function of `(run seed, room identifier)`. Resuming re-seeds and replays nothing.
+
+Three further properties follow, each of which would otherwise have to be
+engineered separately:
+
+* Visiting rooms in a different order, or adding a system that draws more inside
+  one room, cannot change what any other room holds.
+* Entering a room after a reload cannot reroll what is in it.
+* A test can generate the seventeenth room without simulating the sixteen before
+  it, which is what makes the generation suites fast and independent.
+
+`RngService.forget_stream()` releases a finished room's generator state. It is
+not a reset: the stream is derived from the run seed, so asking again produces
+the same bytes.
+
+## Integer weights, and one draw
+
+Weighted selection uses integer weights, summed in file order, resolved with a
+single `next_below()` over the total. Both halves are deliberate.
+
+Integers because floating-point addition is not associative: the same weights
+summed in a different order can differ in the last bit, and a seed would replay
+differently on different hardware. Nothing in the content needs a fractional
+weight.
+
+One draw rather than a rejection loop over candidates because **the number of
+values taken from a stream is part of what a seed reproduces**. A loop that
+retried until it found an eligible candidate would take a different number of
+draws depending on the content, so adding a monster to a table would silently
+change every later roll in that stream.
 
 ## Unbiased sampling
 

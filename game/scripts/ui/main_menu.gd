@@ -9,15 +9,11 @@ extends Control
 const RUN_SHELL_SCENE := "res://scenes/run_shell.tscn"
 const CREDITS_SCENE := "res://scenes/credits.tscn"
 
-## Width, in layout pixels, at or above which the menu uses its wider layout.
-## Chosen to sit between a phone in landscape and a small tablet.
-const TABLET_BREAKPOINT := 900.0
-
 @onready var _content: VBoxContainer = %Content
 @onready var _new_run_button: Button = %NewRunButton
+@onready var _continue_button: Button = %ContinueButton
 @onready var _credits_button: Button = %CreditsButton
 @onready var _quit_button: Button = %QuitButton
-@onready var _seed_label: Label = %SeedLabel
 
 
 func _ready() -> void:
@@ -25,6 +21,11 @@ func _ready() -> void:
 	FramePacingService.set_idle(true)
 
 	_new_run_button.pressed.connect(_on_new_run_pressed)
+	_continue_button.pressed.connect(_on_continue_pressed)
+	# Offered only when there is something to continue. The check asks whether a
+	# save parses, not whether it verifies, so a quarantined save does not leave
+	# a button that does nothing when pressed.
+	_continue_button.visible = RunStore.has_resumable_run()
 	_credits_button.pressed.connect(_on_credits_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 
@@ -37,19 +38,41 @@ func _ready() -> void:
 	# Keyboard players need something focused to navigate from; without this the
 	# first arrow key press does nothing at all.
 	_new_run_button.grab_focus()
-	_seed_label.text = ""
 
 
 func _on_new_run_pressed() -> void:
-	var run_seed := RngService.begin_run()
-	# Shown so a player can quote it in a bug report or replay the run later.
-	_seed_label.text = tr("MENU_SEED_LABEL") % run_seed.hex_encode()
+	_start_run(false)
+
+
+func _on_continue_pressed() -> void:
+	_start_run(true)
+
+
+## Opens the run shell, telling it whether to resume.
+##
+## The scene is instantiated and configured before it enters the tree rather
+## than opened with [method SceneTree.change_scene_to_file], because that call
+## defers the swap and gives no opportunity to set anything on the new scene
+## before its [method Node._ready] runs — and whether to resume has to be known
+## by then.
+##
+## The run is no longer seeded here. Seeding happens in [RunController] once an
+## archetype has been chosen: a seed drawn before that decision would imply the
+## choice could not affect what the dungeon holds.
+func _start_run(resume: bool) -> void:
+	var packed: PackedScene = load(RUN_SHELL_SCENE)
+	if packed == null:
+		push_error("Failed to load the run shell.")
+		return
+
+	var shell: Control = packed.instantiate()
+	shell.resume_requested = resume
 
 	FramePacingService.set_idle(false)
-	var status := get_tree().change_scene_to_file(RUN_SHELL_SCENE)
-	if status != OK:
-		push_error("Failed to start a run (%d)." % status)
-		FramePacingService.set_idle(true)
+	var tree := get_tree()
+	tree.root.add_child(shell)
+	tree.current_scene.queue_free()
+	tree.current_scene = shell
 
 
 func _on_credits_pressed() -> void:
@@ -65,8 +88,8 @@ func _on_quit_pressed() -> void:
 # The parameter is typed as int rather than as InputModeService.Mode: an
 # autoload is a node instance, not a class, so its enum cannot name a type here.
 func _on_input_mode_changed(_mode: int) -> void:
-	var show_hints := InputModeService.should_show_key_hints()
-	_new_run_button.text = tr("MENU_NEW_RUN") + (" [Enter]" if show_hints else "")
+	_new_run_button.text = Layout.with_key_hint(tr("MENU_NEW_RUN"), "Enter")
+	_continue_button.text = tr("MENU_CONTINUE_RUN")
 
 
 ## Adapts to the window the game actually has.
@@ -77,7 +100,9 @@ func _on_input_mode_changed(_mode: int) -> void:
 ## second scene, so there is only one menu to maintain and to translate.
 func _apply_adaptive_layout() -> void:
 	var viewport_width := float(get_viewport_rect().size.x)
-	var is_wide := viewport_width >= TABLET_BREAKPOINT
+	# The breakpoint is shared with every run screen; restating it here would
+	# eventually leave the menu laying out differently from the game it opens.
+	var is_wide := Layout.is_wide(self)
 
 	_content.custom_minimum_size.x = minf(viewport_width * (0.4 if is_wide else 0.8), 560.0)
 	_content.add_theme_constant_override("separation", 20 if is_wide else 12)

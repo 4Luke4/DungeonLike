@@ -92,6 +92,41 @@ func used_platform_entropy() -> bool:
 	return _platform_entropy_used
 
 
+## Composes the name of a stream scoped to one generated thing.
+##
+## A run draws for thirty nodes. If every node drew from the same
+## [code]encounter[/code] stream, that stream would be thirty encounters deep by
+## the end, and resuming a saved run would mean restoring the generator's
+## internal state from the save file — coupling the save format to a
+## cryptographic implementation detail.
+##
+## Scoping instead makes a node's content a pure function of the run seed and
+## the node's identity. Resuming re-seeds and replays nothing, visiting nodes in
+## a different order cannot shift another node's content, and a test can
+## generate node seventeen without simulating the sixteen before it.
+##
+## Streams are derived by name through HKDF and created on first use, so a
+## scoped name costs nothing beyond the stream it names.
+##
+## [codeblock]
+## var stream := RngService.stream_for(RngService.STREAM_ENCOUNTER, "node-17")
+## [/codeblock]
+func stream_for(system: String, scope: String) -> String:
+	assert(not system.is_empty(), "a scoped stream needs a system")
+	assert(not scope.is_empty(), "a scoped stream needs a scope")
+	return "%s:%s" % [system, scope]
+
+
+## Releases a scoped stream's generator state.
+##
+## Called when a node is finished with. Without it a long run would accumulate
+## one generator per node visited; each is small, but nothing would ever release
+## them. Forgetting a stream does not change what it would produce if asked
+## again, because it is derived from the run seed rather than accumulated.
+func forget_stream(stream: String) -> void:
+	_streams.erase(stream)
+
+
 ## Returns [param count] bytes from [param stream].
 func next_bytes(stream: String, count: int) -> PackedByteArray:
 	assert(count > 0, "byte count must be positive")

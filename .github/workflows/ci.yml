@@ -89,6 +89,9 @@ jobs:
       - name: Third-party actions are pinned to a commit SHA
         run: python3 tools/scripts/check_action_pinning.py
 
+      - name: Content data is well formed and every reference resolves
+        run: python3 tools/scripts/check_content.py
+
   gradle:
     name: Kotlin host
     needs: toolchain
@@ -271,6 +274,20 @@ jobs:
           # silently produced nothing would otherwise surface as a blank screen
           # on a device instead of a failed build.
           test -s app/src/main/assets/game.pck
+
+          # The game data is JSON rather than an engine resource, so whether it
+          # reaches the pack depends on the export filter rather than on the
+          # importer. Every GUT suite runs against the imported project and
+          # would pass with an empty pack, so the only place this can be caught
+          # is here. The pack stores its paths as plain strings.
+          for required in data/monsters.json data/affixes.json data/archetypes.json; do
+            if ! grep --quiet --text --fixed-strings "${required}" \
+                app/src/main/assets/game.pck; then
+              echo "${required} is missing from the exported pack." >&2
+              exit 1
+            fi
+          done
+          echo "Game content is present in the pack."
 
       - name: Assemble the debug application
         # Unsigned on purpose: no signing material exists in this repository or

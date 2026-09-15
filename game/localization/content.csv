@@ -1,0 +1,149 @@
+keys,en,it,es,fr,de
+MONSTER_GIANT_RAT,Giant Rat,Ratto gigante,Rata gigante,Rat géant,Riesenratte
+MONSTER_KOBOLD_SKIRMISHER,Kobold Skirmisher,Coboldo incursore,Kóbold hostigador,Kobold tirailleur,Kobold-Plänkler
+MONSTER_GIANT_SPIDER,Giant Spider,Ragno gigante,Araña gigante,Araignée géante,Riesenspinne
+MONSTER_SKELETON_WARRIOR,Skeleton Warrior,Guerriero scheletro,Guerrero esqueleto,Guerrier squelette,Skelettkrieger
+MONSTER_SHAMBLING_HUSK,Shambling Husk,Scorza barcollante,Cascarón tambaleante,Carcasse titubante,Wankende Hülle
+MONSTER_DIRE_WOLF,Dire Wolf,Lupo crudele,Lobo huargo,Loup sanguinaire,Schattenwolf
+MONSTER_CRYPT_GHOUL,Crypt Ghoul,Ghoul della cripta,Necrófago de la cripta,Goule de la crypte,Gruftghul
+MONSTER_ANIMATED_PLATE,Animated Plate,Armatura animata,Armadura animada,Armure animée,Belebte Rüstung
+MONSTER_EMBER_MEPHIT,Ember Mephit,Mefit di brace,Mefit de brasas,Méphite de braises,Glutmephit
+MONSTER_BANDIT_CAPTAIN,Bandit Captain,Capitano dei banditi,Capitán bandido,Capitaine bandit,Banditenhauptmann
+MONSTER_CAIRN_WIGHT,Cairn Wight,Wight del tumulo,Espectro del túmulo,Ombre du cairn,Hügelgrabwicht
+MONSTER_HOLLOW_TYRANT,The Hollow Tyrant,Il Tiranno Cavo,El Tirano Hueco,Le Tyran Creux,Der Hohle Tyrann
+ACTION_BITE,Bite,Morso,Mordisco,Morsure,Biss
+ACTION_CLAWS,Claws,Artigli,Garras,Griffes,Klauen
+ACTION_DAGGER,Dagger,Pugnale,Puñal,Dague,Dolch
+ACTION_DREAD_COMMAND,Dread Command,Comando terrificante,Orden pavorosa,Ordre terrifiant,Schreckensbefehl
+ACTION_GRAVE_TOUCH,Grave Touch,Tocco tombale,Toque sepulcral,Toucher sépulcral,Grabesberührung
+ACTION_GREATSWORD,Greatsword,Spadone,Mandoble,Épée à deux mains,Großschwert
+ACTION_HAND_CROSSBOW,Hand Crossbow,Balestra a mano,Ballesta de mano,Arbalète de poing,Handarmbrust
+ACTION_LONGSWORD,Longsword,Spada lunga,Espada larga,Épée longue,Langschwert
+ACTION_SCIMITAR,Scimitar,Scimitarra,Cimitarra,Cimeterre,Krummsäbel
+ACTION_SHORTSWORD,Shortsword,Spada corta,Espada corta,Épée courte,Kurzschwert
+ACTION_SLAM,Slam,Colpo,Golpe,Coup,Hieb
+ACTION_SLING,Sling,Fionda,Honda,Fronde,Schleuder
+ACTION_VENOMOUS_BITE,Venomous Bite,Morso velenoso,Mordisco venenoso,Morsure venimeuse,Giftiger Biss
+ITEM_BASE_DAGGER,Dagger,Pugnale,Daga,Dague,Dolch
+ITEM_BASE_DAGGER_GRAMMAR,ns,ms,fs,fs,ms
+ITEM_BASE_QUARTERSTAFF,Quarterstaff,Bastone ferrato,Bastón,Bâton,Kampfstab
+ITEM_BASE_QUARTERSTAFF_GRAMMAR,ns,ms,ms,ms,ms
+ITEM_BASE_SHORTSWORD,Shortsword,Spada corta,Espada corta,Épée courte,Kurzschwert
+ITEM_BASE_SHORTSWORD_GRAMMAR,ns,fs,fs,fs,ns
+ITEM_BASE_LONGSWORD,Longsword,Spada lunga,Espada larga,Épée longue,Langschwert
+ITEM_BASE_LONGSWORD_GRAMMAR,ns,fs,fs,fs,ns
+ITEM_BASE_WARHAMMER,Warhammer,Martello da guerra,Martillo de guerra,Marteau de guerre,Kriegshammer
+ITEM_BASE_WARHAMMER_GRAMMAR,ns,ms,ms,ms,ms
+ITEM_BASE_GREATAXE,Greataxe,Ascia bipenne,Hacha a dos manos,Hache à deux mains,Großaxt
+ITEM_BASE_GREATAXE_GRAMMAR,ns,fs,fs,fs,fs
+ITEM_BASE_SHORTBOW,Shortbow,Arco corto,Arco corto,Arc court,Kurzbogen
+ITEM_BASE_SHORTBOW_GRAMMAR,ns,ms,ms,ms,ms
+ITEM_BASE_PADDED_ARMOUR,Padded Armour,Armatura imbottita,Armadura acolchada,Armure matelassée,Gepolsterte Rüstung
+ITEM_BASE_PADDED_ARMOUR_GRAMMAR,ns,fs,fs,fs,fs
+ITEM_BASE_LEATHER_ARMOUR,Leather Armour,Armatura di cuoio,Armadura de cuero,Armure de cuir,Lederrüstung
+ITEM_BASE_LEATHER_ARMOUR_GRAMMAR,ns,fs,fs,fs,fs
+ITEM_BASE_CHAIN_SHIRT,Chain Shirt,Camicia di maglia,Camisote de malla,Chemise de mailles,Kettenhemd
+ITEM_BASE_CHAIN_SHIRT_GRAMMAR,ns,fs,ms,fs,ns
+ITEM_BASE_BREASTPLATE,Breastplate,Corazza,Coraza,Cuirasse,Brustplatte
+ITEM_BASE_BREASTPLATE_GRAMMAR,ns,fs,fs,fs,fs
+ITEM_BASE_CHAIN_MAIL,Chain Mail,Cotta di maglia,Cota de malla,Cotte de mailles,Kettenpanzer
+ITEM_BASE_CHAIN_MAIL_GRAMMAR,ns,fs,fs,fs,ms
+ITEM_BASE_BUCKLER,Buckler,Brocchiere,Broquel,Rondache,Faustschild
+ITEM_BASE_BUCKLER_GRAMMAR,ns,ms,ms,fs,ms
+ITEM_BASE_KITE_SHIELD,Kite Shield,Scudo normanno,Escudo normando,Écu normand,Normannenschild
+ITEM_BASE_KITE_SHIELD_GRAMMAR,ns,ms,ms,ms,ns
+ITEM_BASE_COPPER_BAND,Copper Band,Anello di rame,Anillo de cobre,Anneau de cuivre,Kupferreif
+ITEM_BASE_COPPER_BAND_GRAMMAR,ns,ms,ms,ms,ms
+ITEM_BASE_SILVER_TORC,Silver Torc,Torque d'argento,Torque de plata,Torque d'argent,Silberreif
+ITEM_BASE_SILVER_TORC_GRAMMAR,ns,ms,ms,ms,ms
+AFFIX_KEEN_MS,Keen,affilato,afilado,affûté,scharfer
+AFFIX_KEEN_FS,Keen,affilata,afilada,affûtée,scharfe
+AFFIX_KEEN_NS,Keen,affilato,afilado,affûté,scharfes
+AFFIX_UNERRING_MS,Unerring,infallibile,infalible,infaillible,unfehlbarer
+AFFIX_UNERRING_FS,Unerring,infallibile,infalible,infaillible,unfehlbare
+AFFIX_UNERRING_NS,Unerring,infallibile,infalible,infaillible,unfehlbares
+AFFIX_FLAMING_MS,Flaming,fiammeggiante,flamígero,flamboyant,flammender
+AFFIX_FLAMING_FS,Flaming,fiammeggiante,flamígera,flamboyante,flammende
+AFFIX_FLAMING_NS,Flaming,fiammeggiante,flamígero,flamboyant,flammendes
+AFFIX_FROSTBOUND_MS,Frostbound,gelido,gélido,glacé,frostiger
+AFFIX_FROSTBOUND_FS,Frostbound,gelida,gélida,glacée,frostige
+AFFIX_FROSTBOUND_NS,Frostbound,gelido,gélido,glacé,frostiges
+AFFIX_STORM_TOUCHED_MS,Storm-Touched,tempestoso,tormentoso,orageux,sturmberührter
+AFFIX_STORM_TOUCHED_FS,Storm-Touched,tempestosa,tormentosa,orageuse,sturmberührte
+AFFIX_STORM_TOUCHED_NS,Storm-Touched,tempestoso,tormentoso,orageux,sturmberührtes
+AFFIX_HALLOWED_MS,Hallowed,consacrato,consagrado,consacré,geweihter
+AFFIX_HALLOWED_FS,Hallowed,consacrata,consagrada,consacrée,geweihte
+AFFIX_HALLOWED_NS,Hallowed,consacrato,consagrado,consacré,geweihtes
+AFFIX_VENOMOUS_MS,Venomous,velenoso,venenoso,venimeux,giftiger
+AFFIX_VENOMOUS_FS,Venomous,velenosa,venenosa,venimeuse,giftige
+AFFIX_VENOMOUS_NS,Venomous,velenoso,venenoso,venimeux,giftiges
+AFFIX_CRUEL_MS,Cruel,crudele,cruel,cruel,grausamer
+AFFIX_CRUEL_FS,Cruel,crudele,cruel,cruelle,grausame
+AFFIX_CRUEL_NS,Cruel,crudele,cruel,cruel,grausames
+AFFIX_REINFORCED_MS,Reinforced,rinforzato,reforzado,renforcé,verstärkter
+AFFIX_REINFORCED_FS,Reinforced,rinforzata,reforzada,renforcée,verstärkte
+AFFIX_REINFORCED_NS,Reinforced,rinforzato,reforzado,renforcé,verstärktes
+AFFIX_ADAMANT_MS,Adamant,adamantino,adamantino,adamantin,adamantener
+AFFIX_ADAMANT_FS,Adamant,adamantina,adamantina,adamantine,adamantene
+AFFIX_ADAMANT_NS,Adamant,adamantino,adamantino,adamantin,adamantenes
+AFFIX_WARDED_MS,Warded,protetto,protegido,protégé,geschützter
+AFFIX_WARDED_FS,Warded,protetta,protegida,protégée,geschützte
+AFFIX_WARDED_NS,Warded,protetto,protegido,protégé,geschütztes
+AFFIX_CINDER_CLAD_MS,Cinder-Clad,cinereo,ceniciento,cendré,aschebedeckter
+AFFIX_CINDER_CLAD_FS,Cinder-Clad,cinerea,cenicienta,cendrée,aschebedeckte
+AFFIX_CINDER_CLAD_NS,Cinder-Clad,cinereo,ceniciento,cendré,aschebedecktes
+AFFIX_STURDY_MS,Sturdy,robusto,robusto,robuste,robuster
+AFFIX_STURDY_FS,Sturdy,robusta,robusta,robuste,robuste
+AFFIX_STURDY_NS,Sturdy,robusto,robusto,robuste,robustes
+AFFIX_VITAL_MS,Vital,vigoroso,vigoroso,vigoureux,vitaler
+AFFIX_VITAL_FS,Vital,vigorosa,vigorosa,vigoureuse,vitale
+AFFIX_VITAL_NS,Vital,vigoroso,vigoroso,vigoureux,vitales
+AFFIX_SWIFT_MS,Swift,rapido,raudo,rapide,flinker
+AFFIX_SWIFT_FS,Swift,rapida,rauda,rapide,flinke
+AFFIX_SWIFT_NS,Swift,rapido,raudo,rapide,flinkes
+AFFIX_RUNED_MS,Runed,runico,rúnico,runique,runenbesetzter
+AFFIX_RUNED_FS,Runed,runica,rúnica,runique,runenbesetzte
+AFFIX_RUNED_NS,Runed,runico,rúnico,runique,runenbesetztes
+AFFIX_OF_THE_BEAR,of the Bear,dell'Orso,del Oso,de l'Ours,des Bären
+AFFIX_OF_THE_FOX,of the Fox,della Volpe,del Zorro,du Renard,des Fuchses
+AFFIX_OF_THE_MOUNTAIN,of the Mountain,della Montagna,de la Montaña,de la Montagne,des Berges
+AFFIX_OF_THE_OWL,of the Owl,della Civetta,del Búho,du Hibou,der Eule
+AFFIX_OF_EMBERS,of Embers,delle Braci,de las Brasas,des Braises,der Glut
+AFFIX_OF_THE_DEEP_FROST,of the Deep Frost,del Gelo Profondo,de la Escarcha Profunda,du Gel Profond,des Tiefen Frosts
+AFFIX_OF_THE_GRAVE,of the Grave,della Tomba,de la Tumba,de la Tombe,des Grabes
+AFFIX_OF_WARDING,of Warding,della Protezione,de la Protección,de la Protection,der Abwehr
+AFFIX_OF_ENDURANCE,of Endurance,della Resistenza,de la Resistencia,de l'Endurance,der Ausdauer
+AFFIX_OF_THE_SENTINEL,of the Sentinel,della Sentinella,del Centinela,de la Sentinelle,der Wache
+AFFIX_OF_THE_HUNT,of the Hunt,della Caccia,de la Caza,de la Chasse,der Jagd
+UNIQUE_EMBERFANG,Emberfang,Zanna di Brace,Colmillo de Brasa,Croc de Braise,Glutzahn
+UNIQUE_THE_QUIET_HOUR,The Quiet Hour,L'Ora Quieta,La Hora Callada,L'Heure Silencieuse,Die Stille Stunde
+UNIQUE_GRAVEWARDEN,Gravewarden,Custode delle Tombe,Guardián de Tumbas,Gardien des Tombes,Grabwächter
+UNIQUE_THE_LONG_WINTER,The Long Winter,Il Lungo Inverno,El Largo Invierno,Le Long Hiver,Der Lange Winter
+UNIQUE_LANTERNHEART,Lanternheart,Cuore di Lanterna,Corazón de Linterna,Cœur-Lanterne,Laternenherz
+UNIQUE_THE_UNSPOKEN_NAME,The Unspoken Name,Il Nome Taciuto,El Nombre No Dicho,Le Nom Indicible,Der Ungesagte Name
+POWER_SECOND_WIND,Second Wind,Recupero,Segundo aliento,Second souffle,Zweiter Atem
+POWER_SECOND_WIND_DESCRIPTION,Catch your breath and recover some of your health. Once per encounter.,Riprendi fiato e recuperi parte della salute. Una volta per scontro.,Recobras el aliento y recuperas parte de tu salud. Una vez por combate.,Vous reprenez votre souffle et récupérez une partie de vos points de vie. Une fois par rencontre.,Du schöpfst Atem und stellst einen Teil deiner Lebenspunkte wieder her. Einmal pro Begegnung.
+POWER_CLEAVING_BLOW,Cleaving Blow,Colpo fendente,Golpe hendedor,Coup fendant,Spaltender Hieb
+POWER_CLEAVING_BLOW_DESCRIPTION,One wide swing that strikes every enemy before you. Once per encounter.,Un ampio fendente che colpisce ogni nemico davanti a te. Una volta per scontro.,Un amplio tajo que alcanza a todos los enemigos ante ti. Una vez por combate.,Un large moulinet qui frappe tous les ennemis devant vous. Une fois par rencontre.,"Ein weiter Schwung, der jeden Feind vor dir trifft. Einmal pro Begegnung."
+POWER_PRECISE_STRIKE,Precise Strike,Colpo preciso,Golpe preciso,Frappe précise,Präziser Schlag
+POWER_PRECISE_STRIKE_DESCRIPTION,"A patient strike at an opening, rolled with advantage. Twice per encounter.","Un colpo paziente a un varco, tirato con vantaggio. Due volte per scontro.","Un golpe paciente a un hueco, tirado con ventaja. Dos veces por combate.","Une frappe patiente dans une ouverture, lancée avec avantage. Deux fois par rencontre.","Ein geduldiger Stoß in eine Lücke, mit Vorteil gewürfelt. Zweimal pro Begegnung."
+POWER_VANISH,Vanish,Dileguarsi,Desvanecerse,S'évanouir,Verschwinden
+POWER_VANISH_DESCRIPTION,Step out of sight for a round. Attacks against you are made with disadvantage.,Esci dalla vista per un round. Gli attacchi contro di te sono tirati con svantaggio.,Sales de la vista durante un asalto. Los ataques contra ti se tiran con desventaja.,Vous disparaissez pendant un round. Les attaques contre vous subissent un désavantage.,Du entschwindest für eine Runde. Angriffe gegen dich erhalten Nachteil.
+POWER_SEARING_BOLT,Searing Bolt,Dardo rovente,Dardo abrasador,Trait ardent,Sengender Blitz
+POWER_SEARING_BOLT_DESCRIPTION,A bolt of fire at a single enemy. Three times per encounter.,Un dardo di fuoco contro un singolo nemico. Tre volte per scontro.,Un dardo de fuego contra un solo enemigo. Tres veces por combate.,Un trait de feu sur un seul ennemi. Trois fois par rencontre.,Ein Feuerblitz auf einen einzelnen Feind. Dreimal pro Begegnung.
+POWER_GLYPH_OF_WARDING,Glyph of Warding,Glifo di protezione,Glifo de custodia,Glyphe de garde,Schutzglyphe
+POWER_GLYPH_OF_WARDING_DESCRIPTION,A glyph bursts underfoot. Every enemy makes a Dexterity saving throw or takes the full force.,Un glifo esplode sotto i piedi. Ogni nemico effettua un tiro salvezza su Destrezza o subisce il colpo pieno.,Un glifo estalla bajo los pies. Cada enemigo hace una tirada de salvación de Destreza o recibe todo el impacto.,Une glyphe explose sous les pieds. Chaque ennemi effectue un jet de sauvegarde de Dextérité ou subit les dégâts entiers.,Eine Glyphe zerbirst unter den Füßen. Jeder Feind muss einen Geschicklichkeits-Rettungswurf bestehen oder erleidet die volle Wucht.
+ARCHETYPE_VANGUARD,Vanguard,Avanguardia,Vanguardia,Avant-garde,Vorhut
+ARCHETYPE_VANGUARD_DESCRIPTION,Heavy armour and a long reach. Takes a beating and keeps the line.,Armatura pesante e lunga portata. Incassa i colpi e tiene la linea.,Armadura pesada y largo alcance. Aguanta los golpes y mantiene la línea.,Armure lourde et longue allonge. Encaisse les coups et tient la ligne.,Schwere Rüstung und lange Reichweite. Steckt ein und hält die Linie.
+ARCHETYPE_SHADOW,Shadow,Ombra,Sombra,Ombre,Schatten
+ARCHETYPE_SHADOW_DESCRIPTION,"Quick, light and precise. Strikes first and is rarely where the blow lands.","Rapida, leggera e precisa. Colpisce per prima e di rado si trova dove cade il colpo.","Rápida, ligera y precisa. Golpea primero y rara vez está donde cae el golpe.","Rapide, légère et précise. Frappe la première et se trouve rarement là où le coup tombe.","Schnell, leicht und präzise. Schlägt zuerst zu und ist selten dort, wo der Hieb landet."
+ARCHETYPE_RUNECASTER,Runecaster,Runomante,Runomante,Runemancien,Runenmagier
+ARCHETYPE_RUNECASTER_DESCRIPTION,"Fragile in the front rank, devastating from behind it. Answers crowds with fire.","Fragile in prima fila, devastante da dietro. Risponde alle folle con il fuoco.","Frágil en la primera fila, devastador desde atrás. Responde a las multitudes con fuego.","Fragile en première ligne, dévastateur derrière elle. Répond aux foules par le feu.","Zerbrechlich in der ersten Reihe, verheerend dahinter. Antwortet auf Massen mit Feuer."
+THEME_FLOODED_CRYPT,Flooded Crypt,Cripta allagata,Cripta inundada,Crypte inondée,Geflutete Gruft
+THEME_FLOODED_CRYPT_DESCRIPTION,"Black water to the ankle, and something moving in it.","Acqua nera fino alla caviglia, e qualcosa che vi si muove dentro.","Agua negra hasta el tobillo, y algo que se mueve en ella.","De l'eau noire jusqu'à la cheville, et quelque chose qui s'y déplace.","Schwarzes Wasser bis zum Knöchel, und etwas bewegt sich darin."
+THEME_COLLAPSED_UNDERCROFT,Collapsed Undercroft,Sotterraneo crollato,Cripta derrumbada,Souterrain effondré,Eingestürztes Gewölbe
+THEME_COLLAPSED_UNDERCROFT_DESCRIPTION,The ceiling came down a long time ago. Whatever was sealed here did not.,"Il soffitto è crollato molto tempo fa. Ciò che era sigillato qui, no.","El techo se vino abajo hace mucho. Lo que estaba sellado aquí, no.","Le plafond s'est effondré il y a longtemps. Ce qui était scellé ici, non.","Die Decke stürzte vor langer Zeit ein. Was hier eingeschlossen war, nicht."
+THEME_ASHEN_RELIQUARY,Ashen Reliquary,Reliquiario di cenere,Relicario ceniciento,Reliquaire de cendres,Aschenes Reliquiar
+THEME_ASHEN_RELIQUARY_DESCRIPTION,"Every shrine burned, and the heat has never entirely left.","Ogni sacrario è bruciato, e il calore non se n'è mai andato del tutto.","Todos los santuarios ardieron, y el calor nunca se ha ido del todo.","Chaque sanctuaire a brûlé, et la chaleur n'est jamais entièrement partie.","Jeder Schrein brannte, und die Hitze ist nie ganz gewichen."
+THEME_THE_HOLLOW_THRONE,The Hollow Throne,Il Trono Cavo,El Trono Hueco,Le Trône Creux,Der Hohle Thron
+THEME_THE_HOLLOW_THRONE_DESCRIPTION,The seat at the bottom of the descent. Something is still sitting in it.,Il seggio in fondo alla discesa. Qualcosa vi siede ancora.,El asiento al fondo del descenso. Algo sigue sentado en él.,Le siège au fond de la descente. Quelque chose y est encore assis.,Der Sitz am Grund des Abstiegs. Etwas sitzt noch darauf.

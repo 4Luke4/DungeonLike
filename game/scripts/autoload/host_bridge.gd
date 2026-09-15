@@ -140,5 +140,34 @@ func increment_achievement(achievement_id: String, steps: int) -> void:
 	_plugin.incrementAchievement(achievement_id, steps)
 
 
+## Returns this device's authentication tag for [param payload].
+##
+## The tag is what lets a save the game did not write be detected and reported
+## rather than loaded as though it were valid. It is deliberately not a lock:
+## see `docs/architecture/THREAT_MODEL.md`, which is explicit that the device
+## owner is not an adversary.
+##
+## Returns an empty array when no host is present — in the editor and on desktop
+## builds — and also when the platform refuses, such as on a device whose
+## Keystore has invalidated the key. [RunStore] treats both the same way: the
+## save is written without a signature and the interface says so, rather than
+## the run being lost.
+func save_integrity_tag(payload: PackedByteArray) -> PackedByteArray:
+	if _plugin == null:
+		return PackedByteArray()
+	return _plugin.saveIntegrityTag(payload)
+
+
+## Whether [param tag] is the tag this device would produce for [param payload].
+##
+## False when no host is present, which is why [RunStore] only asks this of a
+## save that recorded a signature in the first place. Asking about an unsigned
+## save in the editor would otherwise report every save as altered.
+func verify_save_integrity(payload: PackedByteArray, tag: PackedByteArray) -> bool:
+	if _plugin == null:
+		return false
+	return _plugin.verifySaveIntegrity(payload, tag)
+
+
 func _on_input_devices_changed(has_keyboard: bool, has_pointer: bool, has_controller: bool) -> void:
 	input_devices_changed.emit(has_keyboard, has_pointer, has_controller)

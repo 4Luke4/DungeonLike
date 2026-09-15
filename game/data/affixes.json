@@ -1,0 +1,601 @@
+{
+  "schema": 1,
+  "affixes": [
+    {
+      "id": "keen",
+      "role": "prefix",
+      "name_key": "AFFIX_KEEN",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 15,
+      "weight": 14,
+      "exclusive_group": "attack_accuracy",
+      "effects": [
+        {
+          "kind": "attack_bonus",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "unerring",
+      "role": "prefix",
+      "name_key": "AFFIX_UNERRING",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 40,
+      "weight": 5,
+      "exclusive_group": "attack_accuracy",
+      "effects": [
+        {
+          "kind": "attack_bonus",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "id": "flaming",
+      "role": "prefix",
+      "name_key": "AFFIX_FLAMING",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 25,
+      "weight": 10,
+      "exclusive_group": "elemental_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d6",
+            "type": "fire"
+          }
+        }
+      ]
+    },
+    {
+      "id": "frostbound",
+      "role": "prefix",
+      "name_key": "AFFIX_FROSTBOUND",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 25,
+      "weight": 10,
+      "exclusive_group": "elemental_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d6",
+            "type": "cold"
+          }
+        }
+      ]
+    },
+    {
+      "id": "storm_touched",
+      "role": "prefix",
+      "name_key": "AFFIX_STORM_TOUCHED",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 4,
+      "budget_cost": 28,
+      "weight": 8,
+      "exclusive_group": "elemental_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d6",
+            "type": "lightning"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hallowed",
+      "role": "prefix",
+      "name_key": "AFFIX_HALLOWED",
+      "inflected": true,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 35,
+      "weight": 6,
+      "exclusive_group": "elemental_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d8",
+            "type": "radiant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "venomous",
+      "role": "prefix",
+      "name_key": "AFFIX_VENOMOUS",
+      "inflected": true,
+      "affix_groups": [
+        "weapon",
+        "light_weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 30,
+      "weight": 7,
+      "exclusive_group": "on_hit_rider",
+      "effects": [
+        {
+          "kind": "on_hit_condition",
+          "condition": "poisoned",
+          "save_ability": "con",
+          "difficulty_class": 12,
+          "rounds": 2
+        }
+      ]
+    },
+    {
+      "id": "cruel",
+      "role": "prefix",
+      "name_key": "AFFIX_CRUEL",
+      "inflected": true,
+      "affix_groups": [
+        "heavy_weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 4,
+      "budget_cost": 30,
+      "weight": 7,
+      "exclusive_group": "on_hit_rider",
+      "effects": [
+        {
+          "kind": "on_hit_condition",
+          "condition": "frightened",
+          "save_ability": "wis",
+          "difficulty_class": 12,
+          "rounds": 1
+        }
+      ]
+    },
+    {
+      "id": "reinforced",
+      "role": "prefix",
+      "name_key": "AFFIX_REINFORCED",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "shield"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 20,
+      "weight": 14,
+      "exclusive_group": "armour_class",
+      "effects": [
+        {
+          "kind": "armour_class_bonus",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "adamant",
+      "role": "prefix",
+      "name_key": "AFFIX_ADAMANT",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "shield"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 45,
+      "weight": 5,
+      "exclusive_group": "armour_class",
+      "effects": [
+        {
+          "kind": "armour_class_bonus",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "warded",
+      "role": "prefix",
+      "name_key": "AFFIX_WARDED",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "trinket"
+      ],
+      "tier": 2,
+      "min_item_level": 4,
+      "budget_cost": 35,
+      "weight": 6,
+      "exclusive_group": "resistance",
+      "effects": [
+        {
+          "kind": "damage_resistance",
+          "damage_type": "necrotic"
+        }
+      ]
+    },
+    {
+      "id": "cinder_clad",
+      "role": "prefix",
+      "name_key": "AFFIX_CINDER_CLAD",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "trinket"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 30,
+      "weight": 8,
+      "exclusive_group": "resistance",
+      "effects": [
+        {
+          "kind": "damage_resistance",
+          "damage_type": "fire"
+        }
+      ]
+    },
+    {
+      "id": "sturdy",
+      "role": "prefix",
+      "name_key": "AFFIX_STURDY",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "trinket",
+        "shield"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 18,
+      "weight": 13,
+      "exclusive_group": "vitality",
+      "effects": [
+        {
+          "kind": "max_hit_points",
+          "roll": "1d4+2"
+        }
+      ]
+    },
+    {
+      "id": "vital",
+      "role": "prefix",
+      "name_key": "AFFIX_VITAL",
+      "inflected": true,
+      "affix_groups": [
+        "armour",
+        "trinket"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 38,
+      "weight": 5,
+      "exclusive_group": "vitality",
+      "effects": [
+        {
+          "kind": "max_hit_points",
+          "roll": "2d4+4"
+        }
+      ]
+    },
+    {
+      "id": "swift",
+      "role": "prefix",
+      "name_key": "AFFIX_SWIFT",
+      "inflected": true,
+      "affix_groups": [
+        "light_weapon",
+        "light_armour",
+        "trinket"
+      ],
+      "tier": 2,
+      "min_item_level": 2,
+      "budget_cost": 22,
+      "weight": 10,
+      "exclusive_group": "initiative",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "dex",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "runed",
+      "role": "prefix",
+      "name_key": "AFFIX_RUNED",
+      "inflected": true,
+      "affix_groups": [
+        "arcane_focus",
+        "trinket"
+      ],
+      "tier": 2,
+      "min_item_level": 2,
+      "budget_cost": 22,
+      "weight": 10,
+      "exclusive_group": "spell_power",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "int",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "of_the_bear",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_BEAR",
+      "inflected": false,
+      "affix_groups": [
+        "weapon",
+        "armour",
+        "trinket"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 18,
+      "weight": 12,
+      "exclusive_group": "ability_strength",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "str",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "of_the_fox",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_FOX",
+      "inflected": false,
+      "affix_groups": [
+        "weapon",
+        "armour",
+        "trinket"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 18,
+      "weight": 12,
+      "exclusive_group": "ability_dexterity",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "dex",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "of_the_mountain",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_MOUNTAIN",
+      "inflected": false,
+      "affix_groups": [
+        "armour",
+        "shield",
+        "trinket"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 18,
+      "weight": 12,
+      "exclusive_group": "ability_constitution",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "con",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "of_the_owl",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_OWL",
+      "inflected": false,
+      "affix_groups": [
+        "arcane_focus",
+        "trinket"
+      ],
+      "tier": 1,
+      "min_item_level": 1,
+      "budget_cost": 18,
+      "weight": 11,
+      "exclusive_group": "ability_intelligence",
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "int",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "of_embers",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_EMBERS",
+      "inflected": false,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 24,
+      "weight": 9,
+      "exclusive_group": "suffix_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d4",
+            "type": "fire"
+          }
+        }
+      ]
+    },
+    {
+      "id": "of_the_deep_frost",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_DEEP_FROST",
+      "inflected": false,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 24,
+      "weight": 9,
+      "exclusive_group": "suffix_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d4",
+            "type": "cold"
+          }
+        }
+      ]
+    },
+    {
+      "id": "of_the_grave",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_GRAVE",
+      "inflected": false,
+      "affix_groups": [
+        "weapon"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 32,
+      "weight": 6,
+      "exclusive_group": "suffix_damage",
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d6",
+            "type": "necrotic"
+          }
+        }
+      ]
+    },
+    {
+      "id": "of_warding",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_WARDING",
+      "inflected": false,
+      "affix_groups": [
+        "armour",
+        "shield"
+      ],
+      "tier": 2,
+      "min_item_level": 3,
+      "budget_cost": 26,
+      "weight": 8,
+      "exclusive_group": "suffix_defence",
+      "effects": [
+        {
+          "kind": "armour_class_bonus",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "id": "of_endurance",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_ENDURANCE",
+      "inflected": false,
+      "affix_groups": [
+        "armour",
+        "shield",
+        "trinket"
+      ],
+      "tier": 2,
+      "min_item_level": 2,
+      "budget_cost": 22,
+      "weight": 10,
+      "exclusive_group": "suffix_defence",
+      "effects": [
+        {
+          "kind": "max_hit_points",
+          "roll": "1d6+2"
+        }
+      ]
+    },
+    {
+      "id": "of_the_sentinel",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_SENTINEL",
+      "inflected": false,
+      "affix_groups": [
+        "armour",
+        "trinket"
+      ],
+      "tier": 3,
+      "min_item_level": 5,
+      "budget_cost": 34,
+      "weight": 5,
+      "exclusive_group": "suffix_resistance",
+      "effects": [
+        {
+          "kind": "damage_resistance",
+          "damage_type": "psychic"
+        }
+      ]
+    },
+    {
+      "id": "of_the_hunt",
+      "role": "suffix",
+      "name_key": "AFFIX_OF_THE_HUNT",
+      "inflected": false,
+      "affix_groups": [
+        "ranged_weapon",
+        "light_weapon"
+      ],
+      "tier": 2,
+      "min_item_level": 2,
+      "budget_cost": 20,
+      "weight": 10,
+      "exclusive_group": "suffix_accuracy",
+      "effects": [
+        {
+          "kind": "attack_bonus",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

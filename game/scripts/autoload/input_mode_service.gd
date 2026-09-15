@@ -30,6 +30,14 @@ enum Mode {
 ##
 ## Gameplay never reads a raw key: it checks an action, so that rebinding and
 ## alternative hardware work without touching game code.
+##
+## The four movement actions are registered and currently unused. The run is
+## played across a map of focusable buttons, where the engine's own
+## [code]ui_up[/code] and [code]ui_right[/code] own the arrow keys and a focused
+## [Control] consumes the event before [method Node._unhandled_input] is
+## reached. They are kept rather than deleted because they are the bindings a
+## free-movement mode would want, and because deleting them would throw away
+## working WASD support to save nine lines.
 const KEY_BINDINGS := {
 	"move_north": [KEY_W, KEY_UP, KEY_KP_8],
 	"move_south": [KEY_S, KEY_DOWN, KEY_KP_2],
@@ -40,6 +48,14 @@ const KEY_BINDINGS := {
 	"cancel": [KEY_ESCAPE, KEY_BACKSPACE],
 	"open_inventory": [KEY_I, KEY_TAB],
 	"open_menu": [KEY_ESCAPE],
+	# Encounter actions. Deliberately on the number and letter rows rather than
+	# the keypad: KEY_KP_1 and KEY_KP_2 are already bound to movement, and a
+	# keycode bound to two actions delivers one press as two, which in a
+	# turn-based game means taking two turns from a single keystroke.
+	"ability_one": [KEY_1],
+	"ability_two": [KEY_2],
+	"previous_target": [KEY_Q],
+	"next_target": [KEY_E],
 }
 
 var _mode: Mode = Mode.TOUCH

@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "powers": [
+    {
+      "id": "second_wind",
+      "name_key": "POWER_SECOND_WIND",
+      "description_key": "POWER_SECOND_WIND_DESCRIPTION",
+      "kind": "self_heal",
+      "uses_per_encounter": 1,
+      "heal": "1d10+3"
+    },
+    {
+      "id": "cleaving_blow",
+      "name_key": "POWER_CLEAVING_BLOW",
+      "description_key": "POWER_CLEAVING_BLOW_DESCRIPTION",
+      "kind": "attack_all_enemies",
+      "uses_per_encounter": 1,
+      "attack_ability": "str",
+      "damage": [{ "dice": "1d8", "type": "slashing" }]
+    },
+    {
+      "id": "precise_strike",
+      "name_key": "POWER_PRECISE_STRIKE",
+      "description_key": "POWER_PRECISE_STRIKE_DESCRIPTION",
+      "kind": "attack_with_advantage",
+      "uses_per_encounter": 2,
+      "attack_ability": "dex",
+      "damage": [{ "dice": "2d6", "type": "piercing" }]
+    },
+    {
+      "id": "vanish",
+      "name_key": "POWER_VANISH",
+      "description_key": "POWER_VANISH_DESCRIPTION",
+      "kind": "self_condition",
+      "uses_per_encounter": 1,
+      "condition": "invisible",
+      "rounds": 1
+    },
+    {
+      "id": "searing_bolt",
+      "name_key": "POWER_SEARING_BOLT",
+      "description_key": "POWER_SEARING_BOLT_DESCRIPTION",
+      "kind": "attack_single_enemy",
+      "uses_per_encounter": 3,
+      "attack_ability": "int",
+      "damage": [{ "dice": "2d6", "type": "fire" }]
+    },
+    {
+      "id": "glyph_of_warding",
+      "name_key": "POWER_GLYPH_OF_WARDING",
+      "description_key": "POWER_GLYPH_OF_WARDING_DESCRIPTION",
+      "kind": "save_all_enemies",
+      "uses_per_encounter": 1,
+      "save_ability": "dex",
+      "difficulty_class": 13,
+      "damage": [{ "dice": "2d6", "type": "force" }],
+      "half_damage_on_success": true
+    }
+  ]
+}

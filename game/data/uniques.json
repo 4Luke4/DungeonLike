@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "uniques": [
+    {
+      "id": "emberfang",
+      "base": "dagger",
+      "name_key": "UNIQUE_EMBERFANG",
+      "rarity": "uncommon",
+      "min_depth": 2,
+      "weight": 10,
+      "attunement": false,
+      "effects": [
+        {
+          "kind": "attack_bonus",
+          "amount": 1
+        },
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "1d6",
+            "type": "fire"
+          }
+        }
+      ]
+    },
+    {
+      "id": "the_quiet_hour",
+      "base": "shortsword",
+      "name_key": "UNIQUE_THE_QUIET_HOUR",
+      "rarity": "uncommon",
+      "min_depth": 3,
+      "weight": 8,
+      "attunement": false,
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "dex",
+          "amount": 3
+        },
+        {
+          "kind": "on_hit_condition",
+          "condition": "blinded",
+          "save_ability": "con",
+          "difficulty_class": 13,
+          "rounds": 1
+        }
+      ]
+    },
+    {
+      "id": "gravewarden",
+      "base": "kite_shield",
+      "name_key": "UNIQUE_GRAVEWARDEN",
+      "rarity": "rare",
+      "min_depth": 4,
+      "weight": 6,
+      "attunement": true,
+      "effects": [
+        {
+          "kind": "armour_class_bonus",
+          "amount": 2
+        },
+        {
+          "kind": "damage_resistance",
+          "damage_type": "necrotic"
+        },
+        {
+          "kind": "max_hit_points",
+          "roll": "1d6+4"
+        }
+      ]
+    },
+    {
+      "id": "the_long_winter",
+      "base": "greataxe",
+      "name_key": "UNIQUE_THE_LONG_WINTER",
+      "rarity": "rare",
+      "min_depth": 5,
+      "weight": 5,
+      "attunement": true,
+      "effects": [
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "2d6",
+            "type": "cold"
+          }
+        },
+        {
+          "kind": "on_hit_condition",
+          "condition": "restrained",
+          "save_ability": "str",
+          "difficulty_class": 14,
+          "rounds": 1
+        }
+      ]
+    },
+    {
+      "id": "lanternheart",
+      "base": "silver_torc",
+      "name_key": "UNIQUE_LANTERNHEART",
+      "rarity": "rare",
+      "min_depth": 4,
+      "weight": 6,
+      "attunement": true,
+      "effects": [
+        {
+          "kind": "max_hit_points",
+          "roll": "2d6+6"
+        },
+        {
+          "kind": "damage_resistance",
+          "damage_type": "psychic"
+        },
+        {
+          "kind": "ability_bonus",
+          "ability": "wis",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "id": "the_unspoken_name",
+      "base": "quarterstaff",
+      "name_key": "UNIQUE_THE_UNSPOKEN_NAME",
+      "rarity": "very_rare",
+      "min_depth": 6,
+      "weight": 3,
+      "attunement": true,
+      "effects": [
+        {
+          "kind": "ability_bonus",
+          "ability": "int",
+          "amount": 4
+        },
+        {
+          "kind": "bonus_damage",
+          "damage": {
+            "dice": "2d4",
+            "type": "force"
+          }
+        },
+        {
+          "kind": "attack_bonus",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}
