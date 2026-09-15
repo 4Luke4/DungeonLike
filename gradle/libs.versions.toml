@@ -1,0 +1,71 @@
+# Declared Gradle library and plugin versions — the single source of truth.
+#
+# Android SDK, build tools, NDK, ABI, Java, Gradle and engine versions do NOT
+# belong here; they live in config/android/toolchain.properties. The two plugin
+# versions below are mirrored from that file at configuration time so the build
+# cannot drift from the documented toolchain (see settings.gradle.kts).
+#
+# Security overrides for vulnerable transitive BUILD tooling belong in
+# config/build-tool-security.versions, not here.
+
+[versions]
+# Mirrored from config/android/toolchain.properties. The root build script
+# compares the two and fails the build if they disagree, so neither file can
+# drift. There is no Kotlin version: AGP 9 provides the Kotlin compiler itself
+# through built-in Kotlin support.
+androidGradlePlugin = "9.4.0"
+
+# Shipped libraries.
+androidxAppcompat = "1.8.0"
+androidxActivity = "1.13.0"
+androidxAnnotation = "1.10.0"
+androidxCore = "1.19.0"
+androidxDatastore = "1.2.1"
+androidxFragment = "1.9.0"
+androidxLifecycle = "2.11.0"
+androidxSplashscreen = "1.2.0"
+androidxWindow = "1.5.1"
+godot = "4.7.2.stable"
+playGames = "22.0.0"
+
+# Test-only libraries.
+androidxTestEspresso = "3.7.0"
+androidxTestJunit = "1.3.0"
+androidxTestRunner = "1.7.0"
+junit = "6.1.3"
+
+[libraries]
+# --- Shipped -----------------------------------------------------------------
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivity" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "androidxAnnotation" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidxFragment" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+# Adaptive layout: reports real window metrics instead of guessing from screen
+# size, which is how phone and tablet layouts stay honest on foldables too.
+androidx-window = { module = "androidx.window:window", version.ref = "androidxWindow" }
+
+# The Godot Engine Android library (MIT). Version-locked to the editor and
+# export templates that CI downloads; see config/android/toolchain.properties.
+godot-android = { module = "org.godotengine:godot", version.ref = "godot" }
+
+# Play Games Services v2, used for achievements. Declared now, wired once a Play
+# Console games project exists; see docs/release/READINESS.md.
+play-services-games = { module = "com.google.android.gms:play-services-games-v2", version.ref = "playGames" }
+
+# --- Test-only ---------------------------------------------------------------
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxTestEspresso" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit" }
+
+[plugins]
+# Only Android Gradle plugins are applied anywhere in this build. The Kotlin
+# Gradle plugin (org.jetbrains.kotlin.android) is not merely unnecessary under
+# AGP 9, it is incompatible with its DSL, and built-in Kotlin replaces it.
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
