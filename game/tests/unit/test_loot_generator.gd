@@ -93,16 +93,18 @@ func test_no_affix_lands_on_an_item_it_does_not_fit() -> void:
 
 
 func test_no_unique_appears_below_its_depth() -> void:
+	# Collected and asserted as a whole rather than asserted inside the loop:
+	# at depth one there may legitimately be no unique at all, and a loop whose
+	# body never runs is a test that passes without checking anything.
+	var too_shallow: Array[String] = []
 	for index in range(200):
 		var node := MapNode.new("shallow-%d" % index, 1, 0)
 		var item := LootGenerator.generate(_content, node, 1)
 		if item == null or not item.is_unique():
 			continue
-		assert_lte(
-			int(_content.by_id(item.unique_id).get("min_depth", 1)),
-			1,
-			"%s appeared shallower than it should" % item.unique_id
-		)
+		if int(_content.by_id(item.unique_id).get("min_depth", 1)) > 1:
+			too_shallow.append(item.unique_id)
+	assert_eq(too_shallow, [], "a unique dropped shallower than its declared depth")
 
 
 func test_rarity_frequencies_are_close_to_their_weights() -> void:

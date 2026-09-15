@@ -80,8 +80,10 @@ func test_a_dead_monster_cannot_be_attacked() -> void:
 	var target := resolver.living_monsters()[0]
 	while target.is_alive() and resolver.state != CombatResolver.State.FINISHED:
 		resolver.player_attacks(target.id)
-	if resolver.state == CombatResolver.State.FINISHED:
-		return
+	# No early return: the assertion holds either way. If the fight is still
+	# running the attack is refused because the target is dead, and if it ended
+	# it is refused because the fight is over. A test that returns without
+	# asserting passes while proving nothing, which GUT reports as risky.
 	var before := resolver.event_count()
 	resolver.player_attacks(target.id)
 	assert_eq(resolver.event_count(), before, "attacking a corpse must do nothing at all")
