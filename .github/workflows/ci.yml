@@ -158,10 +158,14 @@ jobs:
           cache-dependency-path: tools/requirements.txt
 
       - name: Install GDScript tooling
-        run: pip install --require-hashes=false -r tools/requirements.txt
+        run: pip install --requirement tools/requirements.txt
 
       - name: Formatting
-        run: gdformat --check $(find game -name '*.gd')
+        # --diff so a failure shows exactly what differs. Without it the job
+        # reports only which files are wrong, which is not enough to act on
+        # when the formatter is deliberately never run on a contributor's
+        # machine.
+        run: gdformat --check --diff $(find game -name '*.gd')
 
       - name: Lint
         run: gdlint $(find game -name '*.gd')
