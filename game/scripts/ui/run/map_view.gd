@@ -8,11 +8,11 @@ extends Control
 
 signal node_chosen(node_id: String)
 
-@onready var _heading: Label = %Heading
-@onready var _columns: HBoxContainer = %Columns
-
 var _controller: RunController
 var _buttons: Dictionary = {}
+
+@onready var _heading: Label = %Heading
+@onready var _columns: HBoxContainer = %Columns
 
 
 func bind(controller: RunController) -> void:

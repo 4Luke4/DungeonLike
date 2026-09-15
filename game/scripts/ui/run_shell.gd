@@ -25,18 +25,18 @@ const VIEW_SCENES := {
 	"summary": "res://scenes/run/summary.tscn",
 }
 
-@onready var _view_host: MarginContainer = %ViewHost
-@onready var _depth_label: Label = %DepthLabel
-@onready var _health_label: Label = %HealthLabel
-@onready var _seed_label: Label = %SeedLabel
-@onready var _notice_label: Label = %NoticeLabel
+## Set by the main menu before this scene is added to the tree.
+var resume_requested := false
 
 var _controller: RunController
 var _store := RunStore.new()
 var _current_view: Control = null
 
-## Set by the main menu before this scene is added to the tree.
-var resume_requested := false
+@onready var _view_host: MarginContainer = %ViewHost
+@onready var _depth_label: Label = %DepthLabel
+@onready var _health_label: Label = %HealthLabel
+@onready var _seed_label: Label = %SeedLabel
+@onready var _notice_label: Label = %NoticeLabel
 
 
 func _ready() -> void:

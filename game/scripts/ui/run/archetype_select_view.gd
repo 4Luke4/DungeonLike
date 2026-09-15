@@ -8,11 +8,11 @@ extends Control
 
 signal archetype_chosen(archetype_id: String)
 
-@onready var _heading: Label = %Heading
-@onready var _cards: BoxContainer = %Cards
-
 var _content: ContentDatabase
 var _selected := ""
+
+@onready var _heading: Label = %Heading
+@onready var _cards: BoxContainer = %Cards
 
 
 func bind(content: ContentDatabase) -> void:

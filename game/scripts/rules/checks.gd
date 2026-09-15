@@ -13,12 +13,12 @@ extends RefCounted
 ## approximation but the rule, and it matters here because the number of draws
 ## taken from a stream must be the same either way or a seed would not replay.
 
-## The faces of the die every check is resolved on.
-const DIE_SIDES := 20
-
 ## How the two dice of an advantaged or disadvantaged roll are combined.
 enum Bias { NONE, ADVANTAGE, DISADVANTAGE }
 
+
+## The faces of the die every check is resolved on.
+const DIE_SIDES := 20
 
 ## The outcome of one check, with enough detail for the combat log to explain it.
 class Outcome:

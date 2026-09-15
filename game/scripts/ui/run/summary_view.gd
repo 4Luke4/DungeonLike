@@ -7,13 +7,13 @@ extends Control
 
 signal finished
 
+var _controller: RunController
+
 @onready var _heading: Label = %Heading
 @onready var _details: Label = %Details
 @onready var _seed_label: Label = %SeedLabel
 @onready var _copy_button: Button = %CopyButton
 @onready var _done_button: Button = %DoneButton
-
-var _controller: RunController
 
 
 func bind(controller: RunController) -> void:

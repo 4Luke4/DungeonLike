@@ -7,12 +7,12 @@ extends Control
 
 signal resolved
 
+var _controller: RunController
+
 @onready var _heading: Label = %Heading
 @onready var _result: Label = %Result
 @onready var _rest_button: Button = %RestButton
 @onready var _press_on_button: Button = %PressOnButton
-
-var _controller: RunController
 
 
 func bind(controller: RunController) -> void:

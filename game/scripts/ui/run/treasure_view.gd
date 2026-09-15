@@ -7,13 +7,13 @@ extends Control
 
 signal resolved
 
+var _controller: RunController
+
 @onready var _heading: Label = %Heading
 @onready var _found: Label = %Found
 @onready var _current: Label = %Current
 @onready var _take_button: Button = %TakeButton
 @onready var _leave_button: Button = %LeaveButton
-
-var _controller: RunController
 
 
 func bind(controller: RunController) -> void:
@@ -61,14 +61,16 @@ func _describe_equipped(item: Item) -> String:
 ## the data, so that the description is always in step with what the effect does
 ## and needs no separate translation per affix.
 func _describe_effect(effect: Dictionary, item: Item) -> String:
-	var kind := String(effect.get("kind", ""))
-	match kind:
+	var description := ""
+	match String(effect.get("kind", "")):
 		"attack_bonus":
-			return "+%d %s" % [int(effect.get("amount", 0)), tr("ENCOUNTER_ATTACK")]
+			description = "+%d %s" % [int(effect.get("amount", 0)), tr("ENCOUNTER_ATTACK")]
 		"armour_class_bonus":
-			return "+%d %s" % [int(effect.get("amount", 0)), tr("RULES_ARMOUR_CLASS_SHORT")]
+			description = (
+				"+%d %s" % [int(effect.get("amount", 0)), tr("RULES_ARMOUR_CLASS_SHORT")]
+			)
 		"ability_bonus":
-			return (
+			description = (
 				"+%d %s"
 				% [
 					int(effect.get("amount", 0)),
@@ -77,7 +79,7 @@ func _describe_effect(effect: Dictionary, item: Item) -> String:
 			)
 		"bonus_damage":
 			var damage: Dictionary = effect.get("damage", {})
-			return (
+			description = (
 				"+%s %s"
 				% [
 					String(damage.get("dice", "")),
@@ -85,9 +87,11 @@ func _describe_effect(effect: Dictionary, item: Item) -> String:
 				]
 			)
 		"max_hit_points":
-			return "+%d %s" % [_rolled_value(effect, item), tr("RULES_HIT_POINTS_SHORT")]
+			description = (
+				"+%d %s" % [_rolled_value(effect, item), tr("RULES_HIT_POINTS_SHORT")]
+			)
 		"damage_resistance":
-			return (
+			description = (
 				"%s: %s"
 				% [
 					tr("RULES_RESISTANCE"),
@@ -95,8 +99,8 @@ func _describe_effect(effect: Dictionary, item: Item) -> String:
 				]
 			)
 		"on_hit_condition":
-			return tr(Conditions.name_key(String(effect.get("condition", "poisoned"))))
-	return ""
+			description = tr(Conditions.name_key(String(effect.get("condition", "poisoned"))))
+	return description
 
 
 ## The value this particular item rolled for a variable effect, so the card

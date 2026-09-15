@@ -15,16 +15,16 @@ extends Control
 signal encounter_finished
 signal state_changed
 
+var _controller: RunController
+var _resolver: CombatResolver
+var _target_id := ""
+var _rendered_events := 0
+
 @onready var _enemies: HBoxContainer = %Enemies
 @onready var _log: RichTextLabel = %CombatLog
 @onready var _actions: HBoxContainer = %Actions
 @onready var _turn_label: Label = %TurnLabel
 @onready var _body: BoxContainer = %Body
-
-var _controller: RunController
-var _resolver: CombatResolver
-var _target_id := ""
-var _rendered_events := 0
 
 
 func bind(controller: RunController) -> void:
