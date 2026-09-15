@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Launcher icon foreground: an original mark drawn as a stone archway with a
+    keyhole, built from plain geometry so the icon scales to every density and
+    to the themed-icon monochrome treatment without shipping bitmaps.
+
+    Adaptive icons reserve the outer third for masking, so the artwork stays
+    inside the safe zone: a 108dp canvas with everything between 22dp and 86dp.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Archway: a rounded top over straight jambs, open at the floor line. -->
+    <path
+        android:fillColor="@color/icon_foreground"
+        android:pathData="M54,24
+                          C40,24 32,34 32,48
+                          L32,84
+                          L44,84
+                          L44,48
+                          C44,41 48,36 54,36
+                          C60,36 64,41 64,48
+                          L64,84
+                          L76,84
+                          L76,48
+                          C76,34 68,24 54,24
+                          Z" />
+
+    <!-- Keyhole centred in the opening. -->
+    <path
+        android:fillColor="@color/icon_foreground"
+        android:pathData="M54,54
+                          m-5,0
+                          a5,5 0 1,0 10,0
+                          a5,5 0 1,0 -10,0
+                          Z" />
+    <path
+        android:fillColor="@color/icon_foreground"
+        android:pathData="M51,60 L57,60 L59,76 L49,76 Z" />
+</vector>
