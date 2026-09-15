@@ -44,7 +44,7 @@ Notes for contributors:
 `org.godotengine:godot` is embedded in the shipped application and is licensed
 under the MIT licence:
 
-```
+```text
 Copyright (c) 2014-present Godot Engine contributors.
 Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
 

@@ -43,6 +43,13 @@ jobs:
           # pre-existing finding somewhere else in the tree.
           VALIDATE_ALL_CODEBASE: false
 
+          # Super-linter posts a commit status per language by default, which
+          # needs statuses: write. The job keeps least-privilege read-only
+          # permissions instead and reports through its own check, so the
+          # status posting is turned off rather than granted; leaving it on
+          # filled the log with 403s that looked like failures.
+          MULTI_STATUS: false
+
           VALIDATE_BASH: true
           VALIDATE_ENV: true
           VALIDATE_GITHUB_ACTIONS: true

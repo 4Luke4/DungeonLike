@@ -1,3 +1,6 @@
+<!-- markdownlint-disable-next-line MD041 -->
+<!-- This file becomes the body of every pull request, so it deliberately
+     opens with a section rather than a document title. -->
 ## What this changes
 
 <!-- What the change does and why it is needed. One or two paragraphs. -->

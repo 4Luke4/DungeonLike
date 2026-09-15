@@ -53,7 +53,7 @@ Commits follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/
 exactly as described in [`.gitmessage`](.gitmessage), and the
 `Commit messages` workflow enforces it on every pull request.
 
-```
+```sh
 <type>[optional scope][!]: <description>
 
 [optional body]

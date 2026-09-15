@@ -29,7 +29,7 @@ repository is allowed to restate them.
 
 ## Architecture at a glance
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │ :app  — Kotlin Android host (com.yuumi.dungeonlike)      │
 │   GameActivity : GodotHost      hosts GodotFragment      │

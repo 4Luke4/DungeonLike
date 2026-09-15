@@ -7,7 +7,7 @@ has deliberately chosen not to take.
 
 ## Shape
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │ :app — Kotlin                                                │
 │                                                              │
@@ -99,7 +99,7 @@ documentation:
 
 ## Build
 
-```
+```text
 config/android/toolchain.properties   SDK, build tools, ABI, Java, engine version
 gradle/libs.versions.toml             library and plugin versions
 VERSION                               application version → versionName, versionCode

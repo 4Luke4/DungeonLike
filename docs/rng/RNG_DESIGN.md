@@ -29,7 +29,7 @@ seed.
 
 ## Seeding
 
-```
+```text
 platform entropy (SecureRandom, 32 bytes)  ─┐
                                             ├─► HKDF-SHA256 ─► run seed (32 bytes)
 engine entropy (Crypto, 32 bytes)          ─┘
