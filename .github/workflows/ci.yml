@@ -165,10 +165,13 @@ jobs:
         # reports only which files are wrong, which is not enough to act on
         # when the formatter is deliberately never run on a contributor's
         # machine.
-        run: gdformat --check --diff $(find game -name '*.gd')
+        #
+        # Piped through xargs -0 rather than an unquoted command substitution,
+        # which would split a path containing a space into two arguments.
+        run: find game -name '*.gd' -print0 | xargs -0 gdformat --check --diff
 
       - name: Lint
-        run: gdlint $(find game -name '*.gd')
+        run: find game -name '*.gd' -print0 | xargs -0 gdlint
 
       # The editor and its export templates are about 1.3 GB, so they are cached
       # against the pinned version rather than downloaded on every run.

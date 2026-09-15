@@ -1,6 +1,8 @@
-<!-- markdownlint-disable-next-line MD041 -->
-<!-- This file becomes the body of every pull request, so it deliberately
-     opens with a section rather than a document title. -->
+<!-- markdownlint-disable MD041 -->
+<!-- This file becomes the body of every pull request, so it deliberately opens
+     with a section rather than a document title. The rule is disabled for the
+     file because the exemption applies to the document as a whole, not to one
+     line of it. -->
 ## What this changes
 
 <!-- What the change does and why it is needed. One or two paragraphs. -->
