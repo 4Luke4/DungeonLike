@@ -4,10 +4,14 @@ name: CodeQL
 #
 # Two languages are analysed and one is deliberately absent:
 #
-#   java-kotlin  the Android host, in build-mode `none`. Buildless analysis
-#                needs no Android SDK, no Gradle and no engine download, which
-#                is the difference between a few minutes and a quarter of an
-#                hour for a scan that reads the same source either way.
+#   java-kotlin  the Android host, in build-mode `manual`. Buildless analysis
+#                was tried first and worked until the Gradle wrapper was
+#                committed, at which point the extractor stopped producing a
+#                database at all and failed with "could not process any code
+#                written in Java/Kotlin". Watching a real compilation is the
+#                mode CodeQL documents for Kotlin in any case, and it yields a
+#                more complete database than reading source alone, so the build
+#                is worth the minutes it costs.
 #   actions      the workflows themselves. Workflow permissions and untrusted
 #                input handling are a real attack surface for a public
 #                repository, and this is the only job that inspects them.
@@ -47,7 +51,7 @@ jobs:
       matrix:
         include:
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
           - language: actions
             build-mode: none
 
@@ -57,6 +61,36 @@ jobs:
         with:
           persist-credentials: false
 
+      # The Android toolchain, read from the one file that owns it so this
+      # workflow cannot drift from the build it is analysing.
+      - name: Read the toolchain
+        if: matrix.build-mode == 'manual'
+        id: toolchain
+        run: |
+          set -euo pipefail
+          properties=config/android/toolchain.properties
+          read_property() { sed -n "s/^${1}=//p" "${properties}" | tr -d '\r'; }
+          {
+            echo "java=$(read_property 'build.java')"
+            echo "build-tools=$(read_property 'android.buildTools')"
+            echo "compile-sdk=$(read_property 'android.compileSdk').$(read_property 'android.compileSdkMinor')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up the build toolchain
+        if: matrix.build-mode == 'manual'
+        uses: actions/setup-java@v6.0.1
+        with:
+          distribution: temurin
+          java-version: ${{ steps.toolchain.outputs.java }}
+
+      - name: Set up the Android SDK
+        if: matrix.build-mode == 'manual'
+        uses: android-actions/setup-android@v4.0.1
+        with:
+          packages: >-
+            platforms;android-${{ steps.toolchain.outputs.compile-sdk }}
+            build-tools;${{ steps.toolchain.outputs.build-tools }}
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
@@ -65,6 +99,14 @@ jobs:
           # The extended suites add correctness and maintainability queries on
           # top of the default security set.
           queries: security-extended,security-and-quality
+
+      # CodeQL watches this compilation to build its database, so the build has
+      # to happen between init and analyze. Only the classes are needed, not a
+      # packaged application, so the cheapest task that compiles everything is
+      # used rather than assembling a bundle.
+      - name: Build the Kotlin sources
+        if: matrix.build-mode == 'manual'
+        run: ./gradlew --no-daemon :host-core:compileDebugKotlin :app:compileDebugKotlin
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
