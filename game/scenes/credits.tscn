@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/credits.gd" id="1_credits"]
+
+[node name="Credits" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_credits")
+
+[node name="Margins" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Content" type="VBoxContainer" parent="Margins"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HeadingLabel" type="Label" parent="Margins/Content"]
+layout_mode = 2
+text = "CREDITS_HEADING"
+
+[node name="Scroll" type="ScrollContainer" parent="Margins/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Body" type="RichTextLabel" parent="Margins/Content/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+selection_enabled = true
+
+[node name="BackButton" type="Button" parent="Margins/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "COMMON_BACK"

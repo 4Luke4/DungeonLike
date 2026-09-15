@@ -1,0 +1,21 @@
+# gdlint configuration.
+#
+# Only deviations from gdtoolkit's defaults are recorded. Each one is a
+# decision, not a preference.
+
+# Matches the 120-column limit the rest of the repository uses (.editorconfig),
+# rather than gdlint's narrower default.
+max-line-length: 120
+
+# Autoload singletons are referenced by the name registered in project.godot,
+# which is PascalCase by Godot convention. Without this, every call to
+# RngService or HostBridge would be reported as a naming violation.
+class-name: '([A-Z][a-z0-9]*)+'
+
+# Functions prefixed with an underscore are private by Godot convention, and
+# engine callbacks such as _ready and _unhandled_input are named by the engine.
+function-name: '(_on_)?[a-z_][a-z0-9_]*'
+
+# Signal callbacks and engine overrides legitimately take arguments they do not
+# use; an underscore prefix already marks them as intentional.
+function-arguments-number: 6
