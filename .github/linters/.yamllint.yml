@@ -1,0 +1,23 @@
+# yamllint rules.
+#
+# Only deviations from the default profile are recorded.
+
+extends: default
+
+rules:
+  # 120 columns, matching .editorconfig and the Markdown rules.
+  line-length:
+    max: 120
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+
+  # GitHub Actions requires the key `on:`, which yamllint would otherwise read
+  # as the boolean true and report as a truthy-value violation.
+  truthy:
+    check-keys: false
+
+  # Workflow files are conventionally written without a document start marker.
+  document-start: disable
+
+  comments:
+    min-spaces-from-content: 1

@@ -1,0 +1,96 @@
+# Dependabot configuration.
+#
+# Commit message prefixes are set explicitly so that Dependabot's own pull
+# requests satisfy the repository's Conventional Commits rule even though the
+# commit-message workflow exempts them: `build(deps)` for things that change
+# what ships, `ci(deps)` for things that only change how the project is built
+# and checked.
+#
+# Grouping keeps the review burden proportionate. Updates that can change the
+# shipped binary in a meaningful way — the Godot engine library, the Android
+# Gradle plugin, Kotlin, Play services — are deliberately left ungrouped and
+# outside the automatic merge rules in .github/workflows/dependabot.yml.
+version: 2
+
+updates:
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Rome
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - "area:build"
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+    groups:
+      # Test and static-analysis libraries never reach the published binary, so
+      # they are safe to batch and to merge automatically.
+      test-tooling:
+        patterns:
+          - "org.junit*"
+          - "androidx.test*"
+          - "org.jetbrains.kotlin:kotlin-test*"
+        update-types:
+          - minor
+          - patch
+      androidx:
+        patterns:
+          - "androidx.*"
+        exclude-patterns:
+          - "androidx.test*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # The engine library is pinned to the exact version whose editor and
+      # export templates the CI pipeline downloads. Bumping it here without
+      # bumping config/android/toolchain.properties would produce a build whose
+      # engine and exported pack disagree.
+      - dependency-name: "org.godotengine:godot"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Rome
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - "area:ci"
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: pip
+    directory: "/tools"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Rome
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - "area:ci"
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      python-tooling:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch

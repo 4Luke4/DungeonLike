@@ -1,27 +1,62 @@
-# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
+name: Stale
+
+# Closes issues and pull requests that have gone quiet, after warning.
 #
-# You can adjust the behavior by modifying this file.
-# For more information, see:
-# https://github.com/actions/stale
-name: Mark stale issues and pull requests
+# The point is an honest backlog: an issue nobody has touched in three months is
+# not being worked on, and leaving it open misleads everyone reading the tracker.
+# Anything a maintainer has triaged, and anything touching security, is exempt.
 
 on:
   schedule:
-  - cron: '32 9 * * *'
+    - cron: "32 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
 
 jobs:
   stale:
-
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
-
+    name: Mark and close stale items
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/stale@v5
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+      - uses: actions/stale@v11.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          days-before-issue-stale: 90
+          days-before-issue-close: 14
+          stale-issue-label: wontfix
+          stale-issue-message: >
+            This issue has had no activity for 90 days, so it is being marked as
+            stale. If it is still relevant, a comment explaining what is still
+            outstanding will reopen the conversation and remove this label.
+            Otherwise it will be closed in 14 days. Closing is not a judgement on
+            the report — a closed issue can always be reopened.
+          close-issue-message: >
+            Closing after 14 further days without activity. Please comment if
+            this is still happening on a current version and it will be reopened.
+
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          stale-pr-label: wontfix
+          stale-pr-message: >
+            This pull request has had no activity for 30 days, so it is being
+            marked as stale. Push a commit, or comment with what it is waiting
+            on, to keep it open. Otherwise it will be closed in 14 days and can
+            be reopened at any time.
+          close-pr-message: >
+            Closing after 14 further days without activity. The branch is
+            untouched and this pull request can be reopened whenever work
+            resumes.
+
+          # A maintainer has already decided these matter, and a security item
+          # does not become less true by being ignored.
+          exempt-issue-labels: "help wanted,good first issue,area:security,dependencies"
+          exempt-pr-labels: "help wanted,area:security,dependencies"
+          exempt-all-milestones: true
+
+          # Stale marking is advisory; an item nobody has looked at in months is
+          # not an emergency, so the job stays well inside the API budget.
+          operations-per-run: 60
+          ascending: true

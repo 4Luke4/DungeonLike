@@ -1,0 +1,80 @@
+name: Bootstrap Gradle wrapper
+
+# Generates the Gradle wrapper and verifies it against the checksum Gradle
+# publishes for that release.
+#
+# Why a workflow rather than a command a maintainer runs: the repository's
+# verification policy forbids running Gradle locally, and the wrapper jar cannot
+# be obtained any other way. It is assembled by Gradle's own `wrapper` task and
+# is not shipped verbatim inside the distribution archive, so there is no file
+# to download and check by hand.
+#
+# Run manually. The wrapper only changes when the pinned Gradle version in
+# config/android/toolchain.properties changes, so this is a rare, deliberate
+# operation rather than part of the pipeline. Download the artifact it produces
+# and commit the files; from then on the CI workflow validates the jar on every
+# run with gradle/actions/wrapper-validation.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    name: Generate and verify
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@v6.0.1
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Read the pinned Gradle version
+        id: toolchain
+        run: |
+          set -euo pipefail
+          version="$(sed -n 's/^build.gradle=//p' config/android/toolchain.properties | tr -d '\r')"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Pinned Gradle version: ${version}"
+
+      - uses: gradle/actions/setup-gradle@v6.3.0
+        with:
+          gradle-version: ${{ steps.toolchain.outputs.version }}
+
+      - name: Generate the wrapper
+        run: gradle --no-daemon wrapper --gradle-version "${{ steps.toolchain.outputs.version }}"
+
+      - name: Verify the wrapper jar against the published checksum
+        env:
+          VERSION: ${{ steps.toolchain.outputs.version }}
+        run: |
+          set -euo pipefail
+          expected="$(curl --fail --location --silent --show-error \
+            "https://services.gradle.org/distributions/gradle-${VERSION}-wrapper.jar.sha256")"
+          actual="$(sha256sum gradle/wrapper/gradle-wrapper.jar | cut -d' ' -f1)"
+
+          echo "expected ${expected}"
+          echo "actual   ${actual}"
+
+          if [ "${expected}" != "${actual}" ]; then
+            echo "::error::The generated wrapper does not match the checksum Gradle publishes."
+            exit 1
+          fi
+
+      - name: Upload the wrapper for a maintainer to commit
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: gradle-wrapper
+          path: |
+            gradle/wrapper/gradle-wrapper.jar
+            gradle/wrapper/gradle-wrapper.properties
+            gradlew
+            gradlew.bat
+          if-no-files-found: error
+          retention-days: 7

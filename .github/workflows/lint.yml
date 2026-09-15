@@ -1,0 +1,63 @@
+name: Lint
+
+# Repository-wide static analysis for everything the CI workflow's
+# language-specific jobs do not cover: YAML, Markdown, shell scripts, XML,
+# Python and the workflows themselves.
+#
+# Kotlin, GDScript and the Gradle build are deliberately excluded here and
+# checked in the CI workflow instead, where the toolchain that understands them
+# is already installed. Running them twice would double the feedback time
+# without finding anything new.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  super-linter:
+    name: Super-linter
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          # Super-linter compares against the base branch to find what changed,
+          # which needs the full history rather than a shallow clone.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Lint the changed files
+        uses: super-linter/super-linter/slim@v8.7.0
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Only what changed, so an unrelated pull request is not blocked by a
+          # pre-existing finding somewhere else in the tree.
+          VALIDATE_ALL_CODEBASE: false
+
+          VALIDATE_BASH: true
+          VALIDATE_ENV: true
+          VALIDATE_GITHUB_ACTIONS: true
+          VALIDATE_JSON: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_PYTHON_RUFF: true
+          VALIDATE_XML: true
+          VALIDATE_YAML: true
+
+          # Configuration lives in .github/linters/ so that a contributor can
+          # reproduce a finding locally with the same rules.
+          LINTER_RULES_PATH: .github/linters
+          MARKDOWN_CONFIG_FILE: .markdownlint.yml
+          YAML_CONFIG_FILE: .yamllint.yml
+
+          # Copyright and licence files are formatted as their licences require,
+          # not as a linter would prefer.
+          FILTER_REGEX_EXCLUDE: (LICENSE\.md|THIRD_PARTY_NOTICES\.md)
