@@ -6,7 +6,6 @@ MENU_TAGLINE,Every descent is drawn anew.,Ogni discesa è diversa dalle altre.,C
 MENU_NEW_RUN,New run,Nuova partita,Nueva partida,Nouvelle partie,Neuer Lauf
 MENU_CREDITS,Credits,Riconoscimenti,Créditos,Crédits,Danksagungen
 MENU_QUIT,Quit,Esci,Salir,Quitter,Beenden
-MENU_SEED_LABEL,Seed: %s,Seme: %s,Semilla: %s,Graine : %s,Startwert: %s
 RUN_SEED_LABEL,Run seed: %s,Seme della partita: %s,Semilla de la partida: %s,Graine de la partie : %s,Startwert des Laufs: %s
 COMMON_BACK,Back,Indietro,Atrás,Retour,Zurück
 CREDITS_HEADING,Credits and licences,Riconoscimenti e licenze,Créditos y licencias,Crédits et licences,Danksagungen und Lizenzen

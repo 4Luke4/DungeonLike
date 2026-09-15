@@ -47,6 +47,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "MENU_NEW_RUN"
 
+[node name="ContinueButton" type="Button" parent="Margins/Centered/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "MENU_CONTINUE_RUN"
+
 [node name="CreditsButton" type="Button" parent="Margins/Centered/Content"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -56,9 +61,3 @@ text = "MENU_CREDITS"
 unique_name_in_owner = true
 layout_mode = 2
 text = "MENU_QUIT"
-
-[node name="SeedLabel" type="Label" parent="Margins/Centered/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-autowrap_mode = 3
