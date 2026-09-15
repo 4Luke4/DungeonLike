@@ -116,6 +116,14 @@ android {
     lint {
         warningsAsErrors = true
         abortOnError = true
+
+        // ChromeOS runs on x86_64, and lint asks every application to ship that
+        // architecture for it. This one deliberately targets 64-bit ARM phones
+        // and tablets only, which is the documented product scope; adding an
+        // architecture the product does not support would double the size of
+        // the shipped engine libraries to serve a device class it was never
+        // designed for.
+        disable += "ChromeOsAbiSupport"
         // Report formats are not configured: AGP 9 generates every lint report
         // unconditionally and deprecated the switches that used to select them.
         // The CI job collects the generated reports as an artifact.

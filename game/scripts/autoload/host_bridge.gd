@@ -15,6 +15,15 @@ extends Node
 ## Emitted when a keyboard, pointer or controller is attached or detached.
 signal input_devices_changed(has_keyboard: bool, has_pointer: bool, has_controller: bool)
 
+## Floor for any refresh rate the engine or the host reports.
+##
+## [method DisplayServer.screen_get_refresh_rate] returns -1 when it cannot
+## query the display, which happens headlessly and on some devices. Passing that
+## through would set a negative frame cap and, through [FramePacingService],
+## leave the game running uncapped or not at all. Every Android display
+## refreshes at least this fast, and the Kotlin host applies the same floor.
+const FALLBACK_REFRESH_RATE_HZ := 60
+
 ## Name the Kotlin plugin registers itself under. It is spelled in exactly one
 ## other place, `HostPlugin.PLUGIN_NAME`; changing either alone silently
 ## disconnects the game from the host.
@@ -56,9 +65,12 @@ func host_entropy(byte_count: int) -> PackedByteArray:
 ## Falls back to the engine's own reading, which is what the editor and desktop
 ## builds use.
 func display_refresh_rate_hz() -> int:
+	var reported := 0
 	if _plugin == null:
-		return int(round(DisplayServer.screen_get_refresh_rate()))
-	return _plugin.displayRefreshRateHz()
+		reported = int(round(DisplayServer.screen_get_refresh_rate()))
+	else:
+		reported = _plugin.displayRefreshRateHz()
+	return reported if reported > 0 else FALLBACK_REFRESH_RATE_HZ
 
 
 ## Every refresh rate the display supports, ascending.
@@ -68,7 +80,17 @@ func display_refresh_rate_hz() -> int:
 func supported_refresh_rates_hz() -> PackedInt32Array:
 	if _plugin == null:
 		return PackedInt32Array([display_refresh_rate_hz()])
-	return _plugin.supportedRefreshRatesHz()
+
+	# The host reports what the panel advertises, but a rate of zero or less is
+	# not something the game can cap to, so an unusable list degrades to the
+	# single rate the display is running at rather than to nothing.
+	var usable := PackedInt32Array()
+	for rate: int in _plugin.supportedRefreshRatesHz():
+		if rate > 0:
+			usable.append(rate)
+	if usable.is_empty():
+		usable.append(display_refresh_rate_hz())
+	return usable
 
 
 ## Whether a physical alphabetic keyboard is attached.

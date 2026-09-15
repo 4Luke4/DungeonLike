@@ -11,7 +11,8 @@
     or empty translation.
 -->
 <resources>
-    <string name="app_name">DungeonLike</string>
+    <!-- The product name, deliberately identical in every language. -->
+    <string name="app_name" translatable="false">DungeonLike</string>
 
     <!-- Shown if the game content cannot be read from the installed package. -->
     <string name="error_game_pack_missing">The game data could not be loaded. Reinstalling DungeonLike should fix this.</string>

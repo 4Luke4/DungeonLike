@@ -57,8 +57,14 @@ func available_caps() -> PackedInt32Array:
 
 ## Sets the cap the player prefers, clamped to what the panel supports.
 func apply_preferred_cap(fps: int) -> void:
-	var supported := available_caps()
-	var highest := supported[supported.size() - 1] if not supported.is_empty() else fps
+	# The highest rate is found rather than assumed to be last: the host sorts
+	# its list, but a clamp whose upper bound came out below its lower bound
+	# would silently produce a nonsense cap.
+	var highest := 0
+	for rate: int in available_caps():
+		highest = maxi(highest, rate)
+	if highest <= 0:
+		highest = HostBridge.display_refresh_rate_hz()
 	_preferred_cap = clampi(fps, 1, highest)
 	_apply()
 

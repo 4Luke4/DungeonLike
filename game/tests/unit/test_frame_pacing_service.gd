@@ -15,9 +15,16 @@ func test_the_frame_rate_is_capped_rather_than_left_unlimited() -> void:
 
 
 func test_a_requested_cap_is_applied() -> void:
-	FramePacingService.apply_preferred_cap(60)
-	assert_eq(FramePacingService.current_cap(), 60)
-	assert_eq(Engine.max_fps, 60)
+	# The rate is taken from what the display actually offers rather than
+	# hardcoded: a cap above the panel's rate is clamped by design, so a fixed
+	# number would assert the clamp instead of the behaviour under test, and
+	# would pass or fail depending on the machine the suite runs on.
+	var cap := _lowest_available_cap()
+
+	FramePacingService.apply_preferred_cap(cap)
+
+	assert_eq(FramePacingService.current_cap(), cap)
+	assert_eq(Engine.max_fps, cap)
 
 
 func test_a_cap_above_what_the_panel_supports_is_clamped() -> void:
@@ -38,9 +45,20 @@ func test_idling_lowers_the_cap_and_enables_low_processor_mode() -> void:
 
 
 func test_leaving_idle_restores_the_preferred_cap() -> void:
-	FramePacingService.apply_preferred_cap(90)
+	var cap := _lowest_available_cap()
+
+	FramePacingService.apply_preferred_cap(cap)
 	FramePacingService.set_idle(true)
 	FramePacingService.set_idle(false)
 
-	assert_eq(FramePacingService.current_cap(), 90)
+	assert_eq(FramePacingService.current_cap(), cap)
 	assert_false(OS.low_processor_usage_mode)
+
+
+## A rate the display is known to support, so that applying it is never clamped.
+func _lowest_available_cap() -> int:
+	var supported := FramePacingService.available_caps()
+	var lowest: int = supported[0]
+	for rate: int in supported:
+		lowest = mini(lowest, rate)
+	return lowest
