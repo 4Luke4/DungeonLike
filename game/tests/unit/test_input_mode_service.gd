@@ -42,3 +42,32 @@ func test_registration_is_idempotent() -> void:
 	var after := InputMap.action_get_events("confirm").size()
 
 	assert_eq(after, before, "re-registering must replace bindings, not add to them")
+
+
+func test_no_keycode_is_bound_to_two_actions() -> void:
+	# A key bound to two actions delivers one press as two, which in a
+	# turn-based game means taking two turns from a single keystroke. This
+	# caught a real collision: the encounter actions were nearly put on the
+	# keypad, where KEY_KP_1 and KEY_KP_2 are already movement.
+	#
+	# cancel and open_menu share Escape deliberately — one closes an overlay and
+	# the other opens the menu, and only one of them is ever listening.
+	var deliberate_overlap := ["cancel", "open_menu"]
+	var owners := {}
+	for action: String in InputModeService.KEY_BINDINGS:
+		if action in deliberate_overlap:
+			continue
+		for keycode: int in InputModeService.KEY_BINDINGS[action]:
+			assert_false(
+				owners.has(keycode),
+				"keycode %d is bound to both %s and %s" % [keycode, owners.get(keycode, ""), action]
+			)
+			owners[keycode] = action
+
+
+func test_every_action_the_run_uses_is_registered() -> void:
+	# The run reads these by name. An action the interface asks for and the
+	# table does not declare is not an error at runtime — the press is simply
+	# ignored, and the control it belonged to silently stops working.
+	for action in ["confirm", "cancel", "wait_turn", "ability_one", "next_target"]:
+		assert_true(InputMap.has_action(action), "%s is not registered" % action)

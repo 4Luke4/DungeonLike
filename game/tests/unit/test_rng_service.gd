@@ -184,3 +184,40 @@ func _repeated(value: int, count: int) -> PackedByteArray:
 	bytes.resize(count)
 	bytes.fill(value)
 	return bytes
+
+
+func test_a_scoped_stream_is_independent_of_its_system() -> void:
+	# The property per-room scoping rests on: one room's draws must not move
+	# another room's, or resuming a run would reroll everything ahead of it.
+	var first := RngService.stream_for(RngService.STREAM_ENCOUNTER, "node-1")
+	var second := RngService.stream_for(RngService.STREAM_ENCOUNTER, "node-2")
+	assert_ne(first, second, "two scopes must name two streams")
+
+	var expected := RngService.next_bytes(second, 8)
+	RngService.begin_run_with_seed(_fixed_seed())
+	# Draw heavily from the first room before touching the second. If the scopes
+	# shared state, this would change what the second produces.
+	for _draw in range(50):
+		RngService.next_bytes(first, 16)
+	assert_eq(
+		RngService.next_bytes(second, 8),
+		expected,
+		"draws in one scope must not shift another"
+	)
+
+
+func test_a_forgotten_stream_replays_identically() -> void:
+	# Forgetting releases state, it does not reseed: the stream is derived from
+	# the run seed, so asking again must give the same answer.
+	var stream := RngService.stream_for(RngService.STREAM_LOOT, "node-9")
+	var expected := RngService.next_bytes(stream, 16)
+	RngService.forget_stream(stream)
+	RngService.begin_run_with_seed(_fixed_seed())
+	assert_eq(RngService.next_bytes(stream, 16), expected)
+
+
+func _fixed_seed() -> PackedByteArray:
+	var bytes := PackedByteArray()
+	bytes.resize(RngService.SEED_LENGTH)
+	bytes.fill(0x3c)
+	return bytes
