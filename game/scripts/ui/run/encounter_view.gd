@@ -122,7 +122,11 @@ func _build_actions() -> void:
 			"%s (%s)"
 			% [
 				tr(String(power.get("name_key", ""))),
-				tr("ENCOUNTER_USES_LEFT").format([left]) if left > 0 else tr("ENCOUNTER_NO_USES_LEFT"),
+				(
+					tr("ENCOUNTER_USES_LEFT").format([left])
+					if left > 0
+					else tr("ENCOUNTER_NO_USES_LEFT")
+				),
 			]
 		)
 		var button := _action_button(label, str(index), func() -> void: _use_power(power_id))
