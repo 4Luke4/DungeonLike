@@ -172,14 +172,14 @@ jobs:
 
       # The editor and its export templates are about 1.3 GB, so they are cached
       # against the pinned version rather than downloaded on every run.
-      - name: Restore the pinned Godot toolchain
+      - name: Restore the pinned Godot editor
         id: godot-cache
         uses: actions/cache@v6.1.0
         with:
           path: .godot-toolchain
-          key: godot-${{ needs.toolchain.outputs.godot-version }}-linux-x86_64
+          key: godot-editor-${{ needs.toolchain.outputs.godot-version }}-linux-x86_64
 
-      - name: Download and verify Godot
+      - name: Download and verify the Godot editor
         if: steps.godot-cache.outputs.cache-hit != 'true'
         run: tools/scripts/fetch_godot.sh .godot-toolchain
 
@@ -194,17 +194,10 @@ jobs:
           cp -r .gut-source/addons/gut game/addons/gut
 
       - name: Import project resources
-        env:
-          GODOT_HOME: ${{ github.workspace }}/.godot-toolchain
-        run: |
-          set -euo pipefail
-          # The editor keeps export templates under its data directory; pointing
-          # XDG_DATA_HOME at the downloaded toolchain is what lets a headless
-          # run find them without installing anything into the runner's home.
-          export XDG_DATA_HOME="${GODOT_HOME}/data"
-          mkdir -p "${XDG_DATA_HOME}/godot/export_templates"
-          cp -r "${GODOT_HOME}/templates/." "${XDG_DATA_HOME}/godot/export_templates/" 2>/dev/null || true
-          "${GODOT_HOME}/godot" --headless --import --path game
+        # Imports have to finish before the test suite runs, or GUT's own
+        # classes are not registered yet and every suite fails to resolve
+        # GutTest.
+        run: .godot-toolchain/godot --headless --import --path game
 
       - name: Run the GUT suite
         run: |
@@ -241,29 +234,31 @@ jobs:
             platforms;android-${{ needs.toolchain.outputs.compile-sdk }}
             build-tools;${{ needs.toolchain.outputs.build-tools }}
 
-      - name: Restore the pinned Godot toolchain
+      - name: Restore the pinned Godot editor
         id: godot-cache
         uses: actions/cache@v6.1.0
         with:
           path: .godot-toolchain
-          key: godot-${{ needs.toolchain.outputs.godot-version }}-linux-x86_64
+          key: godot-editor-${{ needs.toolchain.outputs.godot-version }}-linux-x86_64
 
-      - name: Download and verify Godot
+      - name: Download and verify the Godot editor
         if: steps.godot-cache.outputs.cache-hit != 'true'
         run: tools/scripts/fetch_godot.sh .godot-toolchain
 
       - name: Export the game pack
-        env:
-          GODOT_HOME: ${{ github.workspace }}/.godot-toolchain
         run: |
           set -euo pipefail
-          export XDG_DATA_HOME="${GODOT_HOME}/data"
-          mkdir -p "${XDG_DATA_HOME}/godot/export_templates"
-          cp -r "${GODOT_HOME}/templates/." "${XDG_DATA_HOME}/godot/export_templates/" 2>/dev/null || true
+          # Imports first: the export writes whatever the import step produced,
+          # and an unimported project exports an empty pack rather than failing.
+          .godot-toolchain/godot --headless --import --path game
 
-          "${GODOT_HOME}/godot" --headless --import --path game
           mkdir -p app/src/main/assets
-          "${GODOT_HOME}/godot" --headless --path game \
+          # A pack export needs no export templates, no Android SDK and no
+          # keystore: for a .pck path the engine calls export_pack() directly,
+          # and the Android platform does not override it. See the comment in
+          # tools/scripts/fetch_godot.sh. The path must be absolute because the
+          # engine resolves it relative to the project directory otherwise.
+          .godot-toolchain/godot --headless --path game \
             --export-pack "Android" "${GITHUB_WORKSPACE}/app/src/main/assets/game.pck"
 
           # The activity loads res://game.pck at start-up; an export that
