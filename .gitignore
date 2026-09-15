@@ -1,6 +1,34 @@
+# Local planning notes
+plan.md
+
+# System Reference Document v5.2.1
+srd/
+
+# https://github.com/github/gitignore/blob/main/Global/Linux.gitignore #
+
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# Metadata left by Dolphin file manager, which comes with KDE Plasma
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# Log files created by default by the nohup command
+nohup.out
+
+# https://github.com/github/gitignore/blob/main/Android.gitignore #
+
 # Gradle files
 .gradle/
 build/
+.kotlin/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -32,3 +60,26 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# https://github.com/github/gitignore/blob/main/Godot.gitignore #
+
+# Godot 4.2+ specific ignores
+~*.dll
+
+# Godot 4+ specific ignores
+.godot/
+.nomedia
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_credentials.cfg
+*.tmp
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
