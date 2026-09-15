@@ -54,7 +54,7 @@ static func _apply_equipment(player: Combatant, state: RunState, content: Conten
 		if item == null:
 			continue
 		for effect: Dictionary in effects_of(item, content):
-			_apply_effect(player, effect, item)
+			_apply_effect(player, effect)
 
 	player.armour_class = _armour_class(state, content, player)
 
@@ -75,7 +75,7 @@ static func effects_of(item: Item, content: ContentDatabase) -> Array[Dictionary
 	return effects
 
 
-static func _apply_effect(player: Combatant, effect: Dictionary, item: Item) -> void:
+static func _apply_effect(player: Combatant, effect: Dictionary) -> void:
 	match String(effect.get("kind", "")):
 		"ability_bonus":
 			player.abilities.add(String(effect.get("ability", "str")), int(effect.get("amount", 0)))
