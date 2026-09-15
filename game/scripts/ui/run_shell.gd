@@ -186,7 +186,7 @@ func _refresh_status() -> void:
 	var state := _controller.state
 	if state == null:
 		return
-	_depth_label.text = tr("MAP_DEPTH") % state.depth
+	_depth_label.text = tr("MAP_DEPTH").format([state.depth])
 	_health_label.text = (
 		"%s %d/%d" % [tr("RULES_HIT_POINTS_SHORT"), state.hit_points, state.max_hit_points]
 	)

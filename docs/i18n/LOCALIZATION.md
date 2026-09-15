@@ -65,13 +65,12 @@ inflects it too, with different endings; English does not inflect it at all.
 None of that is decided in code. Three things in the tables decide it, so a
 wrong name is fixed by a translator rather than by a programmer:
 
-**Word order** is an `ITEM_NAME_*` row per language, written with positional
-placeholders. `%1$s` is always the base noun, `%2$s` the prefix, `%3$s` the
-suffix:
+**Word order** is an `ITEM_NAME_*` row per language. `{0}` is always the base
+noun, `{1}` the prefix, `{2}` the suffix:
 
 | key | en | it |
 | --- | --- | --- |
-| `ITEM_NAME_PREFIX_SUFFIX` | `%2$s %1$s %3$s` | `%1$s %2$s %3$s` |
+| `ITEM_NAME_PREFIX_SUFFIX` | `{1} {0} {2}` | `{0} {1} {2}` |
 
 **Gender** is a `_GRAMMAR` row beside each base noun, holding a tag such as `ms`,
 `fs` or `ns`. It belongs to the *translation*, not to the item: a longsword is
@@ -95,10 +94,29 @@ and one declared not inflected must have the plain row and none of the forms.
 
 ## Practicalities
 
-**Placeholders.** The table uses `%s`-style placeholders, and their order must
-be preserved. Where a language needs a different word order, use the positional
-form (`%1$s`, `%2$s`) in every language for that key, not only the one that
-needs it.
+**Placeholders.** The two stacks do not share a convention, and using the wrong
+one fails silently rather than loudly.
+
+The **game tables** use `{0}`, `{1}` and so on, applied with
+`String.format()`:
+
+```gdscript
+tr("LOG_ATTACK_HIT").format([attacker, defender, amount])
+```
+
+The numbers are indices into the array, so a language may use them in any order
+— which is the whole point, and the reason a single-value row may still be
+written with a plain `%s` and applied with `%`.
+
+GDScript's `%` operator has **no positional specifiers**. A row written `%1$s`
+is not an error: `%` leaves it exactly as it found it, and the player reads
+`%1$s` in the middle of a sentence. `tools/scripts/check_locales.py` cannot see
+this, so `game/tests/unit/test_localisation_placeholders.gd` renders every row
+in every language and fails on any placeholder left unfilled.
+
+The **Android host** resources in `res/values*/strings.xml` keep the platform's
+own positional form, `%1$s` and `%2$s`, because that is what Android's resource
+formatting expects. Do not carry either convention across to the other stack.
 
 **Length.** German and French run visibly longer than English. Layouts use
 containers and wrapping rather than fixed widths, and a new screen should be

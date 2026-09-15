@@ -49,23 +49,23 @@ RULES_RESISTANCE,Resistance,Resistenza,Resistencia,Résistance,Resistenz
 RULES_IMMUNITY,Immunity,Immunità,Inmunidad,Immunité,Immunität
 RULES_VULNERABILITY,Vulnerability,Vulnerabilità,Vulnerabilidad,Vulnérabilité,Verwundbarkeit
 RULES_ATTUNEMENT,Requires attunement,Richiede sintonia,Requiere sintonía,Nécessite une harmonisation,Erfordert Einstimmung
-LOG_ROUND_BEGINS,— Round %1$s —,— Round %1$s —,— Asalto %1$s —,— Round %1$s —,— Runde %1$s —
-LOG_INITIATIVE,%1$s rolls %2$s for initiative.,%1$s ottiene %2$s in iniziativa.,%1$s saca %2$s en iniciativa.,%1$s obtient %2$s en initiative.,%1$s würfelt %2$s für die Initiative.
-LOG_ATTACK_HIT,%1$s hits %2$s for %3$s damage.,%1$s colpisce %2$s infliggendo %3$s danni.,%1$s golpea a %2$s causando %3$s de daño.,%1$s touche %2$s et inflige %3$s dégâts.,%1$s trifft %2$s für %3$s Schaden.
-LOG_ATTACK_MISS,%1$s misses %2$s.,%1$s manca %2$s.,%1$s falla contra %2$s.,%1$s manque %2$s.,%1$s verfehlt %2$s.
-LOG_ATTACK_CRIT,%1$s lands a critical hit on %2$s for %3$s damage.,%1$s mette a segno un colpo critico su %2$s infliggendo %3$s danni.,%1$s asesta un golpe crítico a %2$s causando %3$s de daño.,%1$s porte un coup critique à %2$s et inflige %3$s dégâts.,%1$s landet einen kritischen Treffer auf %2$s für %3$s Schaden.
-LOG_SAVE_SUCCESS,%1$s succeeds on a %2$s saving throw.,%1$s supera un tiro salvezza su %2$s.,%1$s supera una tirada de salvación de %2$s.,%1$s réussit un jet de sauvegarde de %2$s.,%1$s besteht einen %2$s-Rettungswurf.
-LOG_SAVE_FAILURE,%1$s fails a %2$s saving throw.,%1$s fallisce un tiro salvezza su %2$s.,%1$s falla una tirada de salvación de %2$s.,%1$s rate un jet de sauvegarde de %2$s.,%1$s scheitert an einem %2$s-Rettungswurf.
-LOG_CONDITION_APPLIED,%1$s is now %2$s.,%1$s è ora %2$s.,%1$s está ahora %2$s.,%1$s est maintenant %2$s.,%1$s ist jetzt %2$s.
-LOG_CONDITION_ENDED,%1$s is no longer %2$s.,%1$s non è più %2$s.,%1$s ya no está %2$s.,%1$s n'est plus %2$s.,%1$s ist nicht mehr %2$s.
-LOG_RESISTED,%1$s resists the %2$s damage.,%1$s resiste ai danni da %2$s.,%1$s resiste el daño de %2$s.,%1$s résiste aux dégâts de %2$s.,%1$s widersteht dem %2$s-Schaden.
-LOG_IMMUNE,%1$s is immune to %2$s damage.,%1$s è immune ai danni da %2$s.,%1$s es inmune al daño de %2$s.,%1$s est immunisé aux dégâts de %2$s.,%1$s ist immun gegen %2$s-Schaden.
-LOG_VULNERABLE,%1$s is vulnerable to %2$s damage.,%1$s è vulnerabile ai danni da %2$s.,%1$s es vulnerable al daño de %2$s.,%1$s est vulnérable aux dégâts de %2$s.,%1$s ist verwundbar gegen %2$s-Schaden.
-LOG_DEFEATED,%1$s is defeated.,%1$s è sconfitto.,%1$s es derrotado.,%1$s est vaincu.,%1$s ist besiegt.
-LOG_HEALED,%1$s recovers %2$s hit points.,%1$s recupera %2$s punti ferita.,%1$s recupera %2$s puntos de golpe.,%1$s récupère %2$s points de vie.,%1$s stellt %2$s Trefferpunkte wieder her.
-LOG_POWER_USED,%1$s uses %2$s.,%1$s usa %2$s.,%1$s usa %2$s.,%1$s utilise %2$s.,%1$s setzt %2$s ein.
-LOG_DEFEND,%1$s takes a defensive stance.,%1$s assume una posizione difensiva.,%1$s adopta una postura defensiva.,%1$s adopte une posture défensive.,%1$s geht in Verteidigungshaltung.
-LOG_WITH_ADVANTAGE,%1$s attacks with advantage.,%1$s attacca con vantaggio.,%1$s ataca con ventaja.,%1$s attaque avec avantage.,%1$s greift mit Vorteil an.
-LOG_WITH_DISADVANTAGE,%1$s attacks with disadvantage.,%1$s attacca con svantaggio.,%1$s ataca con desventaja.,%1$s attaque avec désavantage.,%1$s greift mit Nachteil an.
+LOG_ROUND_BEGINS,— Round {0} —,— Round {0} —,— Asalto {0} —,— Round {0} —,— Runde {0} —
+LOG_INITIATIVE,{0} rolls {1} for initiative.,{0} ottiene {1} in iniziativa.,{0} saca {1} en iniciativa.,{0} obtient {1} en initiative.,{0} würfelt {1} für die Initiative.
+LOG_ATTACK_HIT,{0} hits {1} for {2} damage.,{0} colpisce {1} infliggendo {2} danni.,{0} golpea a {1} causando {2} de daño.,{0} touche {1} et inflige {2} dégâts.,{0} trifft {1} für {2} Schaden.
+LOG_ATTACK_MISS,{0} misses {1}.,{0} manca {1}.,{0} falla contra {1}.,{0} manque {1}.,{0} verfehlt {1}.
+LOG_ATTACK_CRIT,{0} lands a critical hit on {1} for {2} damage.,{0} mette a segno un colpo critico su {1} infliggendo {2} danni.,{0} asesta un golpe crítico a {1} causando {2} de daño.,{0} porte un coup critique à {1} et inflige {2} dégâts.,{0} landet einen kritischen Treffer auf {1} für {2} Schaden.
+LOG_SAVE_SUCCESS,{0} succeeds on a {1} saving throw.,{0} supera un tiro salvezza su {1}.,{0} supera una tirada de salvación de {1}.,{0} réussit un jet de sauvegarde de {1}.,{0} besteht einen {1}-Rettungswurf.
+LOG_SAVE_FAILURE,{0} fails a {1} saving throw.,{0} fallisce un tiro salvezza su {1}.,{0} falla una tirada de salvación de {1}.,{0} rate un jet de sauvegarde de {1}.,{0} scheitert an einem {1}-Rettungswurf.
+LOG_CONDITION_APPLIED,{0} is now {1}.,{0} è ora {1}.,{0} está ahora {1}.,{0} est maintenant {1}.,{0} ist jetzt {1}.
+LOG_CONDITION_ENDED,{0} is no longer {1}.,{0} non è più {1}.,{0} ya no está {1}.,{0} n'est plus {1}.,{0} ist nicht mehr {1}.
+LOG_RESISTED,{0} resists the {1} damage.,{0} resiste ai danni da {1}.,{0} resiste el daño de {1}.,{0} résiste aux dégâts de {1}.,{0} widersteht dem {1}-Schaden.
+LOG_IMMUNE,{0} is immune to {1} damage.,{0} è immune ai danni da {1}.,{0} es inmune al daño de {1}.,{0} est immunisé aux dégâts de {1}.,{0} ist immun gegen {1}-Schaden.
+LOG_VULNERABLE,{0} is vulnerable to {1} damage.,{0} è vulnerabile ai danni da {1}.,{0} es vulnerable al daño de {1}.,{0} est vulnérable aux dégâts de {1}.,{0} ist verwundbar gegen {1}-Schaden.
+LOG_DEFEATED,{0} is defeated.,{0} è sconfitto.,{0} es derrotado.,{0} est vaincu.,{0} ist besiegt.
+LOG_HEALED,{0} recovers {1} hit points.,{0} recupera {1} punti ferita.,{0} recupera {1} puntos de golpe.,{0} récupère {1} points de vie.,{0} stellt {1} Trefferpunkte wieder her.
+LOG_POWER_USED,{0} uses {1}.,{0} usa {1}.,{0} usa {1}.,{0} utilise {1}.,{0} setzt {1} ein.
+LOG_DEFEND,{0} takes a defensive stance.,{0} assume una posizione difensiva.,{0} adopta una postura defensiva.,{0} adopte une posture défensive.,{0} geht in Verteidigungshaltung.
+LOG_WITH_ADVANTAGE,{0} attacks with advantage.,{0} attacca con vantaggio.,{0} ataca con ventaja.,{0} attaque avec avantage.,{0} greift mit Vorteil an.
+LOG_WITH_DISADVANTAGE,{0} attacks with disadvantage.,{0} attacca con svantaggio.,{0} ataca con desventaja.,{0} attaque avec désavantage.,{0} greift mit Nachteil an.
 LOG_VICTORY,The way ahead is clear.,La via è libera.,El camino está despejado.,La voie est libre.,Der Weg ist frei.
 LOG_DEFEAT,You fall where you stand.,Cadi dove ti trovi.,Caes donde estás.,Vous tombez sur place.,"Du fällst, wo du stehst."

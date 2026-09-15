@@ -15,15 +15,15 @@ CREDITS_RULES_HEADING,Game rules,Regole di gioco,Reglas del juego,Règles du jeu
 CREDITS_SRD_ATTRIBUTION,"This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.","This work includes material from the System Reference Document 5.2.1 (""SRD 5.2.1"") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
 CREDITS_ENGINE_HEADING,Engine,Motore,Motor,Moteur,Engine
 CREDITS_THIRD_PARTY_HEADING,Third-party components,Componenti di terze parti,Componentes de terceros,Composants tiers,Komponenten von Drittanbietern
-ITEM_NAME_BASE,%1$s,%1$s,%1$s,%1$s,%1$s
-ITEM_NAME_PREFIX,%2$s %1$s,%1$s %2$s,%1$s %2$s,%1$s %2$s,%2$s %1$s
-ITEM_NAME_SUFFIX,%1$s %3$s,%1$s %3$s,%1$s %3$s,%1$s %3$s,%1$s %3$s
-ITEM_NAME_PREFIX_SUFFIX,%2$s %1$s %3$s,%1$s %2$s %3$s,%1$s %2$s %3$s,%1$s %2$s %3$s,%2$s %1$s %3$s
+ITEM_NAME_BASE,{0},{0},{0},{0},{0}
+ITEM_NAME_PREFIX,{1} {0},{0} {1},{0} {1},{0} {1},{1} {0}
+ITEM_NAME_SUFFIX,{0} {2},{0} {2},{0} {2},{0} {2},{0} {2}
+ITEM_NAME_PREFIX_SUFFIX,{1} {0} {2},{0} {1} {2},{0} {1} {2},{0} {1} {2},{1} {0} {2}
 MENU_CONTINUE_RUN,Continue run,Riprendi partita,Continuar partida,Reprendre la partie,Lauf fortsetzen
 ARCHETYPE_SELECT_HEADING,Choose your delver,Scegli chi scende,Elige a tu explorador,Choisissez votre explorateur,Wähle deinen Absteiger
 ARCHETYPE_SELECT_BEGIN,Begin the descent,Inizia la discesa,Comienza el descenso,Commencer la descente,Abstieg beginnen
 MAP_HEADING,Choose your path,Scegli il percorso,Elige tu camino,Choisissez votre chemin,Wähle deinen Weg
-MAP_DEPTH,Depth %1$s,Profondità %1$s,Profundidad %1$s,Profondeur %1$s,Tiefe %1$s
+MAP_DEPTH,Depth {0},Profondità {0},Profundidad {0},Profondeur {0},Tiefe {0}
 MAP_ROOM_ENCOUNTER,Encounter,Scontro,Combate,Rencontre,Begegnung
 MAP_ROOM_ELITE,Elite,Élite,Élite,Élite,Elite
 MAP_ROOM_TREASURE,Treasure,Tesoro,Tesoro,Trésor,Schatz
@@ -36,8 +36,8 @@ ENCOUNTER_YOUR_TURN,Your turn,Il tuo turno,Tu turno,À vous de jouer,Du bist am 
 ENCOUNTER_ATTACK,Attack,Attacca,Atacar,Attaquer,Angreifen
 ENCOUNTER_DEFEND,Defend,Difenditi,Defender,Se défendre,Verteidigen
 ENCOUNTER_POWERS,Powers,Poteri,Poderes,Pouvoirs,Kräfte
-ENCOUNTER_TARGET,Target: %1$s,Bersaglio: %1$s,Objetivo: %1$s,Cible : %1$s,Ziel: %1$s
-ENCOUNTER_USES_LEFT,%1$s left,%1$s rimasti,Quedan %1$s,%1$s restants,%1$s übrig
+ENCOUNTER_TARGET,Target: {0},Bersaglio: {0},Objetivo: {0},Cible : {0},Ziel: {0}
+ENCOUNTER_USES_LEFT,{0} left,{0} rimasti,Quedan {0},{0} restants,{0} übrig
 ENCOUNTER_NO_USES_LEFT,Spent,Esaurito,Agotado,Épuisé,Verbraucht
 ENCOUNTER_LOG,Combat log,Registro di combattimento,Registro de combate,Journal de combat,Kampfprotokoll
 ENCOUNTER_CONTINUE,Continue,Continua,Continuar,Continuer,Weiter
@@ -48,7 +48,7 @@ TREASURE_LEAVE,Leave it,Lascialo,Déjalo,Le laisser,Zurücklassen
 TREASURE_EQUIPPED,Equipped,Equipaggiato,Equipado,Équipé,Ausgerüstet
 REST_HEADING,A moment's quiet,Un momento di quiete,Un momento de calma,Un instant de calme,Ein Augenblick Ruhe
 REST_RECOVER,Bind your wounds,Fascia le ferite,Venda tus heridas,Pansez vos blessures,Wunden verbinden
-REST_RECOVER_RESULT,You recover %1$s hit points.,Recuperi %1$s punti ferita.,Recuperas %1$s puntos de golpe.,Vous récupérez %1$s points de vie.,Du stellst %1$s Trefferpunkte wieder her.
+REST_RECOVER_RESULT,You recover {0} hit points.,Recuperi {0} punti ferita.,Recuperas {0} puntos de golpe.,Vous récupérez {0} points de vie.,Du stellst {0} Trefferpunkte wieder her.
 REST_PRESS_ON,Press on without resting,Prosegui senza riposare,Sigue sin descansar,Continuer sans vous reposer,Ohne Rast weiter
 INVENTORY_HEADING,Equipment,Equipaggiamento,Equipo,Équipement,Ausrüstung
 INVENTORY_SLOT_MAIN_HAND,Main hand,Mano primaria,Mano principal,Main directrice,Haupthand
@@ -62,10 +62,10 @@ PAUSE_ABANDON,Abandon run,Abbandona la partita,Abandonar partida,Abandonner la p
 PAUSE_ABANDON_CONFIRM,Abandon this run? It cannot be resumed.,Abbandonare questa partita? Non potrà essere ripresa.,¿Abandonar esta partida? No podrá reanudarse.,Abandonner cette partie ? Elle ne pourra pas être reprise.,Diesen Lauf aufgeben? Er kann nicht fortgesetzt werden.
 SUMMARY_VICTORY,The throne is empty,Il trono è vuoto,El trono está vacío,Le trône est vide,Der Thron ist leer
 SUMMARY_DEFEAT,Your descent ends here,La tua discesa finisce qui,Tu descenso termina aquí,Votre descente s'achève ici,Dein Abstieg endet hier
-SUMMARY_DEPTH_REACHED,Depth reached: %1$s,Profondità raggiunta: %1$s,Profundidad alcanzada: %1$s,Profondeur atteinte : %1$s,Erreichte Tiefe: %1$s
-SUMMARY_ENEMIES_DEFEATED,Enemies defeated: %1$s,Nemici sconfitti: %1$s,Enemigos derrotados: %1$s,Ennemis vaincus : %1$s,Besiegte Feinde: %1$s
-SUMMARY_BEST_ITEM,Finest find: %1$s,Miglior ritrovamento: %1$s,Mejor hallazgo: %1$s,Plus belle trouvaille : %1$s,Bester Fund: %1$s
-SUMMARY_ARCHETYPE,Delver: %1$s,Personaggio: %1$s,Explorador: %1$s,Explorateur : %1$s,Absteiger: %1$s
+SUMMARY_DEPTH_REACHED,Depth reached: {0},Profondità raggiunta: {0},Profundidad alcanzada: {0},Profondeur atteinte : {0},Erreichte Tiefe: {0}
+SUMMARY_ENEMIES_DEFEATED,Enemies defeated: {0},Nemici sconfitti: {0},Enemigos derrotados: {0},Ennemis vaincus : {0},Besiegte Feinde: {0}
+SUMMARY_BEST_ITEM,Finest find: {0},Miglior ritrovamento: {0},Mejor hallazgo: {0},Plus belle trouvaille : {0},Bester Fund: {0}
+SUMMARY_ARCHETYPE,Delver: {0},Personaggio: {0},Explorador: {0},Explorateur : {0},Absteiger: {0}
 SUMMARY_COPY_SEED,Copy seed,Copia il seme,Copiar semilla,Copier la graine,Startwert kopieren
 SUMMARY_SEED_COPIED,Seed copied,Seme copiato,Semilla copiada,Graine copiée,Startwert kopiert
 SUMMARY_NEW_RUN,New run,Nuova partita,Nueva partida,Nouvelle partie,Neuer Lauf

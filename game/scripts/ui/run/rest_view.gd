@@ -30,7 +30,7 @@ func bind(controller: RunController) -> void:
 
 func _on_rest() -> void:
 	var restored := _controller.rest()
-	_result.text = tr("REST_RECOVER_RESULT") % restored
+	_result.text = tr("REST_RECOVER_RESULT").format([restored])
 	# The result is shown before the screen changes, so the player sees what
 	# their decision bought them.
 	_rest_button.disabled = true

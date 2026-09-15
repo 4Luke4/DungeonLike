@@ -67,7 +67,7 @@ static func display_name(item: Item, content: ContentDatabase) -> String:
 	elif not suffix.is_empty():
 		pattern = "ITEM_NAME_SUFFIX"
 
-	return String(TranslationServer.translate(pattern)) % [base_name, prefix, suffix]
+	return String(TranslationServer.translate(pattern)).format([base_name, prefix, suffix])
 
 
 ## The gender tag of a base noun's translation in the current language.

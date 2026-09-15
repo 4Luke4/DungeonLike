@@ -36,13 +36,15 @@ func bind(controller: RunController) -> void:
 func _build_details(state: RunState) -> String:
 	var archetype := _controller.content.by_id(state.archetype_id)
 	var lines: Array[String] = [
-		tr("SUMMARY_ARCHETYPE") % tr(String(archetype.get("name_key", ""))),
-		tr("SUMMARY_DEPTH_REACHED") % state.depth,
-		tr("SUMMARY_ENEMIES_DEFEATED") % state.enemies_defeated,
+		tr("SUMMARY_ARCHETYPE").format([tr(String(archetype.get("name_key", "")))]),
+		tr("SUMMARY_DEPTH_REACHED").format([state.depth]),
+		tr("SUMMARY_ENEMIES_DEFEATED").format([state.enemies_defeated]),
 	]
 	if state.best_item != null:
 		lines.append(
-			tr("SUMMARY_BEST_ITEM") % ItemNaming.display_name(state.best_item, _controller.content)
+			tr("SUMMARY_BEST_ITEM").format(
+				[ItemNaming.display_name(state.best_item, _controller.content)]
+			)
 		)
 	return "\n".join(lines)
 

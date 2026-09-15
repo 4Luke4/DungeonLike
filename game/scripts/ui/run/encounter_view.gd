@@ -51,7 +51,7 @@ func _refresh_all() -> void:
 ## scroll position and the player can read back through a long fight.
 func _render_new_events() -> void:
 	for event in _resolver.events_since(_rendered_events):
-		_log.append_text(tr(event.message_key) % event.arguments + "\n")
+		_log.append_text(tr(event.message_key).format(event.arguments) + "\n")
 	_rendered_events = _resolver.event_count()
 
 
@@ -122,7 +122,7 @@ func _build_actions() -> void:
 			"%s (%s)"
 			% [
 				tr(String(power.get("name_key", ""))),
-				tr("ENCOUNTER_USES_LEFT") % left if left > 0 else tr("ENCOUNTER_NO_USES_LEFT"),
+				tr("ENCOUNTER_USES_LEFT").format([left]) if left > 0 else tr("ENCOUNTER_NO_USES_LEFT"),
 			]
 		)
 		var button := _action_button(label, str(index), func() -> void: _use_power(power_id))
