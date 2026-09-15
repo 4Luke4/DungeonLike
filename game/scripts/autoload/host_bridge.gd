@@ -12,13 +12,13 @@ extends Node
 ## to a documented fallback instead of failing. Code that talked to the
 ## singleton directly would work on device and crash in the editor.
 
+## Emitted when a keyboard, pointer or controller is attached or detached.
+signal input_devices_changed(has_keyboard: bool, has_pointer: bool, has_controller: bool)
+
 ## Name the Kotlin plugin registers itself under. It is spelled in exactly one
 ## other place, `HostPlugin.PLUGIN_NAME`; changing either alone silently
 ## disconnects the game from the host.
 const PLUGIN_NAME := "DungeonLikeHost"
-
-## Emitted when a keyboard, pointer or controller is attached or detached.
-signal input_devices_changed(has_keyboard: bool, has_pointer: bool, has_controller: bool)
 
 var _plugin: Object = null
 

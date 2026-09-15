@@ -6,6 +6,9 @@ extends Node
 ## system on every launch. Until they choose, the device language decides, and
 ## anything unsupported falls back to English.
 
+## Emitted after the locale changes, so open screens can re-read their text.
+signal locale_changed(locale: String)
+
 ## Locales the game ships. Must stay in step with `game/localization/ui.csv`,
 ## with the Android host's `res/values-*` directories and with
 ## `res/xml/locales_config.xml`; `tools/scripts/check_locales.py` enforces that.
@@ -16,9 +19,6 @@ const FALLBACK_LOCALE := "en"
 
 const SETTING_SECTION := "language"
 const SETTING_KEY := "locale"
-
-## Emitted after the locale changes, so open screens can re-read their text.
-signal locale_changed(locale: String)
 
 
 func _ready() -> void:

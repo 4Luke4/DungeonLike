@@ -7,12 +7,12 @@ extends Node
 ## worth solving and locking them out of it would be hostile. See
 ## `docs/architecture/THREAT_MODEL.md`.
 
+## Emitted whenever a value changes, so open screens stay in step.
+signal setting_changed(section: String, key: String, value: Variant)
+
 ## Where settings live. `user://` resolves to the application's private
 ## directory, which no other application can read.
 const SETTINGS_PATH := "user://settings.cfg"
-
-## Emitted whenever a value changes, so open screens stay in step.
-signal setting_changed(section: String, key: String, value: Variant)
 
 var _config := ConfigFile.new()
 

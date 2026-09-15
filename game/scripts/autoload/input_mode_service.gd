@@ -17,14 +17,14 @@ extends Node
 ## and keep focus navigation meaningful, touch mode shows larger targets and no
 ## hints.
 
+## Emitted when the active input mode changes.
+signal mode_changed(mode: Mode)
+
 enum Mode {
 	TOUCH,
 	POINTER,
 	KEYBOARD,
 }
-
-## Emitted when the active input mode changes.
-signal mode_changed(mode: Mode)
 
 ## Bindings, as action name to the keys and buttons that trigger it.
 ##

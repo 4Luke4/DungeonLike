@@ -20,6 +20,10 @@ extends Node
 ## from the run seed with HKDF. Adding a system, or changing how many numbers
 ## one system draws, cannot shift another system's sequence.
 
+## Emitted once a run has been seeded, carrying the seed in the same
+## hexadecimal form the player sees.
+signal run_seeded(seed_hex: String)
+
 ## Length of a run seed, in bytes.
 const SEED_LENGTH := 32
 
@@ -43,10 +47,6 @@ const STREAM_MAP := "map"
 const STREAM_ENCOUNTER := "encounter"
 const STREAM_LOOT := "loot"
 const STREAM_COSMETIC := "cosmetic"
-
-## Emitted once a run has been seeded, carrying the seed in the same
-## hexadecimal form the player sees.
-signal run_seeded(seed_hex: String)
 
 var _run_seed := PackedByteArray()
 var _streams := {}

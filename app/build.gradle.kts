@@ -116,11 +116,9 @@ android {
     lint {
         warningsAsErrors = true
         abortOnError = true
-        // Written by the CI job so that failures are reviewable as an artifact
-        // rather than only as console output.
-        sarifReport = true
-        htmlReport = true
-        xmlReport = false
+        // Report formats are not configured: AGP 9 generates every lint report
+        // unconditionally and deprecated the switches that used to select them.
+        // The CI job collects the generated reports as an artifact.
     }
 }
 

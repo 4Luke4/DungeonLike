@@ -24,6 +24,9 @@ extends Node
 ## what it can do is the only way a single build runs correctly on 60, 90 and
 ## 120 Hz hardware.
 
+## Emitted when the effective cap changes, so the interface can show it.
+signal frame_cap_changed(fps: int)
+
 ## Frame rate cap while the game is idle on a static screen, in hertz. Menus do
 ## not animate continuously, and drawing them at panel rate is pure battery
 ## cost.
@@ -33,9 +36,6 @@ const IDLE_FPS := 30
 ## eighth of a frame at 60 Hz: long enough to matter, short enough that input
 ## still feels immediate.
 const IDLE_SLEEP_USEC := 2000
-
-## Emitted when the effective cap changes, so the interface can show it.
-signal frame_cap_changed(fps: int)
 
 var _preferred_cap := 0
 var _idle := false

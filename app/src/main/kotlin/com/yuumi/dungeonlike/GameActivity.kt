@@ -30,6 +30,26 @@ import org.godotengine.godot.plugin.GodotPlugin
 class GameActivity : AppCompatActivity(), GodotHost {
     private var godotFragment: GodotFragment? = null
 
+    /**
+     * The activity the engine is hosted in.
+     *
+     * Part of the [GodotHost] contract: the engine and its plugins reach the
+     * Android activity through the host rather than holding their own
+     * reference, so that the reference cannot outlive it.
+     */
+    override fun getActivity(): AppCompatActivity = this
+
+    /**
+     * The engine instance this host owns.
+     *
+     * [GodotFragment] asks its host for the instance rather than creating one,
+     * which is how the "one engine per process" rule is enforced:
+     * [Godot.getInstance] returns the same object for the whole process, and
+     * the application context is passed rather than the activity so the engine
+     * does not retain an activity across a recreation.
+     */
+    override fun getGodot(): Godot = Godot.getInstance(applicationContext)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Installed before super.onCreate so the system splash screen stays up
         // until the engine has something to draw; the engine takes a noticeable
