@@ -17,6 +17,13 @@ name: Bootstrap Gradle wrapper
 
 on:
   workflow_dispatch:
+  # TEMPORARY, removed in the same pull request once the wrapper is committed.
+  # A workflow_dispatch trigger is only registered for workflows that exist on
+  # the default branch, so this one cannot be dispatched until it merges — and
+  # the wrapper it produces needs to be in the pull request before then.
+  push:
+    branches: ["chore/initial-scaffolding"]
+    paths: [".github/workflows/bootstrap-gradle-wrapper.yml"]
 
 permissions:
   contents: read
