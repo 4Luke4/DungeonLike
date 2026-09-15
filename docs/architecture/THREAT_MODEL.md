@@ -100,6 +100,16 @@ but a change reaching a build unreviewed.
 
 * Every workflow declares least-privilege `permissions`; the default is
   `contents: read`.
+* Every third-party action is pinned to a full commit SHA, with the version in a
+  trailing comment. A tag or a branch can be repointed at different code by
+  whoever controls that repository, so an action referenced as `owner/action@v1`
+  runs whatever that tag names at the moment the workflow starts — with access to
+  the workflow's token and its runner. A commit SHA cannot move.
+  `tools/scripts/check_action_pinning.py` enforces this on every pull request,
+  so a new workflow cannot quietly reintroduce a mutable reference.
+  Actions published by GitHub itself are exempt because their releases are
+  immutable; that exemption is a trust decision and is listed explicitly in the
+  checker rather than inferred.
 * Dependencies are pinned in one version catalogue, and one toolchain file pins
   the SDK, build tools and engine version.
 * The Godot editor and its export templates are downloaded in CI and verified

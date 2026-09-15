@@ -86,6 +86,9 @@ jobs:
       - name: All randomness goes through RngService
         run: python3 tools/scripts/check_rng_usage.py
 
+      - name: Third-party actions are pinned to a commit SHA
+        run: python3 tools/scripts/check_action_pinning.py
+
   gradle:
     name: Kotlin host
     needs: toolchain
@@ -105,9 +108,9 @@ jobs:
         # may not be committed yet; once it is, this verifies on every run that
         # the jar is an official Gradle release rather than an altered one.
         if: hashFiles('gradle/wrapper/gradle-wrapper.jar') != ''
-        uses: gradle/actions/wrapper-validation@v6.3.0
+        uses: gradle/actions/wrapper-validation@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
 
-      - uses: gradle/actions/setup-gradle@v6.3.0
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
         with:
           gradle-version: ${{ needs.toolchain.outputs.gradle }}
           # Only the default branch writes the shared dependency and build
@@ -115,7 +118,7 @@ jobs:
           # every other branch relies on.
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
-      - uses: android-actions/setup-android@v4.0.1
+      - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
         with:
           packages: >-
             platforms;android-${{ needs.toolchain.outputs.compile-sdk }}
@@ -226,12 +229,12 @@ jobs:
           distribution: temurin
           java-version: ${{ needs.toolchain.outputs.java }}
 
-      - uses: gradle/actions/setup-gradle@v6.3.0
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
         with:
           gradle-version: ${{ needs.toolchain.outputs.gradle }}
           cache-read-only: true
 
-      - uses: android-actions/setup-android@v4.0.1
+      - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
         with:
           packages: >-
             platforms;android-${{ needs.toolchain.outputs.compile-sdk }}

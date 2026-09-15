@@ -152,6 +152,11 @@ labelling silently fails.
   the Godot library, the Android Gradle plugin or the SDK — is reviewed by hand.
 - Security overrides for vulnerable transitive build tooling belong in
   [`config/build-tool-security.versions`](config/build-tool-security.versions).
+- A third-party GitHub Action is pinned to a full commit SHA, with the version
+  in a trailing comment so Dependabot can still update it:
+  `uses: owner/action@<40-hex-sha> # v1.2.3`. Resolve the SHA from the action's
+  own repository, never from a fork. CI enforces this, and the reasoning is in
+  [the threat model](docs/architecture/THREAT_MODEL.md).
 - When a shipped dependency or a licensing obligation changes, update
   [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) in the same pull request.
 

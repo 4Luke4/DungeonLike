@@ -43,7 +43,7 @@ jobs:
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "Pinned Gradle version: ${version}"
 
-      - uses: gradle/actions/setup-gradle@v6.3.0
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
         with:
           gradle-version: ${{ steps.toolchain.outputs.version }}
 
