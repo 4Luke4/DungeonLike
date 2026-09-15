@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "dungeon_themes": [
+    {
+      "id": "flooded_crypt",
+      "name_key": "THEME_FLOODED_CRYPT",
+      "description_key": "THEME_FLOODED_CRYPT_DESCRIPTION",
+      "depth_range": [1, 2],
+      "encounter_table": "crypt_shallow",
+      "cosmetic_variants": 4,
+      "room_weights": {
+        "encounter": 55,
+        "treasure": 16,
+        "rest": 13,
+        "elite": 8,
+        "boss": 0
+      }
+    },
+    {
+      "id": "collapsed_undercroft",
+      "name_key": "THEME_COLLAPSED_UNDERCROFT",
+      "description_key": "THEME_COLLAPSED_UNDERCROFT_DESCRIPTION",
+      "depth_range": [3, 4],
+      "encounter_table": "undercroft",
+      "cosmetic_variants": 4,
+      "room_weights": {
+        "encounter": 52,
+        "treasure": 16,
+        "rest": 12,
+        "elite": 12,
+        "boss": 0
+      }
+    },
+    {
+      "id": "ashen_reliquary",
+      "name_key": "THEME_ASHEN_RELIQUARY",
+      "description_key": "THEME_ASHEN_RELIQUARY_DESCRIPTION",
+      "depth_range": [5, 6],
+      "encounter_table": "reliquary",
+      "cosmetic_variants": 3,
+      "room_weights": {
+        "encounter": 48,
+        "treasure": 15,
+        "rest": 12,
+        "elite": 16,
+        "boss": 0
+      }
+    },
+    {
+      "id": "the_hollow_throne",
+      "name_key": "THEME_THE_HOLLOW_THRONE",
+      "description_key": "THEME_THE_HOLLOW_THRONE_DESCRIPTION",
+      "depth_range": [7, 7],
+      "encounter_table": "hollow_throne",
+      "cosmetic_variants": 1,
+      "room_weights": {
+        "encounter": 0,
+        "treasure": 0,
+        "rest": 0,
+        "elite": 0,
+        "boss": 100
+      }
+    }
+  ]
+}

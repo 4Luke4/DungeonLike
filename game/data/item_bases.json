@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "item_bases": [
+    {
+      "id": "dagger",
+      "name_key": "ITEM_BASE_DAGGER",
+      "slot": "main_hand",
+      "category": "weapon_simple_melee",
+      "damage": {
+        "dice": "1d4",
+        "type": "piercing"
+      },
+      "finesse": true,
+      "value_cp": 200,
+      "item_level": 1,
+      "affix_groups": [
+        "weapon",
+        "light_weapon"
+      ]
+    },
+    {
+      "id": "quarterstaff",
+      "name_key": "ITEM_BASE_QUARTERSTAFF",
+      "slot": "main_hand",
+      "category": "weapon_simple_melee",
+      "damage": {
+        "dice": "1d6",
+        "type": "bludgeoning"
+      },
+      "finesse": false,
+      "value_cp": 20,
+      "item_level": 1,
+      "affix_groups": [
+        "weapon",
+        "arcane_focus"
+      ]
+    },
+    {
+      "id": "shortsword",
+      "name_key": "ITEM_BASE_SHORTSWORD",
+      "slot": "main_hand",
+      "category": "weapon_martial_melee",
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "finesse": true,
+      "value_cp": 1000,
+      "item_level": 1,
+      "affix_groups": [
+        "weapon",
+        "light_weapon"
+      ]
+    },
+    {
+      "id": "longsword",
+      "name_key": "ITEM_BASE_LONGSWORD",
+      "slot": "main_hand",
+      "category": "weapon_martial_melee",
+      "damage": {
+        "dice": "1d8",
+        "type": "slashing"
+      },
+      "finesse": false,
+      "value_cp": 1500,
+      "item_level": 2,
+      "affix_groups": [
+        "weapon",
+        "heavy_weapon"
+      ]
+    },
+    {
+      "id": "warhammer",
+      "name_key": "ITEM_BASE_WARHAMMER",
+      "slot": "main_hand",
+      "category": "weapon_martial_melee",
+      "damage": {
+        "dice": "1d8",
+        "type": "bludgeoning"
+      },
+      "finesse": false,
+      "value_cp": 1500,
+      "item_level": 2,
+      "affix_groups": [
+        "weapon",
+        "heavy_weapon"
+      ]
+    },
+    {
+      "id": "greataxe",
+      "name_key": "ITEM_BASE_GREATAXE",
+      "slot": "main_hand",
+      "category": "weapon_martial_melee",
+      "damage": {
+        "dice": "1d12",
+        "type": "slashing"
+      },
+      "finesse": false,
+      "value_cp": 3000,
+      "item_level": 4,
+      "affix_groups": [
+        "weapon",
+        "heavy_weapon"
+      ]
+    },
+    {
+      "id": "shortbow",
+      "name_key": "ITEM_BASE_SHORTBOW",
+      "slot": "main_hand",
+      "category": "weapon_simple_ranged",
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "finesse": true,
+      "value_cp": 2500,
+      "item_level": 1,
+      "affix_groups": [
+        "weapon",
+        "ranged_weapon"
+      ]
+    },
+    {
+      "id": "padded_armour",
+      "name_key": "ITEM_BASE_PADDED_ARMOUR",
+      "slot": "armour",
+      "category": "armour_light",
+      "base_armour_class": 11,
+      "max_dexterity_bonus": 10,
+      "value_cp": 500,
+      "item_level": 1,
+      "affix_groups": [
+        "armour",
+        "light_armour"
+      ]
+    },
+    {
+      "id": "leather_armour",
+      "name_key": "ITEM_BASE_LEATHER_ARMOUR",
+      "slot": "armour",
+      "category": "armour_light",
+      "base_armour_class": 11,
+      "max_dexterity_bonus": 10,
+      "value_cp": 1000,
+      "item_level": 1,
+      "affix_groups": [
+        "armour",
+        "light_armour"
+      ]
+    },
+    {
+      "id": "chain_shirt",
+      "name_key": "ITEM_BASE_CHAIN_SHIRT",
+      "slot": "armour",
+      "category": "armour_medium",
+      "base_armour_class": 13,
+      "max_dexterity_bonus": 2,
+      "value_cp": 5000,
+      "item_level": 2,
+      "affix_groups": [
+        "armour"
+      ]
+    },
+    {
+      "id": "breastplate",
+      "name_key": "ITEM_BASE_BREASTPLATE",
+      "slot": "armour",
+      "category": "armour_medium",
+      "base_armour_class": 14,
+      "max_dexterity_bonus": 2,
+      "value_cp": 40000,
+      "item_level": 4,
+      "affix_groups": [
+        "armour"
+      ]
+    },
+    {
+      "id": "chain_mail",
+      "name_key": "ITEM_BASE_CHAIN_MAIL",
+      "slot": "armour",
+      "category": "armour_heavy",
+      "base_armour_class": 16,
+      "max_dexterity_bonus": 0,
+      "value_cp": 7500,
+      "item_level": 5,
+      "affix_groups": [
+        "armour"
+      ]
+    },
+    {
+      "id": "buckler",
+      "name_key": "ITEM_BASE_BUCKLER",
+      "slot": "off_hand",
+      "category": "shield",
+      "base_armour_class": 1,
+      "max_dexterity_bonus": 10,
+      "value_cp": 800,
+      "item_level": 1,
+      "affix_groups": [
+        "shield"
+      ]
+    },
+    {
+      "id": "kite_shield",
+      "name_key": "ITEM_BASE_KITE_SHIELD",
+      "slot": "off_hand",
+      "category": "shield",
+      "base_armour_class": 2,
+      "max_dexterity_bonus": 10,
+      "value_cp": 1000,
+      "item_level": 3,
+      "affix_groups": [
+        "shield"
+      ]
+    },
+    {
+      "id": "copper_band",
+      "name_key": "ITEM_BASE_COPPER_BAND",
+      "slot": "trinket",
+      "category": "trinket",
+      "value_cp": 500,
+      "item_level": 1,
+      "affix_groups": [
+        "trinket"
+      ]
+    },
+    {
+      "id": "silver_torc",
+      "name_key": "ITEM_BASE_SILVER_TORC",
+      "slot": "trinket",
+      "category": "trinket",
+      "value_cp": 2500,
+      "item_level": 3,
+      "affix_groups": [
+        "trinket"
+      ]
+    }
+  ]
+}

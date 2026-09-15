@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "archetypes": [
+    {
+      "id": "vanguard",
+      "name_key": "ARCHETYPE_VANGUARD",
+      "description_key": "ARCHETYPE_VANGUARD_DESCRIPTION",
+      "abilities": { "str": 16, "dex": 12, "con": 15, "int": 10, "wis": 13, "cha": 8 },
+      "hit_die": "1d10",
+      "proficiency_bonus": 2,
+      "attack_ability": "str",
+      "saving_throw_proficiencies": ["str", "con"],
+      "starting_items": ["longsword", "chain_shirt", "buckler"],
+      "powers": ["second_wind", "cleaving_blow"]
+    },
+    {
+      "id": "shadow",
+      "name_key": "ARCHETYPE_SHADOW",
+      "description_key": "ARCHETYPE_SHADOW_DESCRIPTION",
+      "abilities": { "str": 10, "dex": 16, "con": 13, "int": 12, "wis": 14, "cha": 9 },
+      "hit_die": "1d8",
+      "proficiency_bonus": 2,
+      "attack_ability": "dex",
+      "saving_throw_proficiencies": ["dex", "int"],
+      "starting_items": ["shortsword", "leather_armour", "copper_band"],
+      "powers": ["precise_strike", "vanish"]
+    },
+    {
+      "id": "runecaster",
+      "name_key": "ARCHETYPE_RUNECASTER",
+      "description_key": "ARCHETYPE_RUNECASTER_DESCRIPTION",
+      "abilities": { "str": 8, "dex": 14, "con": 13, "int": 16, "wis": 12, "cha": 10 },
+      "hit_die": "1d6",
+      "proficiency_bonus": 2,
+      "attack_ability": "int",
+      "saving_throw_proficiencies": ["int", "wis"],
+      "starting_items": ["quarterstaff", "padded_armour", "copper_band"],
+      "powers": ["searing_bolt", "glyph_of_warding"]
+    }
+  ]
+}

@@ -1,0 +1,395 @@
+{
+  "schema": 1,
+  "monsters": [
+    {
+      "id": "giant_rat",
+      "name_key": "MONSTER_GIANT_RAT",
+      "size": "small",
+      "creature_type": "beast",
+      "challenge": "1/8",
+      "armour_class": 12,
+      "hit_dice": "2d6",
+      "speed_ft": 30,
+      "abilities": { "str": 7, "dex": 15, "con": 11, "int": 2, "wis": 10, "cha": 4 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "damage_vulnerabilities": [],
+      "condition_immunities": [],
+      "actions": [
+        {
+          "id": "giant_rat_bite",
+          "name_key": "ACTION_BITE",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d4+2", "type": "piercing" }]
+        }
+      ],
+      "cosmetic_variants": 3
+    },
+    {
+      "id": "kobold_skirmisher",
+      "name_key": "MONSTER_KOBOLD_SKIRMISHER",
+      "size": "small",
+      "creature_type": "humanoid",
+      "challenge": "1/8",
+      "armour_class": 12,
+      "hit_dice": "2d6",
+      "speed_ft": 30,
+      "abilities": { "str": 7, "dex": 15, "con": 9, "int": 8, "wis": 7, "cha": 8 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "damage_vulnerabilities": [],
+      "condition_immunities": [],
+      "actions": [
+        {
+          "id": "kobold_skirmisher_dagger",
+          "name_key": "ACTION_DAGGER",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d4+2", "type": "piercing" }]
+        },
+        {
+          "id": "kobold_skirmisher_sling",
+          "name_key": "ACTION_SLING",
+          "kind": "ranged_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d4+2", "type": "bludgeoning" }]
+        }
+      ],
+      "cosmetic_variants": 3
+    },
+    {
+      "id": "giant_spider",
+      "name_key": "MONSTER_GIANT_SPIDER",
+      "size": "large",
+      "creature_type": "beast",
+      "challenge": "1",
+      "armour_class": 14,
+      "hit_dice": "4d10+4",
+      "speed_ft": 30,
+      "abilities": { "str": 14, "dex": 16, "con": 12, "int": 2, "wis": 11, "cha": 4 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "damage_vulnerabilities": [],
+      "condition_immunities": [],
+      "actions": [
+        {
+          "id": "giant_spider_bite",
+          "name_key": "ACTION_VENOMOUS_BITE",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 5,
+          "damage": [{ "dice": "1d8+3", "type": "piercing" }],
+          "rider_save": {
+            "ability": "con",
+            "difficulty_class": 11,
+            "on_failure_condition": "poisoned",
+            "condition_rounds": 2
+          }
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "skeleton_warrior",
+      "name_key": "MONSTER_SKELETON_WARRIOR",
+      "size": "medium",
+      "creature_type": "undead",
+      "challenge": "1/4",
+      "armour_class": 13,
+      "hit_dice": "2d8+4",
+      "speed_ft": 30,
+      "abilities": { "str": 10, "dex": 14, "con": 15, "int": 6, "wis": 8, "cha": 5 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": ["poison"],
+      "damage_vulnerabilities": ["bludgeoning"],
+      "condition_immunities": ["poisoned"],
+      "actions": [
+        {
+          "id": "skeleton_warrior_shortsword",
+          "name_key": "ACTION_SHORTSWORD",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d6+2", "type": "piercing" }]
+        }
+      ],
+      "cosmetic_variants": 3
+    },
+    {
+      "id": "shambling_husk",
+      "name_key": "MONSTER_SHAMBLING_HUSK",
+      "size": "medium",
+      "creature_type": "undead",
+      "challenge": "1/4",
+      "armour_class": 8,
+      "hit_dice": "3d8+9",
+      "speed_ft": 20,
+      "abilities": { "str": 13, "dex": 6, "con": 16, "int": 3, "wis": 6, "cha": 5 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": ["wis"],
+      "damage_resistances": [],
+      "damage_immunities": ["poison"],
+      "damage_vulnerabilities": [],
+      "condition_immunities": ["poisoned"],
+      "actions": [
+        {
+          "id": "shambling_husk_slam",
+          "name_key": "ACTION_SLAM",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 3,
+          "damage": [{ "dice": "1d6+1", "type": "bludgeoning" }]
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "dire_wolf",
+      "name_key": "MONSTER_DIRE_WOLF",
+      "size": "large",
+      "creature_type": "beast",
+      "challenge": "1",
+      "armour_class": 14,
+      "hit_dice": "5d10+5",
+      "speed_ft": 50,
+      "abilities": { "str": 17, "dex": 15, "con": 15, "int": 3, "wis": 12, "cha": 7 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "damage_vulnerabilities": [],
+      "condition_immunities": [],
+      "actions": [
+        {
+          "id": "dire_wolf_bite",
+          "name_key": "ACTION_BITE",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 5,
+          "damage": [{ "dice": "2d6+3", "type": "piercing" }],
+          "rider_save": {
+            "ability": "str",
+            "difficulty_class": 13,
+            "on_failure_condition": "prone",
+            "condition_rounds": 1
+          }
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "crypt_ghoul",
+      "name_key": "MONSTER_CRYPT_GHOUL",
+      "size": "medium",
+      "creature_type": "undead",
+      "challenge": "1",
+      "armour_class": 12,
+      "hit_dice": "5d8",
+      "speed_ft": 30,
+      "abilities": { "str": 13, "dex": 15, "con": 10, "int": 7, "wis": 10, "cha": 6 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": [],
+      "damage_immunities": ["poison"],
+      "damage_vulnerabilities": ["radiant"],
+      "condition_immunities": ["poisoned"],
+      "actions": [
+        {
+          "id": "crypt_ghoul_claws",
+          "name_key": "ACTION_CLAWS",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "2d4+2", "type": "slashing" }],
+          "rider_save": {
+            "ability": "con",
+            "difficulty_class": 10,
+            "on_failure_condition": "paralysed",
+            "condition_rounds": 1
+          }
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "animated_plate",
+      "name_key": "MONSTER_ANIMATED_PLATE",
+      "size": "medium",
+      "creature_type": "construct",
+      "challenge": "1",
+      "armour_class": 18,
+      "hit_dice": "5d8+5",
+      "speed_ft": 25,
+      "abilities": { "str": 14, "dex": 11, "con": 13, "int": 1, "wis": 3, "cha": 1 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": [],
+      "damage_resistances": ["piercing"],
+      "damage_immunities": ["poison", "psychic"],
+      "damage_vulnerabilities": [],
+      "condition_immunities": ["poisoned", "frightened", "blinded"],
+      "actions": [
+        {
+          "id": "animated_plate_slam",
+          "name_key": "ACTION_SLAM",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d6+2", "type": "bludgeoning" }]
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "ember_mephit",
+      "name_key": "MONSTER_EMBER_MEPHIT",
+      "size": "small",
+      "creature_type": "elemental",
+      "challenge": "1/2",
+      "armour_class": 11,
+      "hit_dice": "5d6",
+      "speed_ft": 30,
+      "abilities": { "str": 7, "dex": 13, "con": 10, "int": 9, "wis": 11, "cha": 12 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": ["dex"],
+      "damage_resistances": [],
+      "damage_immunities": ["fire", "poison"],
+      "damage_vulnerabilities": ["cold"],
+      "condition_immunities": ["poisoned"],
+      "actions": [
+        {
+          "id": "ember_mephit_claws",
+          "name_key": "ACTION_CLAWS",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 3,
+          "damage": [
+            { "dice": "1d4+1", "type": "slashing" },
+            { "dice": "1d4", "type": "fire" }
+          ]
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "bandit_captain",
+      "name_key": "MONSTER_BANDIT_CAPTAIN",
+      "size": "medium",
+      "creature_type": "humanoid",
+      "challenge": "2",
+      "armour_class": 15,
+      "hit_dice": "10d8+10",
+      "speed_ft": 30,
+      "abilities": { "str": 15, "dex": 16, "con": 14, "int": 14, "wis": 11, "cha": 14 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": ["str", "dex", "wis"],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "damage_vulnerabilities": [],
+      "condition_immunities": [],
+      "actions": [
+        {
+          "id": "bandit_captain_scimitar",
+          "name_key": "ACTION_SCIMITAR",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 5,
+          "damage": [{ "dice": "1d6+3", "type": "slashing" }]
+        },
+        {
+          "id": "bandit_captain_pistol_crossbow",
+          "name_key": "ACTION_HAND_CROSSBOW",
+          "kind": "ranged_weapon_attack",
+          "attack_bonus": 5,
+          "damage": [{ "dice": "1d6+3", "type": "piercing" }]
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "cairn_wight",
+      "name_key": "MONSTER_CAIRN_WIGHT",
+      "size": "medium",
+      "creature_type": "undead",
+      "challenge": "3",
+      "armour_class": 14,
+      "hit_dice": "9d8+18",
+      "speed_ft": 30,
+      "abilities": { "str": 15, "dex": 14, "con": 16, "int": 10, "wis": 13, "cha": 15 },
+      "proficiency_bonus": 2,
+      "saving_throw_proficiencies": ["con", "wis"],
+      "damage_resistances": ["necrotic"],
+      "damage_immunities": ["poison"],
+      "damage_vulnerabilities": ["radiant"],
+      "condition_immunities": ["poisoned", "frightened"],
+      "actions": [
+        {
+          "id": "cairn_wight_longsword",
+          "name_key": "ACTION_LONGSWORD",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d8+2", "type": "slashing" }]
+        },
+        {
+          "id": "cairn_wight_grave_touch",
+          "name_key": "ACTION_GRAVE_TOUCH",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 4,
+          "damage": [{ "dice": "1d6+2", "type": "necrotic" }],
+          "rider_save": {
+            "ability": "con",
+            "difficulty_class": 13,
+            "on_failure_condition": "frightened",
+            "condition_rounds": 2
+          }
+        }
+      ],
+      "cosmetic_variants": 2
+    },
+    {
+      "id": "hollow_tyrant",
+      "name_key": "MONSTER_HOLLOW_TYRANT",
+      "size": "large",
+      "creature_type": "undead",
+      "challenge": "5",
+      "armour_class": 17,
+      "hit_dice": "12d10+36",
+      "speed_ft": 30,
+      "abilities": { "str": 18, "dex": 12, "con": 17, "int": 12, "wis": 14, "cha": 16 },
+      "proficiency_bonus": 3,
+      "saving_throw_proficiencies": ["con", "wis", "cha"],
+      "damage_resistances": ["necrotic", "slashing"],
+      "damage_immunities": ["poison"],
+      "damage_vulnerabilities": ["radiant"],
+      "condition_immunities": ["poisoned", "frightened", "prone"],
+      "actions": [
+        {
+          "id": "hollow_tyrant_greatsword",
+          "name_key": "ACTION_GREATSWORD",
+          "kind": "melee_weapon_attack",
+          "attack_bonus": 7,
+          "damage": [
+            { "dice": "2d6+4", "type": "slashing" },
+            { "dice": "1d8", "type": "necrotic" }
+          ]
+        },
+        {
+          "id": "hollow_tyrant_dread_command",
+          "name_key": "ACTION_DREAD_COMMAND",
+          "kind": "saving_throw",
+          "save_ability": "wis",
+          "difficulty_class": 15,
+          "damage": [{ "dice": "3d6", "type": "psychic" }],
+          "half_damage_on_success": true,
+          "rider_save": {
+            "ability": "wis",
+            "difficulty_class": 15,
+            "on_failure_condition": "frightened",
+            "condition_rounds": 2
+          }
+        }
+      ],
+      "cosmetic_variants": 1
+    }
+  ]
+}
